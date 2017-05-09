@@ -1,0 +1,609 @@
+---
+title: "How to process an NMR dataset with speaq2"
+author: "Charlie Beirnaert"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to process an NMR dataset with speaq2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = FALSE)
+figwidth.out <- 600
+```
+
+## speaq2
+
+To illustrate the possibilities of **speaq2**, the spiritual successor to the original speaq package, we will analyse the onion intake in mice dataset (available form the University of Copenhagen at \emph{http://www.models.life.ku.dk/}). This is the same dataset as analysed in the paper and was originally analysed by Winning et al. (DOI: 10.1039/B918259D)
+
+
+Before we start with the example let's first recap what the basic steps of speaq2 encompass:
+
+1. Peak detection: `getWaveletPeaks()` 
+2. Peak grouping: `PeakGrouper()` 
+3. Peak filling: `PeakFilling()` 
+4. Feature matrix construction: `BuildFeatureMatrix()`
+
+These functions alongside other functionality from speaq2 will be demonstrated in this vignette. Note that there is a plotting function available in speaq2 (for raw spectra) but the features are naturally plotted with ggplot2. The code for these plots are also included in this vignette, although thet might seem rather elaborate, they are pretty straightforward and might provide inspiration for your own plots.
+
+### Loading the necessary dataset
+
+Adjust the location of the dataset if necessary
+
+```{r load data}
+library(speaq2)
+load("Oniondata.rda")
+Spectra <- Oniondata$spectra 
+ppm.onion <- Oniondata$ppm 
+onion.percent <- Oniondata$onion.percent
+onion.grouplabels <- Oniondata$grouplabels
+```
+
+### Plotting the raw wine data
+
+```{r onion intake data, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
+# plot of all spectra
+drawSpecPPM(Y.spec = Spectra, 
+            X.ppm = ppm.onion, 
+            groupFactor = onion.grouplabels, 
+            title = 'Raw onion intake data spectra', 
+            legend.extra.x = 1, 
+            legend.extra.y = 1.1)
+```
+
+The `drawSpecPPM()` plotting function indicates that there might be a gap in the data (which is correct as the original authors deleted the region between 5.0 and 4.5 ppm). This warning can be of importance for the interpretation of the plot as in this case the original authors deleted the data, not by setting the values to 0, but by effectively removing it from the matrix and ppm vector. This produces a plot that appears continuous but is in fact not. 
+
+The `drawSpecPPM()` function also indicates that the groupFactor is not a factor and (succesfully) attempts to do the conversion. The next plot is an excerpt of the onion intake dataset.
+```{r onion intake excerpt, dpi=200, fig.width=7, fig.height=4, out.width=figwidth.out}
+# small excerpt by defining the region of interest
+drawSpecPPM(Y.spec = Spectra, 
+            X.ppm = ppm.onion, 
+            groupFactor = as.factor(onion.grouplabels), 
+            title = 'Raw onion intake data excerpt', 
+            legend.extra.x = 1.1, 
+            legend.extra.y = 1.0, 
+            ROI.ppm = 7.35, 
+            ROI = NULL, 
+            roiWidth.ppm = 0.11, 
+            legendpos = "topright" )
+```
+
+### From spectra via peaks to grouped peaks (features)
+
+Now that we've had a look at the spectra it is time to convert these to peaks by using the `getWaveletPeaks()` function. Since this can take some time (2 minutes, with `nCPU = 6`, on a 2.5GHz machine).
+
+```{r wavelet peak detection,  eval = TRUE, results = "hide"}
+
+onion.peaks <- getWaveletPeaks(Y.spec = Spectra, 
+                              X.ppm = ppm.onion, 
+                              baselineThresh = 10,
+                              SNR.Th = -1, 
+                              nCPU = 2, 
+                              include_nearbyPeaks = TRUE)
+
+```
+
+The next step in speaq2 is grouping.
+
+```{r detect onionpeaks,  results = "hide"}
+
+onion.grouped <- PeakGrouper(Y.peaks = onion.peaks,  
+                             min.samp.grp = 5)
+
+```
+
+
+Now we can plot the detected peaks and the grouped peaks with the `onion.grouped` object. The dataset after grouping contains both the original ppm values of every peak (in the `peakPPM` variable) but also the group information (found in the `peakIndex` variable). By calling the `AddPlottingStuff()` function the groupPPM variable is added so we also have the ppm value of the groups (the link is: `groupPPM <- ppm.onion[peakIndex]`)
+
+### Plotting the peak data
+
+```{r plots base, dpi=200, fig.width=7, fig.height=7, warning = FALSE,out.width=figwidth.out}
+# adding labels to the dat a for plotting and the group ppm values
+library(gridExtra)
+library(ggplot2)
+
+onion.peaks.plot <- AddPlottingStuff(Y.peaks = onion.peaks, 
+                                    X.ppm = ppm.onion, 
+                                    groupLabels = onion.grouplabels )
+onion.peaks.plot$label <- factor(onion.peaks.plot$label, levels = c("control", 
+                                                                    "3% residue", 
+                                                                    "7% extract", 
+                                                                    "10% by product"))
+
+onion.grouped.plot <- AddPlottingStuff(Y.peaks = onion.grouped, 
+                                       X.ppm = ppm.onion, 
+                                       groupLabels = onion.grouplabels )
+onion.grouped.plot$label <- factor(onion.grouped.plot$label,  levels = c("control", 
+                                                                         "3% residue", 
+                                                                         "7% extract", 
+                                                                         "10% by product"))
+# region for the zoom in plots
+mi = 20000
+ma = 20360
+
+# the plotting
+plot.legend <- ggplot(onion.grouped.plot, aes(x=peakPPM, y=peakValue, colour = label) ) +
+               geom_point() + 
+               theme_bw() + 
+               xlim(c(as.numeric(max(ppm.onion)),as.numeric(min(ppm.onion)))) + 
+               theme(legend.key = element_blank(), 
+                     plot.margin = unit(c(0,2,0,0.1), "cm"))+
+               scale_colour_manual( values = c("control" = "#FD61D1",
+                                               "3% residue" = "#00BF7D",
+                                               "7% extract" = "#F8766D",
+                                               "10% by product" = "#00B0F6")) +  
+               labs(x = "ppm", y = "peak value")
+
+
+
+pp1 <- ggplot(onion.grouped.plot, aes(x=peakPPM, y=peakValue, colour = label) ) +
+       geom_point() + 
+       theme_bw() +  
+       xlim(c(as.numeric(max(ppm.onion)),as.numeric(min(ppm.onion)))) + 
+       theme(legend.key = element_blank(),
+             plot.title = element_text(lineheight = 0.8, 
+                                               face = "bold", 
+                                               margin = margin(0,0,13,0),
+                                               hjust = 0.5, 
+                                               size = 18)) +
+       ggtitle("Onion intake in mice, grouped peak data") +
+       scale_colour_manual(name = "mice group", values = c("control" = "#FD61D1",
+                                                           "3% residue" = "#00BF7D",
+                                                           "7% extract" = "#F8766D",
+                                                           "10% by product" = "#00B0F6")) +  
+       labs(x = "ppm", y = "peak value") 
+
+
+pp2 <- ggplot(onion.grouped.plot[onion.grouped.plot$peakIndex > mi &
+                                 onion.grouped.plot$peakIndex < ma ,], 
+              aes(x=peakPPM, y=peakValue, colour = label) ) +
+       geom_point() + 
+       theme_bw() + 
+       xlim(c(as.numeric(ppm.onion[mi]),as.numeric(ppm.onion[ma]))) + 
+       guides(color=FALSE) +
+       theme(plot.margin = unit(c(0,0.5,0.1,0.2), "cm")) +
+       scale_colour_manual(values = c("control" = "#FD61D1",
+                                      "3% residue" = "#00BF7D",
+                                      "7% extract" = "#F8766D",
+                                      "10% by product" = "#00B0F6")) +  
+       labs(x = "ppm", y = "peak value") 
+
+
+pp3 <- ggplot(onion.grouped.plot[onion.grouped.plot$peakIndex > mi &
+                                 onion.grouped.plot$peakIndex < ma ,],
+              aes(x=groupPPM, y=peakValue, colour = label) ) +
+       geom_point() + 
+       theme_bw() + 
+       xlim(c(as.numeric(ppm.onion[mi]),as.numeric(ppm.onion[ma]))) +  guides(color=FALSE) +
+       theme(plot.margin = unit(c(0,0.5,0.1,0.2), "cm")) +
+       scale_colour_manual(values = c("control" = "#FD61D1",
+                                      "3% residue" = "#00BF7D",
+                                      "7% extract" = "#F8766D",
+                                      "10% by product" = "#00B0F6")) +  
+       labs(x = "ppm", y = "peak value") 
+
+
+
+g_legend <- function(a.gplot){ 
+    tmp <- ggplot_gtable(ggplot_build(a.gplot)) 
+    leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box") 
+    legend <- tmp$grobs[[leg]] 
+    return(legend)
+    } 
+
+legend <- g_legend(plot.legend) 
+
+lay <- rbind(c(1,1,1,1),
+             c(1,1,1,1),
+             c(1,1,1,1),
+             c(2,2,3,3),
+             c(2,2,3,3))
+
+grid.arrange(pp1, pp2, pp3, layout_matrix = lay)
+
+```
+
+In the top plot you can clearly see the portion of the data that has been deleted by the original authors, in the bottom plots the difference between pre-grouping (left) and post-grouping (right) is clearly visible. With the grouped peaks, which are now regarded as features, we can identify those features that are of interest. Before that however, it is a good idea to check the quality of the grouping by means of a silhouette plot.
+
+
+
+```{r Silhouette values, results = "hide"}
+SilhouetteValues <- SilhouetR(DataMatrix = onion.grouped$peakPPM, 
+                              GroupIndices = onion.grouped$peakIndex)
+
+Silh_plot <- ggplot(SilhouetteValues, aes(SilhouetteValues)) +
+             geom_freqpoly(binwidth = 0.03) +
+             theme_bw()
+Silh_plot
+
+
+```
+
+The grouping is clearly of good quality. To verify the grouping in more detail let's calculate the average Silhouette values per group and see if there are anny groups which have a low average silhouette value.
+
+
+```{r average silhouette}
+groups <- unique(SilhouetteValues$GroupIndices)
+Ngroups <- length(groups)
+sil_means <- matrix(NA, ncol = 3, nrow = Ngroups)
+
+for(k in 1:Ngroups){
+    sil_means[k,1] = groups[k]
+    sil_means[k,2] = mean(SilhouetteValues$SilhouetteValues[SilhouetteValues$GroupIndices==groups[k]])
+    sil_means[k,3] = mean(onion.grouped$peakSNR[onion.grouped$peakIndex==groups[k]])
+}
+
+sil_means <- sil_means[order(sil_means[,2]),]
+colnames(sil_means) <- c("groupIndex", "avg_silhouette_val", "avg. SNR")
+head(sil_means)
+
+```
+
+Cleary there are some groups with a very low average silhouette value, these groups are however of low signal to noise ratio and therefor are probably peaks detected in the very low intensity or noisy signals (plot them to see this is in fact the case). LAter when constructing the feature matrix we have to option to eliminate these groups. 
+
+There is one group which has a high SNR value but a relatively low average silhouette value. Let's plot this group:
+
+
+```{r wrong grouping plot,  dpi=200, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
+library(grid)
+library(gridBase)
+library(gridExtra)
+library(ggplot2)
+
+faulty.groupIndex <- sil_means[5,1]
+ROI.ppm <- ppm.onion[faulty.groupIndex]
+roiWidth.ppm <- 0.1
+pp1 <- ggplot(onion.peaks.plot[onion.peaks.plot$peakPPM > (ROI.ppm - roiWidth.ppm ) &
+                              onion.peaks.plot$peakPPM < (ROI.ppm + roiWidth.ppm ) ,],
+              aes(x = peakPPM, y = peakValue, colour = label) ) + 
+       geom_point() + 
+       xlim(c(ROI.ppm + roiWidth.ppm, ROI.ppm - roiWidth.ppm)) +
+       scale_colour_manual(values = c("control" = "#FD61D1",
+                                      "3% residue" = "#00BF7D",
+                                      "7% extract" = "#F8766D",
+                                      "10% by product" = "#00B0F6")) + 
+       labs(x = "ppm", y = "peak value") + 
+       ggtitle("Wavelet based peak detection") +
+       theme_bw() + 
+       theme(legend.title = element_blank(),
+             legend.position = c(0.061,0.75),
+             legend.background = element_rect(colour = "black", size = 0.3, linetype = 1),
+             legend.key = element_blank(), 
+             legend.text = element_text(size=10),
+             text = element_text(size = 12),
+             axis.text.y = element_text(angle=90, hjust=0.5),
+             axis.ticks.length = unit(0.2,"cm"), 
+             axis.title.x = element_text(margin=margin(10,0,0,0)),
+             axis.title.y = element_text(margin=margin(0,20,0,0)),
+             plot.title = element_text(lineheight = 0.8, face = "bold", margin = margin(0,0,20,0)),
+             plot.margin = unit(c(0.5,1,0.5,0.5), "cm"))
+
+
+pp2 <- ggplot(onion.grouped.plot[onion.grouped.plot$groupPPM > (ROI.ppm - roiWidth.ppm ) &
+                                onion.grouped.plot$groupPPM < (ROI.ppm + roiWidth.ppm ) ,], 
+              aes(x = groupPPM, y = peakValue, colour = label) ) +
+       geom_point() + 
+       theme_bw() + 
+       xlim(c( ROI.ppm + roiWidth.ppm, ROI.ppm - roiWidth.ppm)) +
+       scale_colour_manual(values = c("control" = "#FD61D1",
+                                      "3% residue" = "#00BF7D",
+                                      "7% extract" = "#F8766D",
+                                      "10% by product" = "#00B0F6")) + 
+       labs(x = "ppm", y = "peak value") + 
+       ggtitle("Grouped peaks") +
+       theme(legend.title = element_blank(),
+             legend.position = c(0.061,0.748),
+             legend.background = element_rect(colour = "black", size = 0.3, linetype = 1),
+             legend.key = element_blank(), 
+             legend.text = element_text(size = 10),
+             text = element_text(size = 12),
+             axis.text.y = element_text(angle = 90, hjust = 0.5),
+             axis.ticks.length = unit(0.2,"cm"), 
+             axis.title.x = element_text(margin = margin(10,0,0,0)),
+             axis.title.y = element_text(margin = margin(0,20,0,0)),
+             plot.title = element_text(lineheight = 0.8, face="bold", margin = margin(0,0,20,0)),
+             plot.margin = unit(c(0.5,1,0.5,0.5), "cm"))
+
+plot.new()
+
+
+grid.newpage()
+pushViewport(viewport(layout = grid.layout(13, 1)))
+
+#Draw ggplot1
+pushViewport(viewport(layout.pos.row = (6:9)))
+print(pp1, newpage = FALSE)
+popViewport()
+
+#Draw ggplot2
+pushViewport(viewport(layout.pos.row = (10:13)))
+print(pp2, newpage = FALSE)
+popViewport()
+
+#Draw bsae plot
+pushViewport(viewport(layout.pos.row = (1:5)))
+par(fig = gridFIG(), new = TRUE)
+drawSpecPPM(Y.spec = Spectra, 
+            X.ppm = ppm.onion, 
+            groupFactor = as.factor(onion.grouplabels), 
+            title = "Raw onion data excerpt",
+            ROI.ppm = ROI.ppm, 
+            roiWidth.ppm = roiWidth.ppm,  
+            nAxisPos = 6,
+            legend.extra.x = 0.3, 
+            legend.extra.y = 0.8)
+popViewport()
+
+```
+
+This group is clearly quite a mess but the grouping seems to be of ok quality so we'll leave it at that.
+
+```{r data matrix, results = "hide"}
+
+
+onion.filled <- PeakFilling(Y.grouped = onion.grouped, 
+                            Y.spec = Spectra,  
+                            max.index.shift = 10, 
+                            nCPU = 2) # nCPU set to 1 for the vignette build
+
+
+onion.Features <- BuildFeatureMatrix(onion.filled)
+
+```
+### Intermezzo: PCA
+Now that we have the feature matrix we can quickly perform a PCA (principal component analysis) as a way of visualising potential trends and groups in the data. Before any PCA it is advised to scale and center the data, here we will use the pareto scaling but other are available (see the `SCANT()` helpfile)
+
+```{r scaling, tidy = TRUE}
+onion.Features.scaled <- SCANT(onion.Features, type = c("pareto", "center")) 
+
+
+
+```
+
+
+```{r PCA, dpi=200, fig.width=5, fig.height=3, out.width=figwidth.out}
+library(stats)
+
+common.pca <- prcomp(onion.Features.scaled) 
+
+
+loadings <- common.pca$rotation
+scores <- common.pca$x
+varExplained <- common.pca$sdev^2
+
+barplot(varExplained/sum(varExplained), 
+        main="Scree Plot",
+        ylab="Proportion of variance explained", 
+        xlab = "Principal comonent", 
+        names.arg = as.character(seq(1,length(varExplained))) )
+
+```
+```{r PCA2, dpi=200, fig.width=7, fig.height=5, out.width=figwidth.out}
+plot.marks <- as.numeric(onion.percent)
+plot.marks[plot.marks == 0] <- 15 
+plot.marks[plot.marks == 3] <- 1
+plot.marks[plot.marks == 7] <- 8
+plot.marks[plot.marks == 10] <- 2
+
+cp1 <- 1
+cp2 <- 2 
+plot(scores[,cp1]/max(scores[,cp1]), scores[,cp2]/max(scores[,cp2]),
+     main=paste("score plot, PC",cp1," vs.PC",cp2,sep=""),
+     xlab=paste("PC",cp1,round(varExplained[cp1]/sum(varExplained),digits=2),""),
+     ylab=paste("PC",cp2,round(varExplained[cp2]/sum(varExplained),digits=2),""),
+     pch = plot.marks)
+lines(x = c(-100,100), y = c(0,0))
+lines(x = c(0,0), y = c(-100,100))
+legend("bottomleft", 
+       legend = c("Control ","3% residue ",
+                  "7% extract    ", "10% by-product                 "), 
+       pch = c(15,1,8,2),
+       y.intersp = 1)
+
+```
+
+There is little to nothing to be found in the PCA analysis, this is also what [Winning et al.](http://pubs.rsc.org/en/Content/ArticleLanding/2009/AN/b918259d#!divAbstract) concluded in there paper (DOI: 10.1039/B918259D). 
+
+### A differential analysis based on linear models
+
+Next we can use the `relevant.features()` function in speaq2 which uses linear models to produce a p-value corresponding to the nulhypothesis that feature x is not related to the outcome vector. After a p-value correction for multiple testing (as with increasing numbers of randomly generated features some will eventually be significantly related to the output vector) we can identify the relevant features.
+
+
+```{r relevant}
+
+p.all_bonf <- relevant.features.p(onion.Features.scaled , onion.percent, p.adj = "bonferroni")
+
+
+
+
+significant.features <- p.all_bonf[p.all_bonf$p.values<=0.05, ]
+
+# order from most significant
+significant.features <- significant.features[order(significant.features[,2]),]
+head(significant.features)
+
+```
+
+It is clear that some features are well below the commonly used 0.05 p-value threshold. We can now easily find which features correspond to the low p-values and consequently plot them. 
+
+```{r significant features, dpi=400, fig.width=10, fig.height=8, fig.keep = "last", tidy = FALSE, warnings = FALSE, out.width = figwidth.out}
+.pardefault <- par(no.readonly = T)
+
+p.all_bonf <- relevant.features.p(onion.Features.scaled , onion.percent, p.adj = "bonferroni")
+
+
+
+
+significant.features <- p.all_bonf[p.all_bonf$p.values<=0.05, ]
+significant.features <- significant.features[order(significant.features[,2]),]
+peak_of_interest <- 2# change this number to any of the peaks you want to see
+faulty.groupIndex <- significant.features$index[peak_of_interest]
+faulty.peakIndex <- as.numeric(rownames(significant.features))[peak_of_interest]
+
+#ROI.ppm <- 3.6
+#roiWidth.ppm <- 0.15
+ROI.ppm <- ppm.onion[faulty.groupIndex]
+roiWidth.ppm <- 0.03
+
+pp1 <- ggplot(onion.peaks.plot[onion.peaks.plot$peakPPM > (ROI.ppm - 2*roiWidth.ppm ) &
+                              onion.peaks.plot$peakPPM < (ROI.ppm + 2*roiWidth.ppm ) ,], 
+              aes(x = peakPPM, y = peakValue, colour = label) ) + 
+       geom_point() + 
+       theme_bw() + 
+       xlim(c(ROI.ppm + roiWidth.ppm, ROI.ppm - roiWidth.ppm)) +
+       scale_colour_manual(values = c("control" = "#FD61D1",
+                                      "3% residue" = "#00BF7D",
+                                      "7% extract" = "#F8766D",
+                                      "10% by product" = "#00B0F6")) +   
+       labs(x = "ppm", y = "peak value") + 
+       ggtitle("After peak detection") +
+       theme(legend.title = element_blank(),
+             legend.position = c(0.103,0.726),
+             legend.background = element_rect(colour = "black", size = 0.3, linetype = 1),
+             legend.key = element_blank(),
+             legend.text = element_text(size = 10),
+             text = element_text(size = 14),
+             axis.text.y = element_text(angle = 90, hjust = 0.5, margin = margin(0,0.4,0,0,"cm")),
+             axis.ticks.length = unit(0.2,"cm"), 
+             axis.title.x = element_text(margin = margin(0,0,0,0)),
+             axis.title.y = element_text(margin = margin(0,15,0,0)),
+             plot.title = element_text(lineheight = 0.8, face="bold", margin = margin(0,0,10,0),hjust = 0.5, size = 15),
+             plot.margin = unit(c(0.3,1,0.2,0.25), "cm")) 
+     
+
+
+pp2 <- ggplot(onion.grouped.plot[onion.grouped.plot$peakPPM > (ROI.ppm - 2*roiWidth.ppm ) &
+                                onion.grouped.plot$peakPPM < (ROI.ppm + 2*roiWidth.ppm ) ,],
+               aes(x = groupPPM, y = peakValue, colour = label) ) +
+       geom_point() + 
+       theme_bw() + 
+       xlim(c(ROI.ppm + roiWidth.ppm, ROI.ppm - roiWidth.ppm)) +
+       scale_colour_manual(values = c("control" = "#FD61D1",
+                                      "3% residue" = "#00BF7D",
+                                      "7% extract" = "#F8766D",
+                                      "10% by product" = "#00B0F6")) +  
+       labs(x = "ppm", y = "peak value") + 
+       ggtitle("After grouping") +
+       theme(legend.title = element_blank(),
+             legend.position = c(0.103,0.726),
+             legend.background = element_rect(colour = "black",size = 0.3, linetype = 1),
+             legend.key = element_blank(), 
+             legend.text = element_text(size = 10),
+             text = element_text(size = 14),
+             axis.text.y = element_text(angle = 90, hjust = 0.5, margin = margin(0,0.4,0,0,"cm")),
+             axis.ticks.length = unit(0.2,"cm"), 
+             axis.title.x = element_text(margin = margin(0,0,0,0)),
+             axis.title.y = element_text(margin = margin(0,15,0,0)),
+             plot.title = element_text(lineheight = 0.8, face="bold", margin = margin(0,0,10,0),hjust = 0.5, size = 15),
+             plot.margin = unit(c(0.3,1,0.2,0.25), "cm")) 
+
+pp3 = ggplot(p.all_bonf, aes(x=as.numeric(rownames(p.all_bonf)), y= -log10(p.values) )) + 
+         geom_point(data = p.all_bonf[-faulty.peakIndex,],  
+                    aes(x=as.numeric(rownames(p.all_bonf[-faulty.peakIndex,])), 
+                        y = -log10(p.values) ),
+                    shape = 16) +
+    geom_point(data = p.all_bonf[faulty.peakIndex,],  
+               aes(x=faulty.peakIndex, y = -log10(p.values)),
+               shape = 18, 
+               size = 3, 
+               colour ="#00B0F6" ) +
+    xlab("feature index") + 
+    ylab("- log10 p-value") + 
+    ggtitle("Bonferroni corrected p-values") +
+    geom_hline(aes(yintercept= -log10(0.05), color="red"),linetype = 2) + guides(color=FALSE)+
+    theme_bw() + 
+    theme(plot.title = element_text(lineheight = 0.8, face="bold", margin = margin(12,0,13,0),hjust = 0.5, size = 15), 
+          text = element_text(size=14))
+
+plot.new()
+
+grid.newpage()
+pushViewport(viewport(layout = grid.layout(13, 3)))
+
+#Draw ggplot1
+pushViewport(viewport(layout.pos.row = (6:9), layout.pos.col = (2:3)))
+print(pp1, newpage = FALSE)
+popViewport()
+
+#Draw ggplot2
+pushViewport(viewport(layout.pos.row = (10:13), layout.pos.col = (2:3)))
+print(pp2, newpage = FALSE)
+popViewport()
+
+#Draw ggplot3
+pushViewport(viewport(layout.pos.row = (1:13), layout.pos.col = 1))
+print(pp3, newpage = FALSE)
+popViewport()
+
+#Draw bsae plot
+pushViewport(viewport(layout.pos.row = (1:5), layout.pos.col = (2:3)))
+par(fig = gridFIG(), new = TRUE)
+drawSpecPPM(Y.spec = Spectra, 
+            X.ppm = ppm.onion, 
+            groupFactor = factor(onion.grouplabels, levels = c("control", "3% residue", "7% extract", "10% by product")),
+            title = 'Raw spectra of significant feature in the onion intake data', 
+            legend.extra.x = 1, 
+            legend.extra.y = 1.1,
+            manual.colours = c("#FD61D1","#00BF7D","#F8766D","#00B0F6"),
+            ROI.ppm = ROI.ppm, 
+            roiWidth.ppm = roiWidth.ppm,  
+            nAxisPos = 6)
+popViewport()
+```
+
+Or we can also just plot a spectrum excerpt to quickly look one of the significant features
+
+```{r plot significant features, dpi=200, fig.width=7, fig.height=4, out.width=figwidth.out}
+peak_of_interest <- 1 # change this number to any of the peaks you want to see
+
+drawSpecPPM(Y.spec = Spectra, 
+            X.ppm=ppm.onion, 
+            groupFactor = as.factor(onion.grouplabels), 
+            title = paste("significant feature, p-value =",
+                          format(significant.features$p.values[peak_of_interest], 
+                                 scientific = TRUE, digits=2),
+                          sep=" "),
+            legend.extra.x = 1.1, 
+            legend.extra.y = 0.9, 
+            ROI = significant.features$index[peak_of_interest], 
+            roiWidth = 100, 
+            legendpos = "topright" )
+
+```
+
+When plotting all features it is clear that the peak_of_interest corresponding to index 19510  might be an artifact as the signals exhibit some strange background behaviour, and only this. Nonetheless we can sumbit these peaks to a database like [HMDB](http://www.hmdb.ca/) to identify the possible biomarker metabolites. As explained in the paper one cannot simply submit all the ppm values corresponding to these peaks to the database search, as results will be obfusciated by the amount of peaks (this is because of the Jaccard index that is used by HMDB). Therefor it is advised to perform a correlation analysis first to somewhat group the peaks in advance, note hoewever that this does not always work perfectly since peaks of different molecules can exhibit a correlation that can be larger than different peaks of the same molecule because of the way the wavelets quantify peaks. Nonetheless it works overall. 
+
+By playing with the amount of groups we get to the following correlation plot with all corellations larger than 0.75. When submitting this to HMDB you will find for the large cluster of 4 the top hit is 3-Hydroxyphenylacetic acid (HMDB00440), exactly one of the biomarkers found in the original paper. Note that in this case the clustering did not work perfectly as 
+
+When submitting peak 19723 to HMDD the top hit is Dimethyl sulfone (HMDB04983) (there is only 1 peak in the 1H NMR spectrum of dimethyl sulfone). This is exactly the other biomarker identified by the original paper. 
+
+The other cluster of 2 cannot be assigned to a peak as at least one of these peaks is clearly a background signal (peak index 19510). 
+
+The peak with index 19752 is actually a small peak within the tail of the dimethyl sulfone peak. This is detected because in the peak detection we set **include_nearbyPeaks = TRUE**. Notice that these peaks are actually anti-correlated, this is because the wavelets are extremely good at ignoring the background, so good in fact that they detect the small bump in the tail of the large peak whereby this tail is the background. So actually this peak should be bigger but it is masked by the large tail. setting **include_nearbyPeaks = FALSE** will remove this peak but other important peaks might be missed than as wel.
+
+```{r corrplot, dpi=200, fig.width=7, fig.height=7, out.width=figwidth.out}
+library(stats)
+library(corrplot)
+significant.peakdata <- onion.Features.scaled[, p.all_bonf$p.values<=0.05]
+ 
+corr.analysis <- cor(significant.peakdata)
+corr.colours <- colorRampPalette(c("#00BF7D", "white", "#00B0F6")) 
+corrplot(corr.analysis, 
+         method="number", 
+         order="hclust", 
+         addrect = 5, 
+         tl.col = "black", 
+         col = corr.colours(8) ) 
+
+```
+
+
+## Conclusion
+
+
+With only a few (easy) functions we where able to reproduce the results found by Winning et al., however the workflow above is clearly easier and faster than theirs (which was based in spectral binning) and yet resulted in more peaks to be used for identification.
+
+

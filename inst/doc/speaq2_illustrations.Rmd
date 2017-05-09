@@ -1,0 +1,401 @@
+---
+title: "speaq2 function illustrations"
+author: "Charlie Beirnaert"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{speaq2 function illustrations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = FALSE)
+figwidth.out <- 600
+```
+
+## speaq2
+
+To illustrate the possibilities of speaq2, the spiritual successor to the original speaq package, the wine dataset is used (available form the University of Copenhagen at http://www.models.life.ku.dk/). This dataset is also utilized in the paper so with this vignette you will be able to reproduce the results.
+
+Before we start with the example let's first recap what the basic steps of speaq2 encompass:
+
+1. Peak detection: `getWaveletPeaks()` 
+2. Peak grouping: `PeakGrouper()` 
+3. Peak filling: `PeakFilling()` 
+4. Feature matrix construction: `BuildFeatureMatrix()`
+
+### Plotting the raw wine data
+
+```{r wine data, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
+library(speaq2)
+data(Winedata)
+Spectra.wine <- as.matrix(Winedata$spectra )
+ppm.wine <- as.numeric(Winedata$ppm) 
+wine.color <- Winedata$wine.color 
+wine.origin <- Winedata$origin 
+# all spectra
+drawSpecPPM(Y.spec = Spectra.wine, 
+            X.ppm = ppm.wine, 
+            title = 'Wine data spectra', 
+            groupFactor = wine.color, 
+            legend.extra.x = 1, 
+            legend.extra.y = 1.1)
+```
+
+The `drawSpecPPM()` plotting function indicates that there might be a gap in the data (which is correct as the original authors deleted the region between 5.0 and 4.5 ppm). This warning can be of importance for the interpretation of the plot as in this case the original authors deleted the data, not by setting the values to 0, but by effectively removing it from the matrix and ppm vector. This produces a plot that appears continuous but is in fact not. 
+
+The `drawSpecPPM()` function also indicates that the groupFactor is not a factor and (succesfully) attempts to do the conversion. The next plot is an excerpt of the wine NMR spectra.
+```{r wine excerpt, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
+# small excerpt by defining the region of interest
+drawSpecPPM(Y.spec = Spectra.wine, 
+            X.ppm = ppm.wine, 
+            groupFactor = as.factor(wine.color), 
+            title = 'Raw wine data excerpt', 
+            legend.extra.x = 1.1, 
+            legend.extra.y = 1.0, 
+            ROI.ppm = 3.6, 
+            ROI = NULL, 
+            roiWidth.ppm = 0.15, 
+            legendpos = "topright" )
+```
+
+### From spectra via peaks to peak groups (features)
+
+Now that we've had a look at the spectra it is time to convert these to peaks by using the `getWaveletPeaks()` function. This takes about 50 seconds, with `nCPU = 4` on a 2.5GHz machine (`nCPU` is set to 1 for the vignette build but should be changed).
+
+```{r detect winepeaks,  results = "hide"}
+wine.peaks <- getWaveletPeaks(Y.spec=Spectra.wine, 
+                             X.ppm=ppm.wine, 
+                             baselineThresh = 10,
+                             SNR.Th = -1, 
+                             nCPU = 2, 
+                             include_nearbyPeaks = TRUE) # nCPU set to 2 for the vignette build
+
+
+wine.grouped <- PeakGrouper(Y.peaks = wine.peaks,  
+                            min.samp.grp = 5, 
+                            grouping.window.width = 200)
+
+```
+There are two notes to be made on some important parameters:
+1. The `include_nearbyPeaks = TRUE` option also detects peaks in the tails of larger other peaks. At first this might seem the prefered option as you want to detect as much peaks as possible but we will see later that often it is better to exclude them as these small peaks can cause problems later on.
+2. The `grouping.window.width` parameter is chosen to be twice the size of the default value: it is advised to choose this larger when working with spectra that exhibit large between sample shifts. The wine dataset is an extreme example of large between sample shifts (caused by the substantial pH differences between wines of different colour)
+ 
+ Now we can plot the detected peaks and the grouped peaks. The dataset after grouping contains both the original ppm values of every peak (in the `peakPPM` variable) but also the group information (found in the `peakIndex` variable). By calling the `AddPlottingStuff()` function the groupPPM variable is added so we also have the ppm value of the groups (the link is: `groupPPM <- ppm.wine[peakIndex]`)
+
+### Plotting the peak data
+
+```{r plots base, dpi=200, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
+# adding labels to the dat a for plotting and the group ppm values
+
+ROI.ppm <- 1.330
+roiWidth.ppm <- 0.025
+
+ROIplot(Y.spec = Spectra.wine, 
+        X.ppm = ppm.wine, 
+        ungrouped.peaks = wine.peaks,
+        grouped.peaks = wine.grouped, 
+        ROI.ppm = ROI.ppm,
+        roiWidth.ppm = roiWidth.ppm , 
+        groupLabels = as.factor(wine.color))
+```
+
+The plot above shows clearly what the basis of speaq2 does, convert spectra accurately to peak data and group these peaks. The quality of the grouping can be checked by plotting the silhouette values. this can be done with the `SilhouetR()` function. 
+
+```{r silhouette values,  results = "hide", dpi=100, fig.width=6, fig.height=3.5, out.width = figwidth.out}
+library(ggplot2)
+SilhouetteValues <- SilhouetR(DataMatrix = wine.grouped$peakPPM, 
+                              GroupIndices = wine.grouped$peakIndex)
+
+Silh_plot <- ggplot(SilhouetteValues, aes(SilhouetteValues)) +
+             geom_freqpoly(binwidth = 0.03) +
+             theme_bw()
+Silh_plot
+
+
+```
+It is clear that the grouping is very good. To be absolutely shure we can check the mean silhouette value of every group to see if there are groups that should be regrouped. This regrouping, if needed, can be done with the `regroupR()` function. 
+
+
+```{r average silhouette, tidy = TRUE}
+groups <- unique(SilhouetteValues$GroupIndices)
+Ngroups <- length(groups)
+sil_means <- matrix(NA, ncol = 3, nrow = Ngroups)
+
+for(k in 1:Ngroups){
+    sil_means[k,1] = groups[k]
+    sil_means[k,2] = mean(SilhouetteValues$SilhouetteValues[SilhouetteValues$GroupIndices==groups[k]])
+    sil_means[k,3] = mean(wine.grouped$peakSNR[wine.grouped$peakIndex==groups[k]])
+}
+
+sil_means <- sil_means[order(sil_means[,2]),]
+colnames(sil_means) <- c("groupIndex", "avg_silhouette_val", "avg. SNR")
+head(sil_means)
+
+```
+
+As it turns out, there is a group with a low average silhouette value (0.25) but a fairly high average signal-to-noise ratio (if this group had a low SNR ratio it could just be a noise group). This indicates that these are non-noise peaks which are grouped incorrectly, the follwoing plot acknowledges this
+
+```{r wrong grouping plot,  dpi=200, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
+
+faulty.groupIndex <- sil_means[1,1]
+ROI.ppm <- ppm.wine[faulty.groupIndex]
+roiWidth.ppm <- 0.1
+
+ROIplot(Y.spec = Spectra.wine, 
+        X.ppm = ppm.wine, 
+        ungrouped.peaks = wine.peaks,
+        grouped.peaks = wine.grouped , 
+        ROI.ppm = ROI.ppm ,
+        roiWidth.ppm = roiWidth.ppm , 
+        groupLabels = as.factor(wine.color))
+
+```
+
+Clearly the large peaks and small peaks are grouped together because of the large shifts in the wine dataset making the small and large peaks overlap, this messes up the grouping. There are multiple ways to solve this issue: 
+
+1. By setting `include_nearbyPeaks = FALSE` in the `getWaveletPeaks()` function these small peaks in the tails of large peaks will not be included, although some other peaks might also be missed.  Or
+
+2. by selecting the wrong group and submitting them to the `regroupR()` function. This will use both the ppm values and the peak signal-to-noise ratio for the initial between peak distance calculation and group them according to this distance.
+
+We will use option 2 in this case to demonstrate the use of the `regroupR()` function. Since the wrong grouping of these two overlapping groups also causes a clear misgrouping of the next group we will submit the 3 peak groups (see right half of bottom plot) to the `regroupR()` function to fix the issues. 
+
+```{r regroup}
+wrong.groups <- sort(sil_means[sil_means[,1]>=sil_means[1,1],1])[1:2]
+
+wine.regrouped <- regroupR(grouped.peaks = wine.grouped, 
+                           list.to.regroup = wrong.groups, 
+                           min.samp.grp = 5 ,
+                           max.dupli.prop = 0.1)
+
+```
+
+The plot below reveals the problem is clearly fixed now, but it requires more user interaction than wanted.
+
+```{R regroup fix plot,  dpi=200, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
+
+
+faulty.groupIndex <- sil_means[1,1]
+ROI.ppm <- ppm.wine[faulty.groupIndex]
+roiWidth.ppm <- 0.1
+
+
+
+ROIplot(Y.spec = Spectra.wine, 
+        X.ppm = ppm.wine, 
+        ungrouped.peaks = wine.peaks,
+        grouped.peaks = wine.regrouped , 
+        ROI.ppm = ROI.ppm ,
+        roiWidth.ppm = roiWidth.ppm , 
+        groupLabels = as.factor(wine.color))
+
+
+```
+
+With this peaks regrouped we can continu the analysis. first peak filling is applied and secondly the grouped peak data is converted to a so called feature matrix with samples for rows and features (peak groups) for columns whereby 1 matrix element indicates the peakvalue for a specific group and sample combo. 
+
+
+
+```{r data matrix, results = "hide", message=FALSE}
+
+wine.filled <- PeakFilling(Y.grouped = wine.regrouped, 
+                          Y.spec = Spectra.wine,  
+                          max.index.shift = 200,
+                          nCPU = 2) # nCPU set to 1 for the vignette build
+
+wine.Features <- BuildFeatureMatrix(wine.filled)
+
+```
+
+Now that we have these peak data they can either be incorporated in larger metabolomic experiments, where NMR spectroscopy data is often combined with LC-MS data (which is processed always in peak data format), or it can be anaysed on its own, as we will demonstrate here.
+
+### Intermezzo: PCA
+Now that we have the feature matrix we can quickly perform a PCA (principal component analysis) as a way of visualising potential trends and groups in the data. Before any PCA it is advised to scale and center the data, here we will use the pareto scaling but other are available (see the `SCANT()` helpfile)
+
+```{r scaling}
+wine.Features.scaled <- SCANT(data.matrix = wine.Features, 
+                              type = c("pareto", "center"))  
+
+```
+
+
+```{r PCA, dpi=150, fig.width=5, fig.height=3, out.width = figwidth.out}
+library(stats)
+
+common.pca <- prcomp(wine.Features.scaled) 
+
+
+loadings <- common.pca$rotation
+scores <- common.pca$x
+varExplained <- common.pca$sdev^2
+
+barplot(varExplained/sum(varExplained), 
+        main="Scree Plot",ylab="Proportion of variance explained", 
+        xlab = "Principal comonent", 
+        names.arg = as.character(seq(1,length(varExplained))))
+```
+```{r PCA2, dpi=200, fig.width=7, fig.height=5,out.width = figwidth.out, tidy = FALSE}
+plot.marks <- as.numeric(wine.color)
+plot.marks[plot.marks == 1] <- 8 
+plot.marks[plot.marks == 2] <- 15
+plot.marks[plot.marks == 3] <- 1
+
+cp1 <- 1
+cp2 <- 2 
+plot(scores[,cp1]/max(scores[,cp1]), scores[,cp2]/max(scores[,cp2]),
+     main=paste("score plot, PC",cp1," vs. PC",cp2,sep=""),
+     xlab=paste("PC",cp1,round(varExplained[cp1]/sum(varExplained),digits=2),""),
+     ylab=paste("PC",cp2,round(varExplained[cp2]/sum(varExplained),digits=2),""),
+     pch = plot.marks)
+text(scores[,cp1]/max(scores[,cp1]),scores[,cp2]/max(scores[,cp2]), wine.color, cex=0.5, pos=4, col="red")
+lines(x = c(-100,100), y = c(0,0))
+lines(x = c(0,0), y = c(-100,100))
+legend("topleft", 
+       legend = c("red  ","rosé  ","white      "), 
+       pch = c(8,15,1), 
+       y.intersp = 1.9)
+
+
+
+```
+
+From the PCA analysis it is already clear that there is a large difference between on the one side red wine and on the other side white and rosé wine.  
+
+
+
+
+Next we can use the `relevant.features()` function in speaq2 which uses linear models to produce a p-value corresponding to the nulhypothesis that feature x is not related to the outcome vector. After a p-value correction for multiple testing (as with increasing numbers of even randomly generated features some will eventually be significantly related to the output vector) we can identify the relevant features. As noted in the paper this method is perfectly suited for outcome vectors containing either 2 classes or more classes with a numeric relationship. This is unfortunately not the case here as red, white and rosé are 3 categorical variables. Since there are only 2 rosé wines we will perform the analysis leaving these ones out. This does require however to rescale the raw data without the rosé wines, as otherwise they still have an influence on the dataset
+### removing the rose wine
+```{r no rose}
+red.white.scaled <- SCANT(wine.Features[wine.color!="rose",], 
+                         type = c("pareto", "center"))  
+
+red.white.colors <- as.factor(as.character(wine.color)[wine.color!="rose"])
+
+```
+### A differential analysis based on linear models
+
+```{r relevant peaks}
+p.all_bonf <- relevant.features.p(datamatrix = red.white.scaled,
+                                  responsevector = red.white.colors, 
+                                  p.adj = "bonferroni")
+
+significant.features <- p.all_bonf[p.all_bonf$p.values<=0.05, ]
+
+# order from most significant
+significant.features <- significant.features[order(significant.features[,2]),]
+head(significant.features)
+```
+
+It is clear that there are features well below the 0.05 p-value threshold. This was to be expected as the difference between the two classes was already apparent in the PCA analysis. Often when the PCA analysis does not reveal obvious results the differential analysis bases on linear models will nonetheless find significant features. We can now easily find which features correspond to the low p-values and consequently plot them. 
+
+```{r r significant features plots , dpi=200, fig.width=6, fig.height=8, fig.keep = "all", tidy = FALSE, warnings = FALSE, out.width = figwidth.out}
+
+
+
+
+
+peak_of_interest <- 5 # change this to the peak you want
+
+faulty.groupIndex <- significant.features$index[peak_of_interest]
+faulty.peakIndex <- as.numeric(rownames(significant.features))[peak_of_interest]
+
+
+ROI.ppm <- ppm.wine[faulty.groupIndex]
+roiWidth.ppm <- 0.03
+
+
+ggplot(p.all_bonf, aes(x=as.numeric(rownames(p.all_bonf)), y=p.values)) + 
+      geom_point(data = p.all_bonf[-faulty.peakIndex,],  
+                 aes(x=as.numeric(rownames(p.all_bonf[-faulty.peakIndex,])), y =p.values),
+                 shape = 16) +
+      geom_point(data = p.all_bonf[faulty.peakIndex,],  aes(x=faulty.peakIndex, y =p.values),
+                 shape = 18, 
+                 size = 3, 
+                 colour ="#00B0F6" ) +
+    xlab("feature index") + 
+    ylab("adjusted p value") + 
+    ggtitle("Bonferroni corrected p-values") +
+    geom_hline(aes(yintercept=0.05, color="red"),linetype = 2) + guides(color=FALSE)+
+    scale_y_continuous(breaks = c(0.00,0.05,0.25,0.50,0.75,1.00))+
+    theme_bw() + 
+    theme(plot.title = element_text(lineheight = 0.8, face="bold", margin = margin(12,0,13,0),hjust = 0.5, size = 15), 
+          text = element_text(size=14),
+          axis.text.y = element_text(colour=c("black","red","black","black","black","black")))
+
+
+
+
+ROIplot(Y.spec = Spectra.wine, 
+        X.ppm = ppm.wine, 
+        ungrouped.peaks = wine.peaks,
+        grouped.peaks = wine.regrouped , 
+        ROI.ppm = ROI.ppm ,
+        roiWidth.ppm = roiWidth.ppm , 
+        groupLabels = as.factor(wine.color))
+
+
+```
+
+Or just plot the spectra of a single feature
+
+```{r plot significant features, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
+
+peak_of_interest <- 5# change this number to any of the peaks you want to see
+drawSpecPPM(Y.spec = Spectra.wine[wine.color != "rose", ], 
+            X.ppm = ppm.wine, 
+            groupFactor = red.white.colors, 
+            title = paste("significant feature, p-value =",
+                          format(significant.features$p.values[peak_of_interest], 
+                                 scientific = TRUE, 
+                                 digits=2),
+                          sep=" "), 
+            legend.extra.x = 1.1, 
+            legend.extra.y = 0.9, 
+            ROI = significant.features$index[peak_of_interest], 
+            roiWidth = 100, 
+            legendpos = "topright" )
+
+```
+
+Now that we have identified relevant features we can use the original `speaq` package to plot the spectra more clearly. Specifically we can use the `dohCluster()` function from `speaq` to align the raw spectra and consequently plot these with the `drawSpecPPM()` function as in the plot above. 
+
+
+```{r speaq 1.0,  dpi=200, fig.width=7, fig.height=4, message=F, out.width = figwidth.out}
+library(speaq)
+
+peakList <- detectSpecPeaks(as.matrix(Spectra.wine),   
+                            nDivRange = 128,                
+                            scales = seq(1, 16, 2),
+                            baselineThresh = 100,
+                            SNR.Th = -1,
+                            verbose=FALSE)
+
+resFindRef <- findRef(peakList)
+refInd <- resFindRef$refInd
+
+aligned.spectra <- dohCluster(as.matrix(Spectra.wine), 
+                              peakList = peakList,
+                              refInd = refInd,
+                              maxShift  = 200,
+                              acceptLostPeak = TRUE, verbose=FALSE)
+      
+                
+drawSpecPPM(Y.spec = aligned.spectra[wine.color != "rose", ], 
+            X.ppm = ppm.wine, 
+            groupFactor = red.white.colors, 
+            title = paste("significant feature, p-value =",
+                          format(significant.features$p.values[peak_of_interest], 
+                                 scientific = TRUE, 
+                                 digits=2),
+                          sep=" "), 
+            legend.extra.x = 1.1, 
+            legend.extra.y = 0.9,
+            ROI = significant.features$index[peak_of_interest], 
+            roiWidth = 100, 
+            legendpos = "topright" )               
+```
+
+
