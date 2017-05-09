@@ -1,0 +1,10 @@
+language: R
+sudo: false
+cache: packages
+
+r: # also include oldrel and devel when finished
+  - release
+
+bioc_packages:
+  - MassSpecWavelet
+ 
