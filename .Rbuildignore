@@ -1,0 +1,10 @@
+^README.md$
+^.travis.yml$
+^cran-comments.md$
+^cran-comments.Rmd$
+^.*\.Rproj$
+^\.Rproj\.user$
+^speaq2_Extra/.+$
+^speaq2_Extra/Oniondata.R$
+^speaq2_Extra/Oniondata.rda$
+^speaq2_Extra/Speaq2_NMRprocessing.Rmd$
