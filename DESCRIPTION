@@ -1,8 +1,8 @@
-Package: speaq2
-Version: 0.2.0
-Date: 2017-04-12
+Package: speaq
+Version: 2.0.0
+Date: 2017-05-09
 Title: Wavelet Based Tools for Feature-Wise Analysis and Quantification of Nuclear Magnetic Resonance (NMR) Spectra
-Author: Charlie Beirnaert, Pieter Meysman, Kris Laukens
+Author: Charlie Beirnaert, Trung Nghia Vu, Pieter Meysman, Kris Laukens and Dirk Valkenborg
 Maintainer: Charlie Beirnaert <charlie.beirnaert@uantwerpen.be>
 Description: Tools for feature based analysis of Nuclear Magnetic Resonance (NMR) spectra. Wavelets are used to convert the NMR spectra to peak data, these are then grouped into features. The grouped data is converted to matrix which is substantially smaller (ca. 50 fold reduction is common) than the original data matrix. The results can be analysed with in-house functions to find the peaks significantly associated with the outcome vector or other methods can be used. 'speaq2' is not a replacement of the original 'speaq' (which is based on raw spectra instead of features).
 Depends:
@@ -24,12 +24,11 @@ Imports:
     reshape2
 Suggests:
     datasets,
-    speaq,
     knitr,
     rmarkdown,
     grid,
     gridBase
 LazyData: true
 VignetteBuilder: knitr
-License: GPL-3
+License: Apache License 2.0
 RoxygenNote: 6.0.1

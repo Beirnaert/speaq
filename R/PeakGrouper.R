@@ -5,15 +5,17 @@
 #' @param Y.peaks data frame obtained from the 'getWaveletPeaks' function.
 #' @param grouping.window.width The width of the sliding window (in measurement points). Measurments are taken for when this sliding window is taken too small, but best set this too a value that a normal peak is comfortably in a window. Note if large shifts occur in your dataset (like in the wine dataset) it is best to set this parameter larger.
 #' @param verbose If set to TRUE the window selection process is documented in real time (default = FALSE).
-#' @param min.samp.grp The minimal amount of samples needed te form a group, see \link[speaq2]{hclust.grouping}.
-#' @param max.dupli.prop The maximal duplication proportion allowed for a group to be considered a sigle group, see \link[speaq2]{hclust.grouping}.
-#' @param maxClust The maximum number of clusters (depth of the tree), see \link[speaq2]{hclust.grouping}.
+#' @param min.samp.grp The minimal amount of samples needed te form a group, see \link[speaq]{hclust.grouping}.
+#' @param max.dupli.prop The maximal duplication proportion allowed for a group to be considered a sigle group, see \link[speaq]{hclust.grouping}.
+#' @param maxClust The maximum number of clusters (depth of the tree), see \link[speaq]{hclust.grouping}.
 #' @param Jaccard.regroup.threshold If 2 neighbouring groups have a jaccard index smaller than this 'Jaccard.regroup.threshold' (indicating that they are quite complementary as they have little peaks samples in common), then they are merged and regrouped. This situation can occur if a group is accidentally cut in half by the window approach.
 #' @param linkage The linkage to be used in the hierarchical clustering. See the 'method' argument in \link[stats]{hclust}.
 #'
 #' @return Returns a data frame with grouped peaks. Peaks in a group are indicated with an identical peakIndex
 #'
 #' @author Charlie Beirnaert, \email{charlie.beirnaert@@uantwerpen.be}
+#'
+#' @seealso \code{\link{hclust.grouping}}
 #'
 #' @examples
 #' \dontrun{
@@ -205,7 +207,7 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
             
             ## A group is said to be a group when there are almost no duplicates in it
             
-            regrouped.peaks <- speaq2::hclust.grouping(current.peaks, min.samp.grp = min.samp.grp, max.dupli.prop = max.dupli.prop, 
+            regrouped.peaks <- hclust.grouping(current.peaks, min.samp.grp = min.samp.grp, max.dupli.prop = max.dupli.prop, 
                                                        maxClust = maxClust, linkage = linkage)
             
             
@@ -263,7 +265,7 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
             Jac[k] <- sum(duplicated(dat.to.regroup$Sample))/length(unique(dat.to.regroup$Sample))
             
             if (Jac[k] <= Jaccard.regroup.threshold) {
-                reclustered.groups <- speaq2::hclust.grouping(dat.to.regroup, min.samp.grp = min.samp.grp, max.dupli.prop = max.dupli.prop, 
+                reclustered.groups <- hclust.grouping(dat.to.regroup, min.samp.grp = min.samp.grp, max.dupli.prop = max.dupli.prop, 
                                                               maxClust = maxClust, linkage = linkage)
                 
                 Y.grouped[Y.grouped$peakIndex %in% regroup.indexes, ] <- NA
@@ -306,7 +308,7 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
             
             if (Jaccard.index[k] <= Jaccard.regroup.threshold) {
                 
-                reclustered.groups <- speaq2::hclust.grouping(Y.grouped[Y.grouped$peakIndex %in% c(left.group, 
+                reclustered.groups <- hclust.grouping(Y.grouped[Y.grouped$peakIndex %in% c(left.group, 
                                                                                                    right.group), ], min.samp.grp = min.samp.grp, max.dupli.prop = max.dupli.prop, maxClust = maxClust, linkage = linkage)
                 
                 Y.grouped[Y.grouped$peakIndex %in% c(left.group, right.group), ] <- NA

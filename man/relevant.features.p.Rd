@@ -4,14 +4,14 @@
 \alias{relevant.features.p}
 \title{identify features (columns in the datamatrix) which are significantly associated with the outcome vector}
 \usage{
-relevant.features.p(datamatrix, responsevector, p.adj = "bonferroni")
+relevant.features.p(datamatrix, responsevector, p.adj = "BH")
 }
 \arguments{
 \item{datamatrix}{the data matrix with a column for each feature.}
 
 \item{responsevector}{the vector of outcomes/responses (e.g. class labels). the length of this vector should match the amount of rows in datamatrix.}
 
-\item{p.adj}{the adjustment method for the p-values. Any of 'holm', 'hochberg', 'hommel', 'bonferroni', 'BH', 'BY', 'fdr' or 'none' are accepted.}
+\item{p.adj}{the adjustment method for the p-values. Any of 'holm', 'hochberg', 'hommel', 'bonferroni', 'BH' (default), 'BY', 'fdr' or 'none' are accepted.}
 }
 \value{
 data with the features and their (adjusted) p-values, one for every column in the datamatrix  .

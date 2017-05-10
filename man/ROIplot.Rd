@@ -12,7 +12,7 @@ ROIplot(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL,
 
 \item{X.ppm}{(required) The vector with the ppm values}
 
-\item{ungrouped.peaks}{(required) The data resulting from peak detecion with speaq2}
+\item{ungrouped.peaks}{(required) The data resulting from peak detecion with wavelets}
 
 \item{grouped.peaks}{(required) The data after grouping (with PeakGrouper)}
 

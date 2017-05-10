@@ -29,7 +29,7 @@ Before we start with the example let's first recap what the basic steps of speaq
 ### Plotting the raw wine data
 
 ```{r wine data, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
-library(speaq2)
+
 data(Winedata)
 Spectra.wine <- as.matrix(Winedata$spectra )
 ppm.wine <- as.numeric(Winedata$ppm) 
@@ -362,7 +362,7 @@ Now that we have identified relevant features we can use the original `speaq` pa
 
 
 ```{r speaq 1.0,  dpi=200, fig.width=7, fig.height=4, message=F, out.width = figwidth.out}
-library(speaq)
+
 
 peakList <- detectSpecPeaks(as.matrix(Spectra.wine),   
                             nDivRange = 128,                

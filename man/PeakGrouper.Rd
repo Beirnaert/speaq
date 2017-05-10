@@ -15,11 +15,11 @@ PeakGrouper(Y.peaks, grouping.window.width = 100, verbose = FALSE,
 
 \item{verbose}{If set to TRUE the window selection process is documented in real time (default = FALSE).}
 
-\item{min.samp.grp}{The minimal amount of samples needed te form a group, see \link[speaq2]{hclust.grouping}.}
+\item{min.samp.grp}{The minimal amount of samples needed te form a group, see \link[speaq]{hclust.grouping}.}
 
-\item{max.dupli.prop}{The maximal duplication proportion allowed for a group to be considered a sigle group, see \link[speaq2]{hclust.grouping}.}
+\item{max.dupli.prop}{The maximal duplication proportion allowed for a group to be considered a sigle group, see \link[speaq]{hclust.grouping}.}
 
-\item{maxClust}{The maximum number of clusters (depth of the tree), see \link[speaq2]{hclust.grouping}.}
+\item{maxClust}{The maximum number of clusters (depth of the tree), see \link[speaq]{hclust.grouping}.}
 
 \item{Jaccard.regroup.threshold}{If 2 neighbouring groups have a jaccard index smaller than this 'Jaccard.regroup.threshold' (indicating that they are quite complementary as they have little peaks samples in common), then they are merged and regrouped. This situation can occur if a group is accidentally cut in half by the window approach.}
 
@@ -38,6 +38,9 @@ This functions groups the peaks obtained after wavelet based peak detection (wit
 Grouped.peaks = PeakGrouper(Y.peaks = DetectedPeaks)
 }
 
+}
+\seealso{
+\code{\link{hclust.grouping}}
 }
 \author{
 Charlie Beirnaert, \email{charlie.beirnaert@uantwerpen.be}
