@@ -234,6 +234,8 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
     
     ###### Verify regroupment (check for faulty groupings where window splits occured)
     
+    if(nrow(Y.grouped) != 0){
+    
     grouped.groupindexes <- unique(Y.grouped$peakIndex)
     window.breaks <- window.breaks[!is.na(window.breaks) & window.breaks >= min(grouped.groupindexes) & 
                                        window.breaks < max(grouped.groupindexes)]
@@ -331,6 +333,9 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
     
     Y.grouped <- Y.grouped[stats::complete.cases(Y.grouped$peakIndex), ]
     
+    } else{
+        print("no groups found, check settings and data")
+    }
     return(Y.grouped)
 }
 

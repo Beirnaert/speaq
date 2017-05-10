@@ -24,7 +24,7 @@
 #' @importFrom reshape2 melt
 #' @importFrom gridExtra grid.arrange
 #' 
-ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, ROI.ppm = NULL, roiWidth = 100, roiWidth.ppm = NULL, groupLabels) {
+ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, ROI.ppm = NULL, roiWidth = 100, roiWidth.ppm = NULL, groupLabels = NULL) {
  
     if (!is.null(roiWidth.ppm)) {
         step <- stats::median(abs(diff(X.ppm)))
@@ -38,6 +38,14 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
     if (!is.null(ROI.ppm)) {
         ROI <- which(abs(X.ppm - ROI.ppm) == min(abs(X.ppm - ROI.ppm)))[1]
     }
+    
+    if((ROI - roiWidth) < 1 | (ROI + roiWidth) > length(X.ppm) ){
+        # this means roiwidth is chosen too large for the available ppm range
+        roiWidth = roiWidth - abs(min(c((ROI - roiWidth), (length(X.ppm)-(ROI + roiWidth))))) - 1
+        roiWidth.ppm = abs( (X.ppm[(ROI - roiWidth)] - X.ppm[(ROI + roiWidth)]) / 2 )
+        print("plotting width chosen too large for available range (roiWidth or roiWidth.ppm). Rescaling.")
+    }
+    
     
     if (is.null(ROI)) {
         if (10 * min(abs(diff(X.ppm))) < max(abs(diff(X.ppm)))) {
@@ -73,6 +81,9 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
     grouped.plot <- AddPlottingStuff(Y.peaks = grouped.peaks, 
                                              X.ppm = X.ppm, 
                                              groupLabels = groupLabels)
+    
+    peakValRange = range(ungrouped.peaks$peakValue, finite = TRUE)
+    Range.extra = (peakValRange[2] - peakValRange[1]) * 0.01
 
     pp1 <- ggplot(peaks.plot[peaks.plot$peakPPM > (ROI.ppm - roiWidth.ppm ) & 
                              peaks.plot$peakPPM < (ROI.ppm + roiWidth.ppm ) ,], 
@@ -80,6 +91,7 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
            geom_point() + 
            theme_bw() + 
            xlim(c(ROI.ppm + roiWidth.ppm, ROI.ppm - roiWidth.ppm)) +
+           ylim(c(peakValRange[1] - Range.extra, peakValRange[2]+Range.extra)) +
            labs(x = "ppm", y = "peak value") + 
            ggtitle("After peak detection") +
            theme(legend.title = element_blank(),
@@ -91,6 +103,7 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
            geom_point() + 
            theme_bw() + 
            xlim(c(ROI.ppm + roiWidth.ppm, ROI.ppm - roiWidth.ppm)) +
+           ylim(c(peakValRange[1] - Range.extra, peakValRange[2]+Range.extra)) +
            labs(x = "ppm", y = "peak value") + 
            ggtitle("After grouping") +
            theme(legend.title = element_blank(),

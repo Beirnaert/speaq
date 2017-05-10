@@ -14,7 +14,7 @@
 #' \dontrun{
 #' # This function works on a data frame resulting from the 'getWaveletPeaks' function 
 #' # DetectedPeaks <- getWaveletPeaks(X.ppm= PPM.vector, Y=Y.spec,  baselineThresh = 10,nCPU  = 4)
-#' Aligned.peaks = PeakAligner = function (Y.peaks = DetectedPeaks)
+#' Aligned.peaks <- PeakAligner(Y.peaks = DetectedPeaks)
 #' }
 #' 
 #' @export

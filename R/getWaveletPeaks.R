@@ -38,14 +38,14 @@
 #' 
 #' 
 getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = "small", window.split = 4, 
-    scales = seq(1, 16, 1), baselineThresh = 1000, SNR.Th = -1, nCPU = -1, include_nearbyPeaks = TRUE) {
+                            scales = seq(1, 16, 1), baselineThresh = 1000, SNR.Th = -1, nCPU = -1, include_nearbyPeaks = TRUE) {
     # require(data.table) require(MassSpecWavelet) require(parallel) require(foreach)
     
     # error checks and miscellaneous parameter fixing
     for (w in 1:length(window.split)) {
         if (!window.split[w] %in% c(2, 4, 16, 32, 64)) {
             warning(paste(" 'window.split value", as.character(window.split[w]), "is not a power of 2 (max 64). It is set to the default: 4", 
-                sep = " "))
+                          sep = " "))
         }
     }
     
@@ -65,7 +65,8 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
     
     
     if (class(Y.spec) != "matrix") {
-        warning("the raw spectra, Y.spec, are not in matrix format, attempting conversion")
+        print("the raw spectra, Y.spec, are not in matrix format, attempting conversion")
+        warning("the raw spectra, Y.spec, are not in matrix format, conversion attempted")
         if ("numeric" %in% class(Y.spec)) {
             Y.spec <- matrix(Y.spec, nrow = 1, ncol = length(Y.spec))
         } else {
@@ -79,6 +80,20 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
     
     if(nCPU > nSamp){
         nCPU <- nSamp
+    }
+    
+    if("data.frame" %in% class(X.ppm)){
+        print("X.ppm is a data frame, attempting conversion." )
+        warning("X.ppm was in data frame format. Conversion to numeric vector or matrix attempted")
+        if(1 %in% dim(X.ppm)){
+            X.ppm = as.numeric(X.ppm)
+        } else if(nPPM %in% dim(X.ppm) & nSamp %in% dim(X.ppm)){
+            X.ppm = as.matrix(X.ppm)
+            if(ncol(X.ppm) == nSamp){
+                X.ppm = t(X.ppm)
+                warning("PPM matrix was transposed to have the samples in the matrix rows.")
+            }
+        }
     }
     
     if (is.numeric(X.ppm)) {
@@ -123,169 +138,184 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
     opts <- list(progress=progress)
     
     peakList <- foreach::foreach(Parcounter = 1:nSamp, .options.snow=opts, .inorder = TRUE, .packages = c("data.table", "MassSpecWavelet")) %dopar% 
-        {
-            # noiselevel.estimate = NULL noisecounter = 0 library(MassSpecWavelet) library(data.table)
-            teller <- 0
-            WavPeaks <- list()
-            currentSpec <- as.numeric(Y.spec[Parcounter, ])
-            ppm_vector <- X.ppm.matrix[Parcounter, ]
-            for (kw in 1:length(window.split)) {
-                window.increment <- FFTwindow/window.split[kw]  # determine width of window increment
-                nshifts <- ceiling(nPPM/window.increment) - window.split + 1  # determine how many increments there have to be
-                for (j in 1:nshifts) {
-                  startR <- (j - 1) * window.increment + 1
-                  if (startR >= nPPM) 
+    {
+        # noiselevel.estimate = NULL noisecounter = 0 library(MassSpecWavelet) library(data.table)
+        teller <- 0
+        WavPeaks <- list()
+        currentSpec <- as.numeric(Y.spec[Parcounter, ])
+        ppm_vector <- X.ppm.matrix[Parcounter, ]
+        for (kw in 1:length(window.split)) {
+            window.increment <- FFTwindow/window.split[kw]  # determine width of window increment
+            nshifts <- ceiling(nPPM/window.increment) - window.split + 1  # determine how many increments there have to be
+            for (j in 1:nshifts) {
+                startR <- (j - 1) * window.increment + 1
+                if (startR >= nPPM) 
                     next
-                  endR <- (j - 1) * window.increment + FFTwindow
-                  if (endR > nPPM) {
+                endR <- (j - 1) * window.increment + FFTwindow
+                if (endR > nPPM) {
                     endR <- nPPM
                     startR <- nPPM - FFTwindow + 1
-                  }
-                  subSpec <- currentSpec[startR:endR]
-                  subMean <- mean(subSpec)
-                  subMedian <- stats::median(subSpec)
-                  subMax <- max(subSpec)
-                  subLeft <- 0
-                  # extra for when small spectra are analysed (zero padding left and right to make the spectrum of
-                  # length = FFTwindow )
-                  if (length(subSpec) < FFTwindow) {
+                }
+                subSpec <- currentSpec[startR:endR]
+                subMean <- mean(subSpec)
+                subMedian <- stats::median(subSpec)
+                subMax <- max(subSpec)
+                subLeft <- 0
+                # extra for when small spectra are analysed (zero padding left and right to make the spectrum of
+                # length = FFTwindow )
+                if (length(subSpec) < FFTwindow) {
                     subSpec.extended <- rep(0, FFTwindow)
                     subLeft <- floor((FFTwindow - (endR - startR + 1))/2)
                     subRight <- ceiling((FFTwindow - (endR - startR + 1))/2)
                     subSpec.extended[(subLeft + 1):(FFTwindow - subRight)] <- subSpec
                     subSpec <- subSpec.extended
-                  }
-                  if ((subMean == subMedian) || abs(subMean - subMedian)/((subMean + subMedian) * 2) < 
+                }
+                if ((subMean == subMedian) || abs(subMean - subMedian)/((subMean + subMedian) * 2) < 
                     noiseEsp || subMax < baselineThresh) {
                     # noisecounter = noisecounter + 1 noiselevel.estimate[noisecounter] = subMean
                     next  # there is only noise
-                  } else {
+                } else {
                     Wavelet.Peaks <- -1
                     try({
-                      peakInfo <- MassSpecWavelet::peakDetectionCWT(subSpec, scales = scales, SNR.Th = SNR.Th, 
-                        nearbyPeak = include_nearbyPeaks)
-                      majorPeakInfo <- peakInfo$majorPeakInfo
-                      
-                      betterPeakInfo <- MassSpecWavelet::tuneInPeakInfo(subSpec, majorPeakInfo)
-                      betterPeakInfo$sample <- sample.labels[Parcounter]
-                      
-                      peakIndex <- as.matrix(betterPeakInfo$peakIndex + startR - 1 - subLeft, ncol = 1)  # get the true index, not the one from the subprofile
-                      peakPPM <- as.matrix(ppm_vector[peakIndex], ncol = 1)
-                      peakSNR <- as.matrix(betterPeakInfo$peakSNR, ncol = 1)
-                      peakValue <- as.matrix(betterPeakInfo$peakValue, ncol = 1)
-                      peakScale <- as.matrix(betterPeakInfo$peakScale, ncol = 1)
-                      Sample <- betterPeakInfo$sample
-                      
-                      Wavelet.Peaks <- data.frame(peakIndex, peakPPM, peakValue, peakSNR, peakScale, 
-                        Sample)
-                      
+                        peakInfo <- MassSpecWavelet::peakDetectionCWT(subSpec, scales = scales, SNR.Th = SNR.Th, 
+                                                                      nearbyPeak = include_nearbyPeaks)
+                        majorPeakInfo <- peakInfo$majorPeakInfo
+                        
+                        betterPeakInfo <- MassSpecWavelet::tuneInPeakInfo(subSpec, majorPeakInfo)
+                        betterPeakInfo$sample <- sample.labels[Parcounter]
+                        
+                        peakIndex <- as.matrix(betterPeakInfo$peakIndex + startR - 1 - subLeft, ncol = 1)  # get the true index, not the one from the subprofile
+                        peakPPM <- as.matrix(ppm_vector[peakIndex], ncol = 1)
+                        peakSNR <- as.matrix(betterPeakInfo$peakSNR, ncol = 1)
+                        peakValue <- as.matrix(betterPeakInfo$peakValue, ncol = 1)
+                        peakScale <- as.matrix(betterPeakInfo$peakScale, ncol = 1)
+                        Sample <- betterPeakInfo$sample
+                        
+                        Wavelet.Peaks <- data.frame(peakIndex, peakPPM, peakValue, peakSNR, peakScale, 
+                                                    Sample)
+                        
                     }, silent = TRUE)
                     
                     oldWarningLevel <- getOption("warn")
                     options(warn = -1)
                     
                     if (Wavelet.Peaks[1] != -1) {
-                      teller <- teller + 1
-                      WavPeaks[[teller]] <- Wavelet.Peaks
+                        teller <- teller + 1
+                        WavPeaks[[teller]] <- Wavelet.Peaks
                     }
                     options(warn = oldWarningLevel)
-                  }
                 }
             }
-            
-            WavPeaks <- data.table::rbindlist(WavPeaks)
-            
-            WavPeaks <- WavPeaks[!duplicated(WavPeaks$peakIndex), ]  # Remove all duplicated elements
-            WavPeaks <- WavPeaks[WavPeaks$peakValue > baselineThresh, ]  # remove all elements with smaller than baseline threshold
-            
-            return(WavPeaks)
-            
-            
         }
+        
+        WavPeaks <- data.table::rbindlist(WavPeaks)
+        
+        WavPeaks <- WavPeaks[!duplicated(WavPeaks$peakIndex), ]  # Remove all duplicated elements
+        WavPeaks <- WavPeaks[WavPeaks$peakValue > baselineThresh, ]  # remove all elements with smaller than baseline threshold
+        
+        return(WavPeaks)
+        
+        
+    }
     close(pb)
     parallel::stopCluster(cl)
     WaveletPeaks <- data.table::rbindlist(peakList)
     
-    
-    ###### Fixing the duplicate detections
-    print("fixing duplicate detections")
-    
-    window.increment <- FFTwindow/min(window.split)  # determine width of window increment (take the smalest window width)
-    nshifts <- ceiling(nPPM/window.increment) - window.split + 1  # determine how many increments there where
-    startR <- rep(NA,nshifts)
-    endR <- rep(NA,nshifts)
-    for (j in 1:nshifts) {
-        startR[j] <- (j - 1) * window.increment + 1
-        endR[j] <- (j - 1) * window.increment + FFTwindow
-        if (startR[j] >= nPPM){
-            startR[j] <- NA
-            endR[j] <- NA
+    if(nrow(WaveletPeaks) != 0){
+        
+        ###### Fixing the duplicate detections
+        print("fixing duplicate detections")
+        
+        window.increment <- FFTwindow/min(window.split)  # determine width of window increment (take the smalest window width)
+        nshifts <- ceiling(nPPM/window.increment) - window.split + 1  # determine how many increments there where
+        startR <- rep(NA,nshifts)
+        endR <- rep(NA,nshifts)
+        for (j in 1:nshifts) {
+            startR[j] <- (j - 1) * window.increment + 1
+            endR[j] <- (j - 1) * window.increment + FFTwindow
+            if (startR[j] >= nPPM){
+                startR[j] <- NA
+                endR[j] <- NA
+            }
         }
-    }
-    startR <- startR[complete.cases(startR)]
-    endR <- endR[complete.cases(startR)]
-    
-    
-    cl <- parallel::makeCluster(nCPU)
-    #doParallel::registerDoParallel(cl)
-    doSNOW::registerDoSNOW(cl)
-    to.delete <- list()
-    Parcounter <- NULL
-    pb <- txtProgressBar(max=(nshifts-1), style=3)
-    progress <- function(n) setTxtProgressBar(pb, n)
-    opts <- list(progress=progress)
-    
-    to.delete <- foreach::foreach(Parcounter = 1:(nshifts-1), .options.snow=opts, .inorder = TRUE, .packages = c("cluster")) %dopar% 
-    {
-        check.dat <- WaveletPeaks[WaveletPeaks$peakIndex>=(startR[Parcounter]) & WaveletPeaks$peakIndex<=endR[Parcounter+1],] # the data in two neighbouring windows
-        check.dist <- cluster::daisy(matrix(check.dat$peakPPM,ncol=1), metric = "euclid", stand = FALSE) # cluster matrix
-        check.distM <- as.matrix(check.dist)
-        check.distM[lower.tri(check.distM,diag=T)] <- 100 # only take the top triangle (identical to down triangle) and remove the diag because this is obviously 0 and of no interest
-        # take the first quartile as a maximal distance
-        indices = which(check.distM <= 0.005,arr.ind = TRUE) # which indices have a distance smaller 
+        startR <- startR[complete.cases(startR)]
+        endR <- endR[complete.cases(startR)]
         
         
-        distance.data <- matrix(NA,nrow = nrow(indices), ncol = 9)
-        colnames(distance.data) <- c("distance", "sample1","sample2","peakIndex1", "peakIndex2", "ppm.diff", "peakValue.diff.abs", "peakValue1", "peakValue2")
-        distance.data[,1] <- check.distM[indices]
-        distance.data[,2] <- check.dat$Sample[indices[,1]]
-        distance.data[,3] <- check.dat$Sample[indices[,2]]
-        distance.data[,4] <- check.dat$peakIndex[indices[,1]]
-        distance.data[,5] <- check.dat$peakIndex[indices[,2]]
-        distance.data[,6] <- abs(check.dat$peakPPM[indices[,2]]-check.dat$peakPPM[indices[,1]])
-        distance.data[,7] <- check.dat$peakValue[indices[,2]]-check.dat$peakValue[indices[,1]]
-        distance.data[,8] <- check.dat$peakValue[indices[,1]]
-        distance.data[,9] <- check.dat$peakValue[indices[,2]]
+        cl <- parallel::makeCluster(nCPU)
+        #doParallel::registerDoParallel(cl)
+        doSNOW::registerDoSNOW(cl)
+        to.delete <- list()
+        Parcounter <- NULL
+        pb <- txtProgressBar(max=(nshifts-1), style=3)
+        progress <- function(n) setTxtProgressBar(pb, n)
+        opts <- list(progress=progress)
         
-        distance.data[,7] <- distance.data[,7] /apply(distance.data[,8:9], MARGIN = 1, max)
-        distance.data <- distance.data[,1:7]
-        colnames(distance.data) <- c("distance", "sample1","sample2","peakIndex1", "peakIndex2", "ppm.diff", "peakValue.diff.prop" )
+        to.delete <- foreach::foreach(Parcounter = 1:(nshifts-1), .options.snow=opts, .inorder = TRUE, .packages = c("cluster")) %dopar% 
+        {
+            check.dat <- WaveletPeaks[WaveletPeaks$peakIndex>=(startR[Parcounter]) & WaveletPeaks$peakIndex<=endR[Parcounter+1],] # the data in two neighbouring windows
+            if(nrow(check.dat) != 0){
+                check.dist <- cluster::daisy(matrix(check.dat$peakPPM,ncol=1), metric = "euclid", stand = FALSE) # cluster matrix
+                check.distM <- as.matrix(check.dist)
+                check.distM[lower.tri(check.distM,diag=T)] <- 100 # only take the top triangle (identical to down triangle) and remove the diag because this is obviously 0 and of no interest
+                # take the first quartile as a maximal distance
+                indices = which(check.distM <= 0.005,arr.ind = TRUE) # which indices have a distance smaller 
+                
+                
+                distance.data <- matrix(NA,nrow = nrow(indices), ncol = 9)
+                colnames(distance.data) <- c("distance", "sample1","sample2","peakIndex1", "peakIndex2", "ppm.diff", "peakValue.diff.abs", "peakValue1", "peakValue2")
+                distance.data[,1] <- check.distM[indices]
+                distance.data[,2] <- check.dat$Sample[indices[,1]]
+                distance.data[,3] <- check.dat$Sample[indices[,2]]
+                distance.data[,4] <- check.dat$peakIndex[indices[,1]]
+                distance.data[,5] <- check.dat$peakIndex[indices[,2]]
+                distance.data[,6] <- abs(check.dat$peakPPM[indices[,2]]-check.dat$peakPPM[indices[,1]])
+                distance.data[,7] <- check.dat$peakValue[indices[,2]]-check.dat$peakValue[indices[,1]]
+                distance.data[,8] <- check.dat$peakValue[indices[,1]]
+                distance.data[,9] <- check.dat$peakValue[indices[,2]]
+                
+                distance.data[,7] <- distance.data[,7, drop = FALSE] /apply(distance.data[,8:9, drop = FALSE], MARGIN = 1, max)
+                distance.data <- distance.data[,1:7, drop = FALSE]
+                colnames(distance.data) <- c("distance", "sample1","sample2","peakIndex1", "peakIndex2", "ppm.diff", "peakValue.diff.prop" )
+                
+                distance.data <- distance.data[order(distance.data[,1]), , drop = FALSE]
+                distance.data <- distance.data[distance.data[,2]==distance.data[,3], ,drop = FALSE]
+                
+                left.largest  <- which(sign(distance.data[,7])==-1)
+                distance.data[left.largest, c(4,5)] <- distance.data[left.largest, c(5,4)]
+                distance.data[left.largest, 7] <- abs(distance.data[left.largest, 7])
+                to.delete <- distance.data[,c(3,4), drop = FALSE]
+            } else{
+                distance.data <- matrix(NA,nrow =0, ncol = 7)
+                colnames(distance.data) <- c("distance", "sample1","sample2","peakIndex1", "peakIndex2", "ppm.diff", "peakValue.diff.prop" )
+                to.delete <- distance.data[,c(3,4),drop = FALSE]
+            }
+            
+            return(to.delete)
+        }
+        close(pb)
+        parallel::stopCluster(cl)
         
-        distance.data <- distance.data[order(distance.data[,1]),]
-        distance.data <- distance.data[distance.data[,2]==distance.data[,3], ,drop = FALSE]
         
-        left.largest  <- which(sign(distance.data[,7])==-1)
-        distance.data[left.largest, c(4,5)] <- distance.data[left.largest, c(5,4)]
-        distance.data[left.largest, 7] <- abs(distance.data[left.largest, 7])
-        to.delete <- distance.data[,c(3,4)]
+        to.delete <- do.call(rbind, to.delete)
+        to.delete <- unique(to.delete)
         
-        return(to.delete)
-    }
-    close(pb)
-    parallel::stopCluster(cl)
+        for(sn in 1:nSamp){
+            if(nrow(to.delete[,1,drop=FALSE]) !=0){
+                curr.samp.to.delete <- to.delete[to.delete[,1,drop=FALSE]==sn,2]
+                WaveletPeaks$peakIndex[WaveletPeaks$Sample == sn & WaveletPeaks$peakIndex %in% curr.samp.to.delete] <- NA
+            }
+        }
+        
+        
+        WaveletPeaks <- WaveletPeaks[!is.na(WaveletPeaks$peakIndex), ,drop=FALSE]
+        WaveletPeaks <- data.frame(WaveletPeaks)
+        
+    } else{
+        print("No peaks detected")
+    } 
     
-    
-    to.delete <- do.call(rbind, to.delete)
-    to.delete <- unique(to.delete)
-    
-    for(sn in 1:nSamp){
-        curr.samp.to.delete <- to.delete[to.delete[,1]==sn,2]
-        WaveletPeaks$peakIndex[WaveletPeaks$Sample == sn & WaveletPeaks$peakIndex %in% curr.samp.to.delete] <- NA
-    }
-    
-    
-    WaveletPeaks <- WaveletPeaks[!is.na(WaveletPeaks$peakIndex), ,drop=FALSE]
-    WaveletPeaks <- data.frame(WaveletPeaks)
     return(WaveletPeaks)
+    
 }
 
