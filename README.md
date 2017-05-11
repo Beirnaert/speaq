@@ -38,3 +38,6 @@ See the vignette on CRAN for a usage case of most functions. See the GitHub repo
 ### License
 
 The **speaq** package is licensed under the Apache License v2.0 
+
+
+![Screenshot](docimages/speaq-github-workflow.png)
