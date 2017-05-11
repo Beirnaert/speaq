@@ -152,6 +152,8 @@ roiWidth.ppm &lt;-<span class="st"> </span><span class="fl">0.025</span>
 SilhouetteValues &lt;-<span class="st"> </span><span class="kw">SilhouetR</span>(<span class="dt">DataMatrix =</span> wine.grouped$peakPPM, 
                               <span class="dt">GroupIndices =</span> wine.grouped$peakIndex)</code></pre></div>
 <pre><code>## DataMatrix is not a matrix, attempting conversion with the assumption of only 1 variable (1 column)</code></pre>
+<pre><code>## Warning: closing unused connection 6 (&lt;-localhost:11536)</code></pre>
+<pre><code>## Warning: closing unused connection 5 (&lt;-localhost:11536)</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Silh_plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(SilhouetteValues, <span class="kw">aes</span>(SilhouetteValues)) +
 <span class="st">             </span><span class="kw">geom_freqpoly</span>(<span class="dt">binwidth =</span> <span class="fl">0.03</span>) +
 <span class="st">             </span><span class="kw">theme_bw</span>()
