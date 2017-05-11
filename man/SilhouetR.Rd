@@ -16,19 +16,29 @@ SilhouetR(DataMatrix, GroupIndices, distance = "euclid", stand = TRUE)
 \item{stand}{whether to standardize the data before calculating the dissimilarities. See \link[cluster]{daisy}.}
 }
 \value{
-Returns the silhouette values.
+Returns the silhouette values. Note if a group contains only 1 no Silhouette value can be calculated (will give NA)
 }
 \description{
 Calculate the Silhouette value for
 }
 \examples{
-\dontrun{
-# This function works on grouped peak data
-library(ggplot2)
-Silhouette.values = SilhouetR(DataMatrix = Grouped.peaks$peakPPM, 
-Grouped.peaks$peakIndex, distance = 'euclid', stand = TRUE)
-ggplot(SilhouetteValues, aes(SilhouetteValues)) +geom_freqpoly(binwidth = 0.03) +theme_bw()
-}
+subset <- GetWinedata.subset()
+subset.spectra = as.matrix(subset$Spectra)
+subset.ppm = as.numeric(subset$PPM)
+
+test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
+                              X.ppm=subset.ppm,
+                              nCPU = 2) # nCPU set to 2 for the vignette build
+                              
+test.grouped <- PeakGrouper(Y.peaks = test.peaks)
+
+Silhouette.values = SilhouetR(DataMatrix = test.grouped$peakPPM, 
+                              test.grouped$peakIndex, 
+                              distance = 'euclid', 
+                              stand = TRUE)
+                              
+hist(Silhouette.values$SilhouetteValues)
+
 
 }
 \author{

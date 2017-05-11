@@ -16,6 +16,28 @@
 #' @return a plot
 #'
 #' @author Charlie Beirnaert, \email{charlie.beirnaert@@uantwerpen.be}
+#' 
+#' @examples 
+#' subset <- GetWinedata.subset()
+#' subset.spectra = as.matrix(subset$Spectra)
+#' subset.ppm = as.numeric(subset$PPM)
+#'
+#' test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
+#'                               X.ppm=subset.ppm,
+#'                               nCPU = 2) # nCPU set to 2 for the vignette build
+#'
+#' test.grouped <- PeakGrouper(Y.peaks = test.peaks)
+#'                            
+#' ROI.ppm <- 4.9
+#' roiWidth.ppm <- 1
+#'
+#' ROIplot(Y.spec = subset.spectra, 
+#'         X.ppm =subset.ppm, 
+#'         ungrouped.peaks = test.peaks,
+#'         grouped.peaks = test.grouped ,
+#'         ROI.ppm = ROI.ppm,
+#'         roiWidth.ppm = roiWidth.ppm , 
+#'         )
 #'
 #' @export
 #' 

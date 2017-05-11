@@ -11,11 +11,16 @@
 #' @author Charlie Beirnaert, \email{charlie.beirnaert@@uantwerpen.be}
 #'
 #' @examples
-#' \dontrun{
-#' # This function works on a data frame resulting from the 'getWaveletPeaks' function 
-#' # DetectedPeaks <- getWaveletPeaks(X.ppm= PPM.vector, Y=Y.spec,  baselineThresh = 10,nCPU  = 4)
-#' Aligned.peaks <- PeakAligner(Y.peaks = DetectedPeaks)
-#' }
+#' subset <- GetWinedata.subset()
+#' subset.spectra = as.matrix(subset$Spectra)
+#' subset.ppm = as.numeric(subset$PPM)
+#' 
+#' test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
+#'                               X.ppm=subset.ppm,
+#'                               nCPU = 2) # nCPU set to 2 for the vignette build
+#'                               
+#' test.peaks.plot = AddPlottingStuff(test.peaks, subset.ppm, subset$Color)
+#' head(test.peaks.plot)
 #' 
 #' @export
 AddPlottingStuff <- function(Y.peaks, X.ppm = NULL, groupLabels = NULL) {

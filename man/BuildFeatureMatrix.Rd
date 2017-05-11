@@ -31,10 +31,23 @@ This function converts the grouped peak data to a matrix.
 The matrix has features (peaks groups) in the columns and the value of the peak for every sample in the rows.
 }
 \examples{
-\dontrun{
-# 'DetectedPeaks_grouped' is the peak data after wavelet based peak detection and grouping
-Featurematrix <- BuildFeatureMatrix(Y.data = DetectedPeaks_grouped, var = 'peakValue')
-}
+subset <- GetWinedata.subset()
+subset.spectra = as.matrix(subset$Spectra)
+subset.ppm = as.numeric(subset$PPM)
+
+test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
+                              X.ppm=subset.ppm,
+                              nCPU = 2) # nCPU set to 2 for the vignette build
+
+test.grouped <- PeakGrouper(Y.peaks = test.peaks)
+
+test.filled <- PeakFilling(Y.grouped = test.grouped, 
+                           Y.spec = subset.spectra,  
+                           nCPU = 2) # nCPU set to 2 for the vignette build
+                           
+test.Features <- BuildFeatureMatrix(test.filled)
+
+        
 }
 \author{
 Charlie Beirnaert, \email{charlie.beirnaert@uantwerpen.be}

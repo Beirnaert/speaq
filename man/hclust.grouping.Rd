@@ -24,6 +24,9 @@ Returns a data frame with grouped peaks.
 \description{
 Internal function in the PeakGrouper function for generating the hierarchical clustering tree and cutting it.
 }
+\seealso{
+\code{\link{PeakGrouper}}
+}
 \author{
 Charlie Beirnaert, \email{charlie.beirnaert@uantwerpen.be}
 }

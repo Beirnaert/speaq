@@ -18,13 +18,13 @@
 #' @author Charlie Beirnaert, \email{charlie.beirnaert@@uantwerpen.be}
 #'
 #' @examples
-#' \dontrun{
-#' # This example takes ca. 50 seconds (with nCPU = 4) on a 2.5GHz machine
-#' data(Winedata)
-#' Y.spec = as.matrix(Winedata$spectra)
-#' PPM.vector = as.numeric(Winedata$ppm)
-#' DetectedPeaks <- getWaveletPeaks(X.ppm= PPM.vector, Y=Y.spec,  baselineThresh = 10,nCPU  = 4)
-#'}
+#' subset <- GetWinedata.subset()
+#' subset.spectra = as.matrix(subset$Spectra)
+#' subset.ppm = as.numeric(subset$PPM)
+#'
+#' test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
+#'                               X.ppm=subset.ppm ,
+#'                               nCPU = 2) # nCPU set to 2 for the vignette build
 #'
 #' @export
 #' 

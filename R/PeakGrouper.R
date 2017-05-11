@@ -18,11 +18,15 @@
 #' @seealso \code{\link{hclust.grouping}}
 #'
 #' @examples
-#' \dontrun{
-#' # This function works on a data frame resulting from the 'getWaveletPeaks' function 
-#' # DetectedPeaks <- getWaveletPeaks(X.ppm= PPM.vector, Y=Y.spec,  baselineThresh = 10,nCPU  = 4)
-#' Grouped.peaks = PeakGrouper(Y.peaks = DetectedPeaks)
-#' }
+#' subset <- GetWinedata.subset()
+#' subset.spectra = as.matrix(subset$Spectra)
+#' subset.ppm = as.numeric(subset$PPM)
+#'
+#' test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
+#'                               X.ppm=subset.ppm ,
+#'                               nCPU = 2) # nCPU set to 2 for the vignette build
+#'
+#' test.grouped <- PeakGrouper(Y.peaks = test.peaks)
 #' 
 #' @export
 #' 

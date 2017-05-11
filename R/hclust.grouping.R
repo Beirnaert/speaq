@@ -10,8 +10,11 @@
 #'
 #' @return Returns a data frame with grouped peaks.
 #' 
+#' 
 #' @author Charlie Beirnaert, \email{charlie.beirnaert@@uantwerpen.be}
 #'
+#' @seealso \code{\link{PeakGrouper}}
+#' 
 #' @export
 #' 
 #' @importFrom cluster daisy

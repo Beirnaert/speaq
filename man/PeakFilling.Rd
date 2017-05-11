@@ -25,12 +25,20 @@ Returns a data frame with grouped peaks and possibly extra peaks obtained from t
 This functions detects which samples (after grouping) are missing from every peak group and reanalyses the raw data to verify whether this peak is actually non-existent for this sample
 }
 \examples{
-\dontrun{
-# This function works on a data frame resulting from the 'PeakGrouper' function 
-# DetectedPeaks <- getWaveletPeaks(X.ppm= PPM.vector, Y=Y.spec,  baselineThresh = 10,nCPU  = 4)
-# Grouped.peaks = PeakGrouper = function (Y.peaks = DetectedPeaks)
-Filled.Peaks = SpecPeak.filling(Y.grouped = Grouped.peaks, Y.spec = Y)
-}
+subset <- GetWinedata.subset()
+subset.spectra = as.matrix(subset$Spectra)
+subset.ppm = as.numeric(subset$PPM)
+
+test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
+                              X.ppm=subset.ppm,
+                              nCPU = 2) # nCPU set to 2 for the vignette build
+
+test.grouped <- PeakGrouper(Y.peaks = test.peaks)
+
+test.filled <- PeakFilling(Y.grouped = test.grouped, 
+                           Y.spec = subset.spectra,  
+                           nCPU = 2) # nCPU set to 2 for the vignette build
+
 
 }
 \author{

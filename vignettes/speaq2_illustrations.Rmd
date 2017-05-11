@@ -1,10 +1,10 @@
 ---
-title: "speaq2 function illustrations"
+title: "speaq 2.0 function illustrations"
 author: "Charlie Beirnaert"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{speaq2 function illustrations}
+  %\VignetteIndexEntry{speaq 2.0 function illustrations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,11 +15,11 @@ knitr::opts_chunk$set(tidy = FALSE)
 figwidth.out <- 600
 ```
 
-## speaq2
+## speaq 2.0
 
-To illustrate the possibilities of speaq2, the spiritual successor to the original speaq package, the wine dataset is used (available form the University of Copenhagen at http://www.models.life.ku.dk/). This dataset is also utilized in the paper so with this vignette you will be able to reproduce the results.
+To illustrate the possibilities of speaq 2.0, the wine dataset is used (available form the University of Copenhagen at http://www.models.life.ku.dk/). This dataset is also utilized in the paper so with this vignette you will be able to reproduce the results.
 
-Before we start with the example let's first recap what the basic steps of speaq2 encompass:
+Before we start with the example let's first recap what the new method in speaq 2.0 encompass:
 
 1. Peak detection: `getWaveletPeaks()` 
 2. Peak grouping: `PeakGrouper()` 
@@ -29,7 +29,7 @@ Before we start with the example let's first recap what the basic steps of speaq
 ### Plotting the raw wine data
 
 ```{r wine data, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
-
+library(speaq)
 data(Winedata)
 Spectra.wine <- as.matrix(Winedata$spectra )
 ppm.wine <- as.numeric(Winedata$ppm) 
@@ -102,7 +102,7 @@ ROIplot(Y.spec = Spectra.wine,
         groupLabels = as.factor(wine.color))
 ```
 
-The plot above shows clearly what the basis of speaq2 does, convert spectra accurately to peak data and group these peaks. The quality of the grouping can be checked by plotting the silhouette values. this can be done with the `SilhouetR()` function. 
+The plot above shows clearly what the basis of speaq 2.0 does, convert spectra accurately to peak data and group these peaks. The quality of the grouping can be checked by plotting the silhouette values. this can be done with the `SilhouetR()` function. 
 
 ```{r silhouette values,  results = "hide", dpi=100, fig.width=6, fig.height=3.5, out.width = figwidth.out}
 library(ggplot2)
@@ -222,7 +222,7 @@ wine.Features.scaled <- SCANT(data.matrix = wine.Features,
 
 
 ```{r PCA, dpi=150, fig.width=5, fig.height=3, out.width = figwidth.out}
-library(stats)
+
 
 common.pca <- prcomp(wine.Features.scaled) 
 
@@ -266,7 +266,7 @@ From the PCA analysis it is already clear that there is a large difference betwe
 
 
 
-Next we can use the `relevant.features()` function in speaq2 which uses linear models to produce a p-value corresponding to the nulhypothesis that feature x is not related to the outcome vector. After a p-value correction for multiple testing (as with increasing numbers of even randomly generated features some will eventually be significantly related to the output vector) we can identify the relevant features. As noted in the paper this method is perfectly suited for outcome vectors containing either 2 classes or more classes with a numeric relationship. This is unfortunately not the case here as red, white and rosé are 3 categorical variables. Since there are only 2 rosé wines we will perform the analysis leaving these ones out. This does require however to rescale the raw data without the rosé wines, as otherwise they still have an influence on the dataset
+Next we can use the `relevant.features()` function in speaq which uses linear models to produce a p-value corresponding to the nulhypothesis that feature x is not related to the outcome vector. After a p-value correction for multiple testing (as with increasing numbers of even randomly generated features some will eventually be significantly related to the output vector) we can identify the relevant features. As noted in the paper this method is perfectly suited for outcome vectors containing either 2 classes or more classes with a numeric relationship. This is unfortunately not the case here as red, white and rosé are 3 categorical variables. Since there are only 2 rosé wines we will perform the analysis leaving these ones out. This does require however to rescale the raw data without the rosé wines, as otherwise they still have an influence on the dataset
 ### removing the rose wine
 ```{r no rose}
 red.white.scaled <- SCANT(wine.Features[wine.color!="rose",], 

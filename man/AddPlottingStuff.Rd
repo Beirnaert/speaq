@@ -20,11 +20,16 @@ Returns a data frame with added plotting variables (groupPPM for aligned feature
 This functions adds a few variables which make plotting features easier (and more informative). Since for example every peaks keeps it original ppm value, if you want to plot the groups this function adds the group ppm value. Also sample labels can be added.
 }
 \examples{
-\dontrun{
-# This function works on a data frame resulting from the 'getWaveletPeaks' function 
-# DetectedPeaks <- getWaveletPeaks(X.ppm= PPM.vector, Y=Y.spec,  baselineThresh = 10,nCPU  = 4)
-Aligned.peaks = PeakAligner = function (Y.peaks = DetectedPeaks)
-}
+subset <- GetWinedata.subset()
+subset.spectra = as.matrix(subset$Spectra)
+subset.ppm = as.numeric(subset$PPM)
+
+test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
+                              X.ppm=subset.ppm,
+                              nCPU = 2) # nCPU set to 2 for the vignette build
+                              
+test.peaks.plot = AddPlottingStuff(test.peaks, subset.ppm, subset$Color)
+head(test.peaks.plot)
 
 }
 \author{

@@ -5,7 +5,8 @@
 \title{Plot NMR spectra, together with raw and grouped peaks}
 \usage{
 ROIplot(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL,
-  ROI.ppm = NULL, roiWidth = 100, roiWidth.ppm = NULL, groupLabels)
+  ROI.ppm = NULL, roiWidth = 100, roiWidth.ppm = NULL,
+  groupLabels = NULL)
 }
 \arguments{
 \item{Y.spec}{(required) The raw spectra in matrix format (1 sample per row) or numeric vector (in case of 1 spectrum)}
@@ -31,6 +32,29 @@ a plot
 }
 \description{
 This function plots NMR spectra, peak plots and grouped peak plots all in figure for easy comparison.
+}
+\examples{
+subset <- GetWinedata.subset()
+subset.spectra = as.matrix(subset$Spectra)
+subset.ppm = as.numeric(subset$PPM)
+
+test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
+                              X.ppm=subset.ppm,
+                              nCPU = 2) # nCPU set to 2 for the vignette build
+
+test.grouped <- PeakGrouper(Y.peaks = test.peaks)
+                           
+ROI.ppm <- 4.9
+roiWidth.ppm <- 1
+
+ROIplot(Y.spec = subset.spectra, 
+        X.ppm =subset.ppm, 
+        ungrouped.peaks = test.peaks,
+        grouped.peaks = test.grouped ,
+        ROI.ppm = ROI.ppm,
+        roiWidth.ppm = roiWidth.ppm , 
+        )
+
 }
 \author{
 Charlie Beirnaert, \email{charlie.beirnaert@uantwerpen.be}
