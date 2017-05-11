@@ -4,7 +4,7 @@ knitr::opts_chunk$set(tidy = FALSE)
 figwidth.out <- 600
 
 ## ----wine data, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out----
-library(speaq2)
+library(speaq)
 data(Winedata)
 Spectra.wine <- as.matrix(Winedata$spectra )
 ppm.wine <- as.numeric(Winedata$ppm) 
@@ -146,7 +146,7 @@ wine.Features.scaled <- SCANT(data.matrix = wine.Features,
 
 
 ## ----PCA, dpi=150, fig.width=5, fig.height=3, out.width = figwidth.out----
-library(stats)
+
 
 common.pca <- prcomp(wine.Features.scaled) 
 
@@ -210,31 +210,29 @@ head(significant.features)
 
 peak_of_interest <- 5 # change this to the peak you want
 
-faulty.groupIndex <- significant.features$index[peak_of_interest]
-faulty.peakIndex <- as.numeric(rownames(significant.features))[peak_of_interest]
+interest.groupIndex <- significant.features$index[peak_of_interest]
+interest.peakIndex <- as.numeric(rownames(significant.features))[peak_of_interest]
 
 
-ROI.ppm <- ppm.wine[faulty.groupIndex]
+ROI.ppm <- ppm.wine[interest.groupIndex]
 roiWidth.ppm <- 0.03
 
 
-ggplot(p.all_bonf, aes(x=as.numeric(rownames(p.all_bonf)), y=p.values)) + 
-      geom_point(data = p.all_bonf[-faulty.peakIndex,],  
-                 aes(x=as.numeric(rownames(p.all_bonf[-faulty.peakIndex,])), y =p.values),
+ggplot(p.all_bonf, aes(x=as.numeric(rownames(p.all_bonf)), y= -log10(p.values) )) + 
+      geom_point(data = p.all_bonf[-interest.peakIndex,],  
+                 aes(x=as.numeric(rownames(p.all_bonf[-interest.peakIndex,])), y= -log10(p.values) ),
                  shape = 16) +
-      geom_point(data = p.all_bonf[faulty.peakIndex,],  aes(x=faulty.peakIndex, y =p.values),
+      geom_point(data = p.all_bonf[interest.peakIndex,],  aes(x=interest.peakIndex, y= -log10(p.values) ),
                  shape = 18, 
                  size = 3, 
                  colour ="#00B0F6" ) +
     xlab("feature index") + 
-    ylab("adjusted p value") + 
+    ylab("- log10 p-value") + 
     ggtitle("Bonferroni corrected p-values") +
-    geom_hline(aes(yintercept=0.05, color="red"),linetype = 2) + guides(color=FALSE)+
-    scale_y_continuous(breaks = c(0.00,0.05,0.25,0.50,0.75,1.00))+
+    geom_hline(aes(yintercept= -log10(0.05), color="red"),linetype = 2) + guides(color=FALSE)+
     theme_bw() + 
     theme(plot.title = element_text(lineheight = 0.8, face="bold", margin = margin(12,0,13,0),hjust = 0.5, size = 15), 
-          text = element_text(size=14),
-          axis.text.y = element_text(colour=c("black","red","black","black","black","black")))
+          text = element_text(size=14))
 
 
 
@@ -268,7 +266,7 @@ drawSpecPPM(Y.spec = Spectra.wine[wine.color != "rose", ],
 
 
 ## ----speaq 1.0,  dpi=200, fig.width=7, fig.height=4, message=F, out.width = figwidth.out----
-library(speaq)
+
 
 peakList <- detectSpecPeaks(as.matrix(Spectra.wine),   
                             nDivRange = 128,                
