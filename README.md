@@ -1,7 +1,7 @@
 # speaq: an R package for 1D NMR spectra data processing 
 
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-
+[![Build Status](https://travis-ci.com/Beirnaert/speaq.svg?token=RasChTxxFxz6YzsLEhBK&branch=master)](https://travis-ci.com/Beirnaert/speaq)
 
 
 The **speaq** package is meant to make Nuclear Magnetic Resonance spectroscopy (NMR spectroscopy) data analysis as easy as possible by only requiring a small set of functions to perform an entire analysis. Parallel processing is extensively implemented throughout these function to limit processing time.  
