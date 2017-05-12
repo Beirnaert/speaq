@@ -3,7 +3,9 @@ sudo: false
 cache: packages
 
 r: # also include oldrel and devel when finished
+  - oldrel
   - release
+  - devel
 
 bioc_packages:
   - MassSpecWavelet
