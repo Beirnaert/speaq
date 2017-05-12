@@ -4,40 +4,63 @@
 [![Build Status](https://travis-ci.com/Beirnaert/speaq.svg?token=RasChTxxFxz6YzsLEhBK&branch=master)](https://travis-ci.com/Beirnaert/speaq)
 
 
-The **speaq** package is meant to make Nuclear Magnetic Resonance spectroscopy (NMR spectroscopy) data analysis as easy as possible by only requiring a small set of functions to perform an entire analysis. Parallel processing is extensively implemented throughout these function to limit processing time.  
+The **speaq** package is meant to make Nuclear Magnetic Resonance spectroscopy (NMR spectroscopy) data analysis as easy as possible by only requiring a small set of functions to perform an entire analysis. **speaq** offers two main possibilities for NMR spectral processing:
+
+* Raw spectra alignment & processing (speaq version <= 1.2.3)
+
+* Peak based processing (new since version 2.0)
 
 
-### Installation
+A visual representation of what each method encompasses, and how both methods can be used together can be found in the [image below](#Workflow). More specific information on both methods can be found in their respective publications (see [References]). 
 
-``` r
-install.packages("speaq")
+![#Workflow](docimages/speaq-github-workflow.png)
+
+
+## Installation
+
+
+### From CRAN using R
+```R
+install.packages("speaq")   
+library("speaq")
 ```
 
-### Features
+### From Github using R (with devtools):
+```R
+library("devtools")
+install_github("speaq","beirnaert")
+library("speaq")
+```
+
+
+## Features
+
 
 Functions include
 
-* Plot functions for raw spectra
-* Peak picking with wavelets
-* Peak grouping
-* Peak Filling
-* Linear model based differential analysis
-* Silhouette values (check for alignment quality)
-* Converting raw spectra of unequal length (unequal measurement time) to matrix of equal length spectra
-* SCANT: a function to scale, normalise or transform a data matrix (included besides the standard are pareto scaling, probabilistic quotient normalization, range scaling, etc.)
-* etc.
+* Raw spectra 
+	- spectra alignment (CluPA)
+	- quantitation (BW-ratio)
+	- visualizations
+	- etc.
+
+* Peak based approach (new since v2.0)
+	- peak picking (wavelets)
+	- grouping
+	- peak filling
+	- scaling & imputations
+	- differential analysis (also more than 2 groups)
+	- visualizations
+	- etc.
 
 
 
-### Usage
+### References 
 
-See the vignette on CRAN for a usage case of most functions. See the GitHub repo for more extensive vignettes.
-
-
+Vu TN, Valkenborg D, Smets K, Verwaest KA, Dommisse R, Lemière F, Verschoren A, Goethals B, Laukens K. (2011) An integrated workflow for robust alignment and simplified quantitative analysis of NMR spectrometry data. BMC Bioinformatics. 2011 Oct 20;12:405.
 
 ### License
 
 The **speaq** package is licensed under the Apache License v2.0 
 
 
-![Screenshot](docimages/speaq-github-workflow.png)
