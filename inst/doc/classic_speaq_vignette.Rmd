@@ -54,7 +54,7 @@ groupLabel=res$label;
 
 Now, we draw a spectral plot to observe the dataset before alignment.
 
-```{r Unaligned_spectral_plots}
+```{r Unaligned_spectral_plots, dpi=150, fig.width=6, fig.height=5, out.width = figwidth.out}
 drawSpec(X);
 ```
 
@@ -122,7 +122,7 @@ Y <- dohCluster(X,
 
 If users are not confident when selecting a value for the *maxShift*, just set the value to *NULL*. Then, the software will automatically learn to select the optimal value based on the median Pearson correlation coefficient between spectra. It is worth noting that this metric is significantly effected by high peaks in the spectra [2], so it might not be the best measure for evaluating alignment performances. However, it is fast for the purpose of detecting the suitable *maxShift* value. This mode also takes more time since CluPA implements extra alignment for few *maxShift* values. If set *verbose=TRUE*, a plot of performances of CluPA with different values of *maxShift* will be displayed. For example:
 
-```{r Spectral_alignment_optimal_maxShift,fig.align='center'}
+```{r Spectral_alignment_optimal_maxShift,fig.align='center', dpi=150, fig.width=6, fig.height=5, out.width = figwidth.out}
 Y <- dohCluster(X,
                 peakList = peakList,
                 refInd = refInd,
@@ -181,14 +181,14 @@ Yc <- dohClusterCustommedSegments(X,
 
 We could draw a segment to see the performance of the alignement.
 
-```{r AlignedSpectral_plots}
+```{r AlignedSpectral_plots, dpi=150, fig.width=6, fig.height=5, out.width = figwidth.out}
 drawSpec(Y);
 ```
 
 
 We could limit the heights of spectra to easily check the alignment performance.
 
-```{r AlignedSpectral_plots_limited_height}
+```{r AlignedSpectral_plots_limited_height, dpi=150, fig.width=6, fig.height=5, out.width = figwidth.out}
 drawSpec(Y,
         startP=450,
         endP=680,
@@ -201,7 +201,7 @@ drawSpec(Y,
 We achieved similar results with *Yc* but the region of the first peak was not aligned because the segment information just allows align the region 450-680.
 
 
-```{r Aligned_spectral_plots_customized}
+```{r Aligned_spectral_plots_customized, dpi=150, fig.width=6, fig.height=5, out.width = figwidth.out}
 drawSpec(Yc);
 ```
 
@@ -230,13 +230,13 @@ for (i in 1 : length(perc)){
 
 Now, some figures are plotting. Read the publication to understand more about these figures.
 
-```{r drawBW_1, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
+```{r drawBW_1, dpi=150, fig.width=7, fig.height=7, out.width = figwidth.out}
 
 drawBW(BW, perc,Y, groupLabel = groupLabel)
 
 ```
 
-```{r drawBW_2, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
+```{r drawBW_2, dpi=150, fig.width=7, fig.height=7, out.width = figwidth.out}
 
 drawBW(BW, perc, Y ,startP=450, endP=680, groupLabel = groupLabel)
 
@@ -246,9 +246,9 @@ drawBW(BW, perc, Y ,startP=450, endP=680, groupLabel = groupLabel)
 ## References
 
 
-* Vu, Trung Nghia, Dirk Valkenborg, Koen Smets, Kim A. Verwaest, Roger Dommisse, Filip Lemiere, Alain Verschoren, Bart Goethals, and Kris Laukens. "An Integrated Workflow for Robust Alignment and Simplified Quantitative Analysis of NMR Spectrometry Data." BMC Bioinformatics 12, no. 1 (October 20, 2011): 405.
+[1] Vu, Trung Nghia, Dirk Valkenborg, Koen Smets, Kim A. Verwaest, Roger Dommisse, Filip Lemiere, Alain Verschoren, Bart Goethals, and Kris Laukens. "An Integrated Workflow for Robust Alignment and Simplified Quantitative Analysis of NMR Spectrometry Data." BMC Bioinformatics 12, no. 1 (October 20, 2011): 405.
 
-*Vu, Trung Nghia, and Kris Laukens. "Getting Your Peaks in Line: A Review of Alignment Methods for NMR Spectral Data." Metabolites 3, no. 2 (April 15, 2013): 259-76.
+[2] Vu, Trung Nghia, and Kris Laukens. "Getting Your Peaks in Line: A Review of Alignment Methods for NMR Spectral Data." Metabolites 3, no. 2 (April 15, 2013): 259-76.
 
 
 
