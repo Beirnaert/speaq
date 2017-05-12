@@ -32,6 +32,10 @@ install_github("speaq","beirnaert")
 library("speaq")
 ```
 
+### older versions
+
+speaq versions <= 1.2.3 are still available at https://github.com/nghiavtr/speaq
+
 
 ## Features
 
