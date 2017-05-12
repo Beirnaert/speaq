@@ -11,9 +11,9 @@ The **speaq** package is meant to make Nuclear Magnetic Resonance spectroscopy (
 * Peak based processing (new since version 2.0)
 
 
-A visual representation of what each method encompasses, and how both methods can be used together can be found in the [image below](#Workflow). More specific information on both methods can be found in their respective publications (see [References]). 
+A visual representation of what each method encompasses, and how both methods can be used together can be found in the image below. More specific information on both methods can be found in their respective publications (see [References](#Refs)). 
 
-![#Workflow](docimages/speaq-github-workflow.png)
+![Workflow](docimages/speaq-github-workflow.png)
 
 
 ## Installation
@@ -55,7 +55,7 @@ Functions include
 
 
 
-### References 
+### References {#Refs}
 
 Vu TN, Valkenborg D, Smets K, Verwaest KA, Dommisse R, Lemière F, Verschoren A, Goethals B, Laukens K. (2011) An integrated workflow for robust alignment and simplified quantitative analysis of NMR spectrometry data. BMC Bioinformatics. 2011 Oct 20;12:405.
 
