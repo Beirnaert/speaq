@@ -55,7 +55,7 @@ Functions include
 
 
 
-### References {#Refs}
+### <a name="Refs"></a> References 
 
 Vu TN, Valkenborg D, Smets K, Verwaest KA, Dommisse R, Lemière F, Verschoren A, Goethals B, Laukens K. (2011) An integrated workflow for robust alignment and simplified quantitative analysis of NMR spectrometry data. BMC Bioinformatics. 2011 Oct 20;12:405.
 
