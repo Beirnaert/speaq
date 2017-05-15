@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 figwidth.out <- 600
-dpi.HQ <- 180
+dpi.HQ <- 150
 dpi.LQ <- 120
 ```
 
@@ -223,7 +223,7 @@ wine.Features.scaled <- SCANT(data.matrix = wine.Features,
 ```
 
 
-```{r PCA, dpi=dpi.LQ, fig.width=5, fig.height=3, out.width = 500}
+```{r PCA, dpi=dpi.LQ, fig.width=7, fig.height=5, out.width = 500}
 
 
 common.pca <- prcomp(wine.Features.scaled) 

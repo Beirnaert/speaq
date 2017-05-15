@@ -2,7 +2,7 @@
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 figwidth.out <- 600
-dpi.HQ <- 180
+dpi.HQ <- 150
 dpi.LQ <- 120
 
 ## ----wine data, dpi=dpi.HQ, fig.width=7, fig.height=4, out.width = figwidth.out----
@@ -147,7 +147,7 @@ wine.Features.scaled <- SCANT(data.matrix = wine.Features,
                               type = c("pareto", "center"))  
 
 
-## ----PCA, dpi=dpi.LQ, fig.width=5, fig.height=3, out.width = 500---------
+## ----PCA, dpi=dpi.LQ, fig.width=7, fig.height=5, out.width = 500---------
 
 
 common.pca <- prcomp(wine.Features.scaled) 

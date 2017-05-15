@@ -2,7 +2,7 @@
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = TRUE)
 figwidth.out <- 600
-DPI.out <- 150
+DPI.out <- 140
 
 ## ----Read_data_input,fig.keep='none', tidy=FALSE, message=F, warning=F----
 library(speaq)

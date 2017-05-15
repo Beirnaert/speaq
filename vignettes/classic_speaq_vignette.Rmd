@@ -14,7 +14,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = TRUE)
 figwidth.out <- 600
-DPI.out <- 150
+DPI.out <- 140
 ```
 
 ## Preface
