@@ -42,6 +42,9 @@ Win-builder generated NOTEs
 -   possibly mis-spelled words in DESCRIPTION: These words are
     not mis-spelled.
 
+-   Files ‘README.md’ or ‘NEWS.md’ cannot be checked without ‘pandoc’
+    being installed: These are common .md files
+
 Downstream dependencies
 -----------------------
 
