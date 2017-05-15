@@ -13,6 +13,8 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 figwidth.out <- 600
+dpi.HQ <- 180
+dpi.LQ <- 120
 ```
 
 ## speaq 2.0
@@ -28,7 +30,7 @@ Before we start with the example let's first recap what the new method in speaq 
 
 ### Plotting the raw wine data
 
-```{r wine data, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
+```{r wine data, dpi=dpi.HQ, fig.width=7, fig.height=4, out.width = figwidth.out}
 library(speaq)
 data(Winedata)
 Spectra.wine <- as.matrix(Winedata$spectra )
@@ -47,7 +49,7 @@ drawSpecPPM(Y.spec = Spectra.wine,
 The `drawSpecPPM()` plotting function indicates that there might be a gap in the data (which is correct as the original authors deleted the region between 5.0 and 4.5 ppm). This warning can be of importance for the interpretation of the plot as in this case the original authors deleted the data, not by setting the values to 0, but by effectively removing it from the matrix and ppm vector. This produces a plot that appears continuous but is in fact not. 
 
 The `drawSpecPPM()` function also indicates that the groupFactor is not a factor and (succesfully) attempts to do the conversion. The next plot is an excerpt of the wine NMR spectra.
-```{r wine excerpt, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
+```{r wine excerpt, dpi=dpi.HQ, fig.width=7, fig.height=4, out.width = figwidth.out}
 # small excerpt by defining the region of interest
 drawSpecPPM(Y.spec = Spectra.wine, 
             X.ppm = ppm.wine, 
@@ -87,7 +89,7 @@ There are two notes to be made on some important parameters:
 
 ### Plotting the peak data
 
-```{r plots base, dpi=200, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
+```{r plots base, dpi=dpi.HQ, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
 # adding labels to the dat a for plotting and the group ppm values
 
 ROI.ppm <- 1.330
@@ -104,7 +106,7 @@ ROIplot(Y.spec = Spectra.wine,
 
 The plot above shows clearly what the basis of speaq 2.0 does, convert spectra accurately to peak data and group these peaks. The quality of the grouping can be checked by plotting the silhouette values. this can be done with the `SilhouetR()` function. 
 
-```{r silhouette values,  results = "hide", dpi=100, fig.width=6, fig.height=3.5, out.width = figwidth.out}
+```{r silhouette values,  results = "hide", dpi=dpi.LQ, fig.width=6, fig.height=3.5, out.width = 500}
 library(ggplot2)
 SilhouetteValues <- SilhouetR(DataMatrix = wine.grouped$peakPPM, 
                               GroupIndices = wine.grouped$peakIndex)
@@ -138,7 +140,7 @@ head(sil_means)
 
 As it turns out, there is a group with a low average silhouette value (0.25) but a fairly high average signal-to-noise ratio (if this group had a low SNR ratio it could just be a noise group). This indicates that these are non-noise peaks which are grouped incorrectly, the follwoing plot acknowledges this
 
-```{r wrong grouping plot,  dpi=200, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
+```{r wrong grouping plot,  dpi=dpi.HQ, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
 
 faulty.groupIndex <- sil_means[1,1]
 ROI.ppm <- ppm.wine[faulty.groupIndex]
@@ -174,7 +176,7 @@ wine.regrouped <- regroupR(grouped.peaks = wine.grouped,
 
 The plot below reveals the problem is clearly fixed now, but it requires more user interaction than wanted.
 
-```{R regroup fix plot,  dpi=200, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
+```{R regroup fix plot,  dpi=dpi.HQ, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
 
 
 faulty.groupIndex <- sil_means[1,1]
@@ -221,7 +223,7 @@ wine.Features.scaled <- SCANT(data.matrix = wine.Features,
 ```
 
 
-```{r PCA, dpi=150, fig.width=5, fig.height=3, out.width = figwidth.out}
+```{r PCA, dpi=dpi.LQ, fig.width=5, fig.height=3, out.width = 500}
 
 
 common.pca <- prcomp(wine.Features.scaled) 
@@ -291,7 +293,7 @@ head(significant.features)
 
 It is clear that there are features well below the 0.05 p-value threshold. This was to be expected as the difference between the two classes was already apparent in the PCA analysis. Often when the PCA analysis does not reveal obvious results the differential analysis bases on linear models will nonetheless find significant features. We can now easily find which features correspond to the low p-values and consequently plot them. 
 
-```{r r significant features plots , dpi=200, fig.width=6, fig.height=8, fig.keep = "all", tidy = FALSE, warnings = FALSE, out.width = figwidth.out}
+```{r r significant features plots 1 , dpi=dpi.HQ, fig.width=5, fig.height=6, fig.keep = "all", tidy = FALSE, warnings = FALSE, out.width = 500}
 
 
 
@@ -326,6 +328,14 @@ ggplot(p.all_bonf, aes(x=as.numeric(rownames(p.all_bonf)), y= -log10(p.values) )
 
 
 
+
+```
+
+```{r r significant features plots 2 , dpi=dpi.HQ, fig.width=6, fig.height=8, fig.keep = "all", tidy = FALSE, warnings = FALSE, out.width = figwidth.out}
+
+
+
+
 ROIplot(Y.spec = Spectra.wine, 
         X.ppm = ppm.wine, 
         ungrouped.peaks = wine.peaks,
@@ -339,7 +349,7 @@ ROIplot(Y.spec = Spectra.wine,
 
 Or just plot the spectra of a single feature
 
-```{r plot significant features, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
+```{r plot significant features, dpi=dpi.HQ, fig.width=7, fig.height=4, out.width = figwidth.out}
 
 peak_of_interest <- 5# change this number to any of the peaks you want to see
 drawSpecPPM(Y.spec = Spectra.wine[wine.color != "rose", ], 
@@ -361,7 +371,7 @@ drawSpecPPM(Y.spec = Spectra.wine[wine.color != "rose", ],
 Now that we have identified relevant features we can use the original `speaq` package to plot the spectra more clearly. Specifically we can use the `dohCluster()` function from `speaq` to align the raw spectra and consequently plot these with the `drawSpecPPM()` function as in the plot above. 
 
 
-```{r speaq 1.0,  dpi=200, fig.width=7, fig.height=4, message=F, out.width = figwidth.out}
+```{r speaq 1.0,  dpi=dpi.HQ, fig.width=7, fig.height=4, message=F, out.width = figwidth.out}
 
 
 peakList <- detectSpecPeaks(as.matrix(Spectra.wine),   

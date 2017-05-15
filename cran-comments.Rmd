@@ -4,8 +4,8 @@ author: "Charlie Beirnaert"
 date: "`r Sys.Date()`"
 output: md_document
 ---
-## speaq2 vs speaq:
-Both speaq and speaq2 was developed in our research group but speaq2 is so fundamentally different than speaq that we deemed it belonged in a different package. Speaq however will not be discontinued and is still in an active state (both on the user as the developper end).
+## new maintainer
+Under mutual agreement with Trung Nghia Vu (nghiavtr@gmail.com) I will take over the package maintenance.
 
 ## Bioconductor 
 MassSpecWavelet is a Bioconductor package.
@@ -23,7 +23,7 @@ MassSpecWavelet is a Bioconductor package.
 ## R CMD check results
 There were no ERRORs or WARNINGs.
 
-Local OS X build generated no NOTEs
+Local OS X build generated NOTEs
 
 Travis.ci generated 1 NOTE
 
@@ -35,7 +35,6 @@ Win-builder generated NOTEs
 
 * possibly mis-spelled words in DESCRIPTION: These words are not mis-spelled.
 
-* package size is 5.4 Mb. This is because it includes 2 vignettes, for the 2 main methods in the package and also because a dataset is included.
 
 
 ## Downstream dependencies

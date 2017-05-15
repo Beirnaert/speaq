@@ -2,6 +2,7 @@
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = TRUE)
 figwidth.out <- 600
+DPI.out <- 150
 
 ## ----Read_data_input,fig.keep='none', tidy=FALSE, message=F, warning=F----
 library(speaq)
@@ -10,7 +11,7 @@ res=makeSimulatedData();
 X=res$data;
 groupLabel=res$label;
 
-## ----Unaligned_spectral_plots, dpi=150, fig.width=6, fig.height=5, out.width = figwidth.out----
+## ----Unaligned_spectral_plots, dpi=DPI.out, fig.width=6, fig.height=5, out.width = figwidth.out----
 drawSpec(X);
 
 ## ----Peak_detection------------------------------------------------------
@@ -53,7 +54,7 @@ Y <- dohCluster(X,
                 acceptLostPeak = TRUE, verbose=FALSE);
 
 
-## ----Spectral_alignment_optimal_maxShift,fig.align='center', dpi=150, fig.width=6, fig.height=5, out.width = figwidth.out----
+## ----Spectral_alignment_optimal_maxShift,fig.align='center', dpi=DPI.out, fig.width=6, fig.height=5, out.width = figwidth.out----
 Y <- dohCluster(X,
                 peakList = peakList,
                 refInd = refInd,
@@ -84,17 +85,17 @@ Yc <- dohClusterCustommedSegments(X,
                                  verbose=FALSE)
                                  
 
-## ----AlignedSpectral_plots, dpi=150, fig.width=6, fig.height=5, out.width = figwidth.out----
+## ----AlignedSpectral_plots, dpi=DPI.out, fig.width=6, fig.height=5, out.width = figwidth.out----
 drawSpec(Y);
 
-## ----AlignedSpectral_plots_limited_height, dpi=150, fig.width=6, fig.height=5, out.width = figwidth.out----
+## ----AlignedSpectral_plots_limited_height, dpi=DPI.out, fig.width=6, fig.height=5, out.width = figwidth.out----
 drawSpec(Y,
         startP=450,
         endP=680,
         highBound = 5e+5,
         lowBound = -100);
 
-## ----Aligned_spectral_plots_customized, dpi=150, fig.width=6, fig.height=5, out.width = figwidth.out----
+## ----Aligned_spectral_plots_customized, dpi=DPI.out, fig.width=6, fig.height=5, out.width = figwidth.out----
 drawSpec(Yc);
 
 ## ----Quantitative_analysis-----------------------------------------------
@@ -114,12 +115,12 @@ for (i in 1 : length(perc)){
     perc[i] = quantile(H0[,i],1-alpha_corr, type = 3);
 }
 
-## ----drawBW_1, dpi=150, fig.width=7, fig.height=7, out.width = figwidth.out----
+## ----drawBW_1, dpi=DPI.out, fig.width=7, fig.height=7, out.width = figwidth.out----
 
 drawBW(BW, perc,Y, groupLabel = groupLabel)
 
 
-## ----drawBW_2, dpi=150, fig.width=7, fig.height=7, out.width = figwidth.out----
+## ----drawBW_2, dpi=DPI.out, fig.width=7, fig.height=7, out.width = figwidth.out----
 
 drawBW(BW, perc, Y ,startP=450, endP=680, groupLabel = groupLabel)
 

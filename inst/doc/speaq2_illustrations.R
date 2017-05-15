@@ -2,8 +2,10 @@
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 figwidth.out <- 600
+dpi.HQ <- 180
+dpi.LQ <- 120
 
-## ----wine data, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out----
+## ----wine data, dpi=dpi.HQ, fig.width=7, fig.height=4, out.width = figwidth.out----
 library(speaq)
 data(Winedata)
 Spectra.wine <- as.matrix(Winedata$spectra )
@@ -18,7 +20,7 @@ drawSpecPPM(Y.spec = Spectra.wine,
             legend.extra.x = 1, 
             legend.extra.y = 1.1)
 
-## ----wine excerpt, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out----
+## ----wine excerpt, dpi=dpi.HQ, fig.width=7, fig.height=4, out.width = figwidth.out----
 # small excerpt by defining the region of interest
 drawSpecPPM(Y.spec = Spectra.wine, 
             X.ppm = ppm.wine, 
@@ -45,7 +47,7 @@ wine.grouped <- PeakGrouper(Y.peaks = wine.peaks,
                             grouping.window.width = 200)
 
 
-## ----plots base, dpi=200, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE----
+## ----plots base, dpi=dpi.HQ, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE----
 # adding labels to the dat a for plotting and the group ppm values
 
 ROI.ppm <- 1.330
@@ -59,7 +61,7 @@ ROIplot(Y.spec = Spectra.wine,
         roiWidth.ppm = roiWidth.ppm , 
         groupLabels = as.factor(wine.color))
 
-## ----silhouette values,  results = "hide", dpi=100, fig.width=6, fig.height=3.5, out.width = figwidth.out----
+## ----silhouette values,  results = "hide", dpi=dpi.LQ, fig.width=6, fig.height=3.5, out.width = 500----
 library(ggplot2)
 SilhouetteValues <- SilhouetR(DataMatrix = wine.grouped$peakPPM, 
                               GroupIndices = wine.grouped$peakIndex)
@@ -87,7 +89,7 @@ colnames(sil_means) <- c("groupIndex", "avg_silhouette_val", "avg. SNR")
 head(sil_means)
 
 
-## ----wrong grouping plot,  dpi=200, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE----
+## ----wrong grouping plot,  dpi=dpi.HQ, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE----
 
 faulty.groupIndex <- sil_means[1,1]
 ROI.ppm <- ppm.wine[faulty.groupIndex]
@@ -111,7 +113,7 @@ wine.regrouped <- regroupR(grouped.peaks = wine.grouped,
                            max.dupli.prop = 0.1)
 
 
-## ----regroup fix plot,  dpi=200, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE----
+## ----regroup fix plot,  dpi=dpi.HQ, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE----
 
 
 faulty.groupIndex <- sil_means[1,1]
@@ -145,7 +147,7 @@ wine.Features.scaled <- SCANT(data.matrix = wine.Features,
                               type = c("pareto", "center"))  
 
 
-## ----PCA, dpi=150, fig.width=5, fig.height=3, out.width = figwidth.out----
+## ----PCA, dpi=dpi.LQ, fig.width=5, fig.height=3, out.width = 500---------
 
 
 common.pca <- prcomp(wine.Features.scaled) 
@@ -202,7 +204,7 @@ significant.features <- p.all_bonf[p.all_bonf$p.values<=0.05, ]
 significant.features <- significant.features[order(significant.features[,2]),]
 head(significant.features)
 
-## ----r significant features plots , dpi=200, fig.width=6, fig.height=8, fig.keep = "all", tidy = FALSE, warnings = FALSE, out.width = figwidth.out----
+## ----r significant features plots 1 , dpi=dpi.HQ, fig.width=5, fig.height=6, fig.keep = "all", tidy = FALSE, warnings = FALSE, out.width = 500----
 
 
 
@@ -237,6 +239,13 @@ ggplot(p.all_bonf, aes(x=as.numeric(rownames(p.all_bonf)), y= -log10(p.values) )
 
 
 
+
+
+## ----r significant features plots 2 , dpi=dpi.HQ, fig.width=6, fig.height=8, fig.keep = "all", tidy = FALSE, warnings = FALSE, out.width = figwidth.out----
+
+
+
+
 ROIplot(Y.spec = Spectra.wine, 
         X.ppm = ppm.wine, 
         ungrouped.peaks = wine.peaks,
@@ -247,7 +256,7 @@ ROIplot(Y.spec = Spectra.wine,
 
 
 
-## ----plot significant features, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out----
+## ----plot significant features, dpi=dpi.HQ, fig.width=7, fig.height=4, out.width = figwidth.out----
 
 peak_of_interest <- 5# change this number to any of the peaks you want to see
 drawSpecPPM(Y.spec = Spectra.wine[wine.color != "rose", ], 
@@ -265,7 +274,7 @@ drawSpecPPM(Y.spec = Spectra.wine[wine.color != "rose", ],
             legendpos = "topright" )
 
 
-## ----speaq 1.0,  dpi=200, fig.width=7, fig.height=4, message=F, out.width = figwidth.out----
+## ----speaq 1.0,  dpi=dpi.HQ, fig.width=7, fig.height=4, message=F, out.width = figwidth.out----
 
 
 peakList <- detectSpecPeaks(as.matrix(Spectra.wine),   
