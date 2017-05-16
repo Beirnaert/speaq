@@ -11,6 +11,7 @@
 #' @param roiWidth The width of the ROI (region of interest) plot in index points/measurement points. The plot will span from ROI/ROI.ppm - roiWidth to ROI/ROI.ppm + roiWidth. (only supply roiWidth or roiWidth.ppm if needed).
 #' @param roiWidth.ppm The width of the ROI (region of interest) plot in ppm. The plot will span from ROI/ROI.ppm - roiWidth.ppm to ROI/ROI.ppm + roiWidth.ppm. (only supply roiWidth or roiWidth.ppm if needed).
 #' @param groupLabels The vector with group labels (as factors)
+#' @param output Whether to return a plot (default), or the individual ggplot objects (output = "ggObjects")
 #' 
 #' 
 #' @return a plot
@@ -24,20 +25,21 @@
 #'
 #' test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
 #'                               X.ppm=subset.ppm,
-#'                               nCPU = 2) # nCPU set to 2 for the vignette build
+#'                               nCPU = 1) # nCPU set to 2 for the vignette build
 #'
 #' test.grouped <- PeakGrouper(Y.peaks = test.peaks)
 #'                            
 #' ROI.ppm <- 4.9
-#' roiWidth.ppm <- 1
+#' roiWidth.ppm <- 0.15
 #'
-#' ROIplot(Y.spec = subset.spectra, 
-#'         X.ppm =subset.ppm, 
-#'         ungrouped.peaks = test.peaks,
-#'         grouped.peaks = test.grouped ,
-#'         ROI.ppm = ROI.ppm,
-#'         roiWidth.ppm = roiWidth.ppm , 
-#'         )
+#' plots <- ROIplot(Y.spec = subset.spectra, 
+#'                  X.ppm =subset.ppm, 
+#'                  ungrouped.peaks = test.peaks,
+#'                  grouped.peaks = test.grouped ,
+#'                  ROI.ppm = ROI.ppm,
+#'                  roiWidth.ppm = roiWidth.ppm , 
+#'                  output = "ggObjects"
+#'                  )
 #'
 #' @export
 #' 
@@ -46,7 +48,7 @@
 #' @importFrom reshape2 melt
 #' @importFrom gridExtra grid.arrange
 #' 
-ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, ROI.ppm = NULL, roiWidth = 100, roiWidth.ppm = NULL, groupLabels = NULL) {
+ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, ROI.ppm = NULL, roiWidth = 100, roiWidth.ppm = NULL, groupLabels = NULL, output = NULL) {
  
     if (!is.null(roiWidth.ppm)) {
         step <- stats::median(abs(diff(X.ppm)))
@@ -94,6 +96,12 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
                 groupLabels <- as.factor(as.numeric(groupLabels))
             })
         }
+    }
+    
+    if(is.null(output)){
+         
+    } else if(output != "ggObjects"){
+        output = NULL
     }
     
     peaks.plot <- AddPlottingStuff(Y.peaks = ungrouped.peaks, 
@@ -146,6 +154,10 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
            theme(legend.title = element_blank(),
                  plot.title = element_text(face = "bold",hjust = 0.5)) 
   
-    gridExtra::grid.arrange(pp0, pp1, pp2, ncol=1)
+    if(is.null(output)){
+        gridExtra::grid.arrange(pp0, pp1, pp2, ncol=1)
+    } else{
+        return(list(SpectraPlot = pp0, peakPlot = pp1, GroupPlot = pp2))
+    }
 }
 

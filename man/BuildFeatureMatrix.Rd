@@ -9,7 +9,7 @@ BuildFeatureMatrix(Y.data, var = "peakValue", impute = "zero",
   thresholds.pass = "any-to-pass")
 }
 \arguments{
-\item{Y.data}{The dataset after (at least) peak detection and grouping with speaq 2.0.}
+\item{Y.data}{The dataset after (at least) peak detection and grouping with speaq 2.0. The dataset after peak filling is recomended.}
 
 \item{var}{The variable to be used in the Featurematrix. This can be any of 'peakIndex', 'peakPPM', 'peakValue' (default), 'peakSNR', 'peakScale', or 'Sample'.}
 
@@ -37,15 +37,11 @@ subset.ppm = as.numeric(subset$PPM)
 
 test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
                               X.ppm=subset.ppm,
-                              nCPU = 2) # nCPU set to 2 for the vignette build
+                              nCPU = 1) # nCPU set to 2 for the vignette build
 
 test.grouped <- PeakGrouper(Y.peaks = test.peaks)
-
-test.filled <- PeakFilling(Y.grouped = test.grouped, 
-                           Y.spec = subset.spectra,  
-                           nCPU = 2) # nCPU set to 2 for the vignette build
                            
-test.Features <- BuildFeatureMatrix(test.filled)
+test.Features <- BuildFeatureMatrix(test.grouped)
 
         
 }

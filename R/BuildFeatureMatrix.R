@@ -3,7 +3,7 @@
 #' This function converts the grouped peak data to a matrix.
 #' The matrix has features (peaks groups) in the columns and the value of the peak for every sample in the rows. 
 #'
-#' @param Y.data The dataset after (at least) peak detection and grouping with speaq 2.0.
+#' @param Y.data The dataset after (at least) peak detection and grouping with speaq 2.0. The dataset after peak filling is recomended.
 #' @param var The variable to be used in the Featurematrix. This can be any of 'peakIndex', 'peakPPM', 'peakValue' (default), 'peakSNR', 'peakScale', or 'Sample'.
 #' @param impute What to impute when a certain peak is missing for a certain sample and feature combo. Options are 'zero' (or 'zeros'), any other statement will produce NA's.
 #' @param delete.below.threshold Whether to ignore peaks for which the 'var' variable has a value below 'baselineThresh' (default = FALSE).
@@ -22,15 +22,11 @@
 #' 
 #' test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
 #'                               X.ppm=subset.ppm,
-#'                               nCPU = 2) # nCPU set to 2 for the vignette build
+#'                               nCPU = 1) # nCPU set to 2 for the vignette build
 #'
 #' test.grouped <- PeakGrouper(Y.peaks = test.peaks)
-#'
-#' test.filled <- PeakFilling(Y.grouped = test.grouped, 
-#'                            Y.spec = subset.spectra,  
-#'                            nCPU = 2) # nCPU set to 2 for the vignette build
 #'                            
-#' test.Features <- BuildFeatureMatrix(test.filled)
+#' test.Features <- BuildFeatureMatrix(test.grouped)
 #'
 #'         
 #' @export

@@ -6,7 +6,7 @@
 \usage{
 ROIplot(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL,
   ROI.ppm = NULL, roiWidth = 100, roiWidth.ppm = NULL,
-  groupLabels = NULL)
+  groupLabels = NULL, output = NULL)
 }
 \arguments{
 \item{Y.spec}{(required) The raw spectra in matrix format (1 sample per row) or numeric vector (in case of 1 spectrum)}
@@ -26,6 +26,8 @@ ROIplot(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL,
 \item{roiWidth.ppm}{The width of the ROI (region of interest) plot in ppm. The plot will span from ROI/ROI.ppm - roiWidth.ppm to ROI/ROI.ppm + roiWidth.ppm. (only supply roiWidth or roiWidth.ppm if needed).}
 
 \item{groupLabels}{The vector with group labels (as factors)}
+
+\item{output}{Whether to return a plot (default), or the individual ggplot objects (output = "ggObjects")}
 }
 \value{
 a plot
@@ -40,20 +42,21 @@ subset.ppm = as.numeric(subset$PPM)
 
 test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
                               X.ppm=subset.ppm,
-                              nCPU = 2) # nCPU set to 2 for the vignette build
+                              nCPU = 1) # nCPU set to 2 for the vignette build
 
 test.grouped <- PeakGrouper(Y.peaks = test.peaks)
                            
 ROI.ppm <- 4.9
-roiWidth.ppm <- 1
+roiWidth.ppm <- 0.15
 
-ROIplot(Y.spec = subset.spectra, 
-        X.ppm =subset.ppm, 
-        ungrouped.peaks = test.peaks,
-        grouped.peaks = test.grouped ,
-        ROI.ppm = ROI.ppm,
-        roiWidth.ppm = roiWidth.ppm , 
-        )
+plots <- ROIplot(Y.spec = subset.spectra, 
+                 X.ppm =subset.ppm, 
+                 ungrouped.peaks = test.peaks,
+                 grouped.peaks = test.grouped ,
+                 ROI.ppm = ROI.ppm,
+                 roiWidth.ppm = roiWidth.ppm , 
+                 output = "ggObjects"
+                 )
 
 }
 \author{
