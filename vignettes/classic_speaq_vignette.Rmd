@@ -4,7 +4,7 @@ author: "Trung Nghia Vu, Charlie Beirnaert, et al."
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{speaq 2.0 function illustrations}
+  %\VignetteIndexEntry{classic speaq vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 
