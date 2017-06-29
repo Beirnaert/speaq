@@ -60,7 +60,9 @@ Functions include
 
 ## A minimal example
 
+```r
 library(speaq)
+
 # get the data. (spectra in matrix format)
 spectra.matrix = as.matrix(Winedata$spectra)
 ppm.vector = as.numeric(Winedata$ppm)
@@ -77,7 +79,7 @@ groups <- PeakGrouper(Y.peaks = test.peaks)
 
 # get the feature matrix
 Features <- BuildFeatureMatrix(groups)
-
+```
 
 ### <a name="Refs"></a> References 
 
