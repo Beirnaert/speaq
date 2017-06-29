@@ -58,10 +58,32 @@ Functions include
 	- etc.
 
 
+## A minimal example
+
+library(speaq)
+# get the data. (spectra in matrix format)
+spectra.matrix = as.matrix(Winedata$spectra)
+ppm.vector = as.numeric(Winedata$ppm)
+class.factor = as.factor(Winedata$wine.color)
+
+# plot the spectra
+drawSpecPPM(Y.spec = spectra.matrix, X.ppm = ppm.vector, groupFactor = class.vector, title = 'Example spectra')
+
+# peak detection
+peaks <- getWaveletPeaks(Y.spec = spectra.matrix, X.ppm = ppm.vector)  # the default mode is parallel
+
+# peak grouping
+groups <- PeakGrouper(Y.peaks = test.peaks)
+
+# get the feature matrix
+Features <- BuildFeatureMatrix(groups)
+
 
 ### <a name="Refs"></a> References 
 
-Vu TN, Valkenborg D, Smets K, Verwaest KA, Dommisse R, Lemière F, Verschoren A, Goethals B, Laukens K. (2011) An integrated workflow for robust alignment and simplified quantitative analysis of NMR spectrometry data. BMC Bioinformatics. 2011 Oct 20;12:405.
+Vu TN, Valkenborg D, Smets K, Verwaest KA, Dommisse R, Lemière F, Verschoren A, Goethals B, Laukens K. An integrated workflow for robust alignment and simplified quantitative analysis of NMR spectrometry data. BMC Bioinformatics, 2011, 12:405.
+
+**preprint** Beirnaert C, Meysman P, Vu TN, Hermans N, Apers S, Pieters L, Covaci A, Laukens K (2017) speaq 2.0: a complete workflow for high-throughput 1D NMR spectra processing and quantification. bioRxiv preprint server, 2017, doi: https://doi.org/10.1101/138503
 
 ### License
 
