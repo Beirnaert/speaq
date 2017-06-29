@@ -78,7 +78,9 @@ peaks <- getWaveletPeaks(Y.spec = spectra.matrix, X.ppm = ppm.vector)  # the def
 groups <- PeakGrouper(Y.peaks = test.peaks)
 
 # get the feature matrix
-Features <- BuildFeatureMatrix(groups)
+Features <- BuildFeatureMatrix(Y.data = groups)
+
+# this featurematrix can be processed further (scaling, transformations) or analysed with the statistical tools of interest like PCA. 
 ```
 
 ### <a name="Refs"></a> References 
