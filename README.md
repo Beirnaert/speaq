@@ -60,7 +60,7 @@ Functions include
 
 ## A minimal example
 
-```r
+```R
 library(speaq)
 
 # get the data. (spectra in matrix format)
