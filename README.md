@@ -69,14 +69,10 @@ ppm.vector = as.numeric(Winedata$ppm)
 class.factor = as.factor(Winedata$wine.color)
 
 # plot the spectra
-drawSpecPPM(Y.spec = spectra.matrix, 
-            X.ppm = ppm.vector, 
-	    groupFactor = class.vector, 
-	    title = 'Example spectra')
+drawSpecPPM(Y.spec = spectra.matrix, X.ppm = ppm.vector, groupFactor = class.vector, title = 'Example spectra')
 
 # peak detection (the default mode is parallel)
-peaks <- getWaveletPeaks(Y.spec = spectra.matrix, 
-                         X.ppm = ppm.vector)  
+peaks <- getWaveletPeaks(Y.spec = spectra.matrix, X.ppm = ppm.vector)  
 
 # peak grouping
 groups <- PeakGrouper(Y.peaks = test.peaks)
