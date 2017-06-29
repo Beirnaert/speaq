@@ -42,7 +42,7 @@ onion.percent <- Oniondata$onion.percent
 onion.grouplabels <- Oniondata$grouplabels
 ```
 
-### Plotting the raw wine data
+### Plotting the onion intake data
 
 ```{r onion intake data, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
 # plot of all spectra
