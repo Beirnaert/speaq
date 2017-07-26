@@ -53,7 +53,7 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
     if (!is.null(roiWidth.ppm)) {
         step <- stats::median(abs(diff(X.ppm)))
         roiWidth <- round(roiWidth.ppm/step)
-    } else if (!is.null(roiWidth)){
+    } else {
         step <- stats::median(abs(diff(X.ppm)))
         roiWidth.ppm <- roiWidth*step
     }
