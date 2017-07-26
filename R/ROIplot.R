@@ -115,7 +115,9 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
                                              X.ppm = X.ppm, 
                                              groupLabels = groupLabels)
     
-    peakValRange = range(ungrouped.peaks$peakValue, finite = TRUE)
+    peakValRange = range(ungrouped.peaks$peakValue[ungrouped.peaks$peakPPM > (ROI.ppm - roiWidth.ppm ) &
+    ungrouped.peaks$peakPPM < (ROI.ppm + roiWidth.ppm )], finite = TRUE)
+    
     Range.extra = (peakValRange[2] - peakValRange[1]) * 0.01
 
     pp1 <- ggplot(peaks.plot[peaks.plot$peakPPM > (ROI.ppm - roiWidth.ppm ) & 
