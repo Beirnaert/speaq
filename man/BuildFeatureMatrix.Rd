@@ -13,7 +13,7 @@ BuildFeatureMatrix(Y.data, var = "peakValue", impute = "zero",
 
 \item{var}{The variable to be used in the Featurematrix. This can be any of 'peakIndex', 'peakPPM', 'peakValue' (default), 'peakSNR', 'peakScale', or 'Sample'.}
 
-\item{impute}{What to impute when a certain peak is missing for a certain sample and feature combo. Options are 'zero' (or 'zeros'), any other statement will produce NA's.}
+\item{impute}{What to impute when a certain peak is missing for a certain sample and feature combo. Options are 'zero' (or 'zeros'), mean (imputetion with mean), randomForest (imputation with missForest function from package missForest) or kNN followed by a number indicating the amount of neighbours to use e.g. kNN5 or kNN10 (as per the method of Troyanskaya, 2001). Any other statement will produce NA's.}
 
 \item{delete.below.threshold}{Whether to ignore peaks for which the 'var' variable has a value below 'baselineThresh' (default = FALSE).}
 
@@ -44,6 +44,9 @@ test.grouped <- PeakGrouper(Y.peaks = test.peaks)
 test.Features <- BuildFeatureMatrix(test.grouped)
 
         
+}
+\references{
+Olga Troyanskaya, Michael Cantor, Gavin Sherlock, Pat Brown, Trevor Hastie, Robert Tibshirani, David Botstein and Russ B. Altman, Missing value estimation methods for DNA microarrays BIOINFORMATICS Vol. 17 no. 6, 2001 Pages 520-525
 }
 \author{
 Charlie Beirnaert, \email{charlie.beirnaert@uantwerpen.be}

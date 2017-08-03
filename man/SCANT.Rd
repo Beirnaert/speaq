@@ -28,6 +28,9 @@ ncol = Features, nrow = Samples)
 changed_matrix = SCANT(data.matrix, type=c('pareto', 'center'), what = 'columns')
 
 }
+\references{
+van den Berg RA, Hoefsloot HCJ, Westerhuis JA, et al. Centering, scaling, and transformations: improving the biological information content of metabolomics data. BMC Genomics 2006; 7:142.
+}
 \author{
 Charlie Beirnaert, \email{charlie.beirnaert@uantwerpen.be}
 }

@@ -5,11 +5,13 @@
 #'
 #' @param Y.data The dataset after (at least) peak detection and grouping with speaq 2.0. The dataset after peak filling is recomended.
 #' @param var The variable to be used in the Featurematrix. This can be any of 'peakIndex', 'peakPPM', 'peakValue' (default), 'peakSNR', 'peakScale', or 'Sample'.
-#' @param impute What to impute when a certain peak is missing for a certain sample and feature combo. Options are 'zero' (or 'zeros'), any other statement will produce NA's.
+#' @param impute What to impute when a certain peak is missing for a certain sample and feature combo. Options are 'zero' (or 'zeros'), mean (imputetion with mean), randomForest (imputation with missForest function from package missForest) or kNN followed by a number indicating the amount of neighbours to use e.g. kNN5 or kNN10 (as per the method of Troyanskaya, 2001). Any other statement will produce NA's.
 #' @param delete.below.threshold Whether to ignore peaks for which the 'var' variable has a value below 'baselineThresh' (default = FALSE).
 #' @param baselineThresh The threshold for the 'var' variable peaks have to surpass to be included in the feature matrix.
 #' @param snrThres The threshold for the signal-to-noise ratio of a peak.
 #' @param thresholds.pass This variable lets users deside whether a peak has to pass all the thresholds (both snrThres and baselineThresh), or just one. (If the peak does not need to surpass any thresholds set 'delete.below.threshold' to FALSE). 
+#' 
+#' @references Olga Troyanskaya, Michael Cantor, Gavin Sherlock, Pat Brown, Trevor Hastie, Robert Tibshirani, David Botstein and Russ B. Altman, Missing value estimation methods for DNA microarrays BIOINFORMATICS Vol. 17 no. 6, 2001 Pages 520-525
 #' 
 #' @return a matrix, data.matrix, with samples for rows and features for columns. The values in the matrix are thoes of the 'var' variable.
 #'
@@ -30,6 +32,9 @@
 #'
 #'         
 #' @export
+#' 
+#' @importFrom missForest missForest
+#' @importFrom impute impute.knn
 #' 
 BuildFeatureMatrix <- function(Y.data, var = "peakValue", impute = "zero", delete.below.threshold = FALSE, 
     baselineThresh = 500, snrThres = 3, thresholds.pass = "any-to-pass") {
@@ -110,7 +115,12 @@ BuildFeatureMatrix <- function(Y.data, var = "peakValue", impute = "zero", delet
         for (k in 1:nFeatures) {
             data.matrix[is.na(data.matrix[, k]), k] <- mean(data.matrix[!is.na(data.matrix[, k]), k])
         }
+    } else if(length(grep("kNN",  impute)) > 0){
+        data.matrix <- impute::impute.knn(data.matrix, k = as.numeric(gsub("kNN","", impute)), rowmax = 0.5, colmax = 0.8, maxp = 1500)
+    } else if (impute == "randomForest"){
+        data.matrix <- missForest::missForest(data.matrix, verbose = FALSE)
     }
+    
     
     return(data.matrix)
 }
