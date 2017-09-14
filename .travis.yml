@@ -4,6 +4,7 @@ cache: packages
 
 r: # also include oldrel and devel when finished
   - release
+  - devel
 
 bioc_packages:
   - MassSpecWavelet

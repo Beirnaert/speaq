@@ -1,9 +1,3 @@
-new maintainer
---------------
-
-Under mutual agreement with Trung Nghia Vu (<nghiavtr@gmail.com>) I will
-take over the package maintenance.
-
 Bioconductor
 ------------
 
@@ -13,12 +7,10 @@ Test environments
 -----------------
 
 -   local OS X install, R 3.3.2
--   devtools win-builder, R-oldrelease
--   devtools win-builder, R-release (3.4.0)
--   devtools win-builder, R devel (unstable) (2017-05-11 r72669)
--   travis.ci Linux, x64, R oldrel (3.3.3)
--   travis.ci Linux, x64, R release (3.4.0)
--   travis.ci Linux, x64, R devel (unstable) (2017-05-12 r72670)
+-   devtools win-builder, R-release (3.4.1)
+-   devtools win-builder, R devel (unstable) (2017-09-12 r73242)
+-   travis.ci Linux, x64, R release (3.4.1)
+-   travis.ci Linux, x64, R devel (unstable)
 
 R CMD check results
 -------------------
@@ -30,9 +22,6 @@ Local OS X build generated NOTEs
 Travis.ci generated 1 NOTE
 
 Win-builder generated NOTEs
-
--   new package maintainer: Under mutual agreement with Trung Nghia Vu
-    (<nghiavtr@gmail.com>) I will take over the package maintenance.
 
 -   Uses the superseded package: 'doSNOW': this is to provide progress
     bars when performing parallel computations (not available in
