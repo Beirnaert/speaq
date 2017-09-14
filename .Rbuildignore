@@ -11,3 +11,4 @@
 ^speaq2_Extra/Speaq2_NMRprocessing.Rmd$
 ^docimages/speaq-github-workflow.png$
 ^revdep/.+$
+^.gitattributes
