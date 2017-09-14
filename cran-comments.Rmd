@@ -12,7 +12,7 @@ MassSpecWavelet is a Bioconductor package.
 * devtools win-builder, R-release (3.4.1)
 * devtools win-builder, R devel (unstable) (2017-09-12 r73242)
 * travis.ci Linux, x64, R release (3.4.1)
-* travis.ci Linux, x64, R devel (unstable) 
+* travis.ci Linux, x64, R devel (unstable) (2017-09-14 r73258) 
 
 
 ## R CMD check results
@@ -20,7 +20,7 @@ There were no ERRORs or WARNINGs.
 
 Local OS X build generated NOTEs
 
-Travis.ci generated 1 NOTE
+Travis.ci generated no NOTE
 
 Win-builder generated NOTEs
 
