@@ -4,3 +4,4 @@ data/ linguist-vendored = true
 *.rds text
 inst/ linguist-documentation
 R/ linguist-vendored = false
+vignettes/ linguist-vendored = true
