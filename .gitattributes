@@ -1,8 +1,6 @@
 /data linguist-vendored = true
 *.md text
-*.Rmd text
 *.rda text
 *.rds text
-*.Rd text
-/inst linguist-vendored = true
+/inst linguist-documentation
 /R linguist-vendored = false
