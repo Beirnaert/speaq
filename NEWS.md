@@ -1,3 +1,11 @@
+# speaq 2.1:
+### 14/09/2017
+
+
+* HMDB searchfunction added
+* general bugfixes
+
+
 # speaq 2.0:
 ### 12/05/2017
 
