@@ -91,7 +91,7 @@ There are two notes to be made on some important parameters:
 
 ```{r plots base, dpi=dpi.HQ, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
 # adding labels to the dat a for plotting and the group ppm values
-
+library(ggplot2)
 ROI.ppm <- 1.330
 roiWidth.ppm <- 0.025
 
@@ -107,7 +107,6 @@ ROIplot(Y.spec = Spectra.wine,
 The plot above shows clearly what the basis of speaq 2.0 does, convert spectra accurately to peak data and group these peaks. The quality of the grouping can be checked by plotting the silhouette values. this can be done with the `SilhouetR()` function. 
 
 ```{r silhouette values,  results = "hide", dpi=dpi.LQ, fig.width=6, fig.height=3.5, out.width = 500}
-library(ggplot2)
 SilhouetteValues <- SilhouetR(DataMatrix = wine.grouped$peakPPM, 
                               GroupIndices = wine.grouped$peakIndex)
 

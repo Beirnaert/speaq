@@ -49,7 +49,7 @@ wine.grouped <- PeakGrouper(Y.peaks = wine.peaks,
 
 ## ----plots base, dpi=dpi.HQ, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE----
 # adding labels to the dat a for plotting and the group ppm values
-
+library(ggplot2)
 ROI.ppm <- 1.330
 roiWidth.ppm <- 0.025
 
@@ -62,7 +62,6 @@ ROIplot(Y.spec = Spectra.wine,
         groupLabels = as.factor(wine.color))
 
 ## ----silhouette values,  results = "hide", dpi=dpi.LQ, fig.width=6, fig.height=3.5, out.width = 500----
-library(ggplot2)
 SilhouetteValues <- SilhouetR(DataMatrix = wine.grouped$peakPPM, 
                               GroupIndices = wine.grouped$peakIndex)
 

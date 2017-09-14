@@ -10,3 +10,5 @@
 ^speaq2_Extra/Oniondata.rda$
 ^speaq2_Extra/Speaq2_NMRprocessing.Rmd$
 ^docimages/speaq-github-workflow.png$
+^revdep/.+$
+^revdep/checks.rda$
