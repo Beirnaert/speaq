@@ -23,10 +23,12 @@ Travis.ci generated no NOTE
 
 Win-builder generated NOTEs
 
--   Uses the superseded package: 'doSNOW': this is to provide progress
-    bars when performing parallel computations (not available in
-    doParallel so far). When this option is avalaible in doParallel the
-    switch to this package will be made.
+-   Uses the superseded package: 'doSNOW': this is to provide
+    continuously updated progress bars when performing parallel
+    computations (not available in doParallel so far as doParallel calls
+    the combine function only when all results have been accumulated).
+    When this option is avalaible in doParallel the switch to this
+    package will be made.
 
 -   possibly mis-spelled words in DESCRIPTION: These words are
     not mis-spelled.
