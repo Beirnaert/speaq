@@ -19,7 +19,7 @@ dpi.LQ <- 120
 
 ## speaq 2.0
 
-To illustrate the possibilities of speaq 2.0, the wine dataset is used (available form the University of Copenhagen at http://www.models.life.ku.dk/). This dataset is also utilized in the paper so with this vignette you will be able to reproduce the results.
+To illustrate the possibilities of speaq 2.0, the wine dataset is used (available form the University of Copenhagen at models.life.ku.dk). This dataset is also utilized in the paper so with this vignette you will be able to reproduce the results.
 
 Before we start with the example let's first recap what the new method in speaq 2.0 encompass:
 

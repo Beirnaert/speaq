@@ -6,7 +6,7 @@
 \title{Wine dataset}
 \format{A list with the spectra, ppm values, color and origin as list entries.}
 \source{
-\href{http://www.models.life.ku.dk/datasets}{University of Copenhagen, Dept. of Food Science, Quality & Technology}
+University of Copenhagen, Dept. of Food Science, Quality & Technology. Available at 'models.life.ku.dk/datasets'
 }
 \usage{
 data(Winedata)
