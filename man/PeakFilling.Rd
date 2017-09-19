@@ -31,13 +31,13 @@ subset.ppm = as.numeric(subset$PPM)
 
 test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
                               X.ppm=subset.ppm,
-                              nCPU = 2) # nCPU set to 2 for the vignette build
+                              nCPU = 1) # nCPU set to 1 for the vignette build
 
 test.grouped <- PeakGrouper(Y.peaks = test.peaks)
 
 test.filled <- PeakFilling(Y.grouped = test.grouped, 
                            Y.spec = subset.spectra,  
-                           nCPU = 2) # nCPU set to 2 for the vignette build
+                           nCPU = 1) # nCPU set to 1 for the vignette build
 
 
 }
