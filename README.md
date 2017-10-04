@@ -75,7 +75,7 @@ drawSpecPPM(Y.spec = spectra.matrix, X.ppm = ppm.vector, groupFactor = class.vec
 peaks <- getWaveletPeaks(Y.spec = spectra.matrix, X.ppm = ppm.vector)  
 
 # peak grouping
-groups <- PeakGrouper(Y.peaks = test.peaks)
+groups <- PeakGrouper(Y.peaks = peaks)
 
 # get the feature matrix
 Features <- BuildFeatureMatrix(Y.data = groups)
