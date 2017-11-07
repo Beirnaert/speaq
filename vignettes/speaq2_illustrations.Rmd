@@ -38,12 +38,12 @@ ppm.wine <- as.numeric(Winedata$ppm)
 wine.color <- Winedata$wine.color 
 wine.origin <- Winedata$origin 
 # all spectra
-drawSpecPPM(Y.spec = Spectra.wine, 
-            X.ppm = ppm.wine, 
-            title = 'Wine data spectra', 
-            groupFactor = wine.color, 
-            legend.extra.x = 1, 
-            legend.extra.y = 1.1)
+speaq::drawSpecPPM(Y.spec = Spectra.wine, 
+                   X.ppm = ppm.wine, 
+                   title = 'Wine data spectra', 
+                   groupFactor = wine.color, 
+                   legend.extra.x = 1, 
+                   legend.extra.y = 1.1)
 ```
 
 The `drawSpecPPM()` plotting function indicates that there might be a gap in the data (which is correct as the original authors deleted the region between 5.0 and 4.5 ppm). This warning can be of importance for the interpretation of the plot as in this case the original authors deleted the data, not by setting the values to 0, but by effectively removing it from the matrix and ppm vector. This produces a plot that appears continuous but is in fact not. 
@@ -51,16 +51,16 @@ The `drawSpecPPM()` plotting function indicates that there might be a gap in the
 The `drawSpecPPM()` function also indicates that the groupFactor is not a factor and (succesfully) attempts to do the conversion. The next plot is an excerpt of the wine NMR spectra.
 ```{r wine excerpt, dpi=dpi.HQ, fig.width=7, fig.height=4, out.width = figwidth.out}
 # small excerpt by defining the region of interest
-drawSpecPPM(Y.spec = Spectra.wine, 
-            X.ppm = ppm.wine, 
-            groupFactor = as.factor(wine.color), 
-            title = 'Raw wine data excerpt', 
-            legend.extra.x = 1.1, 
-            legend.extra.y = 1.0, 
-            ROI.ppm = 3.6, 
-            ROI = NULL, 
-            roiWidth.ppm = 0.15, 
-            legendpos = "topright" )
+speaq::drawSpecPPM(Y.spec = Spectra.wine, 
+                   X.ppm = ppm.wine, 
+                   groupFactor = as.factor(wine.color), 
+                   title = 'Raw wine data excerpt', 
+                   legend.extra.x = 1.1, 
+                   legend.extra.y = 1.0,
+                   ROI.ppm = 3.6, 
+                   ROI = NULL, 
+                   roiWidth.ppm = 0.15,
+                   legendpos = "topright" )
 ```
 
 ### From spectra via peaks to peak groups (features)
@@ -68,17 +68,17 @@ drawSpecPPM(Y.spec = Spectra.wine,
 Now that we've had a look at the spectra it is time to convert these to peaks by using the `getWaveletPeaks()` function. This takes about 50 seconds, with `nCPU = 4` on a 2.5GHz machine (`nCPU` is set to 1 for the vignette build but should be changed).
 
 ```{r detect winepeaks,  results = "hide"}
-wine.peaks <- getWaveletPeaks(Y.spec=Spectra.wine, 
-                             X.ppm=ppm.wine, 
-                             baselineThresh = 10,
-                             SNR.Th = -1, 
-                             nCPU = 2, 
-                             include_nearbyPeaks = TRUE) # nCPU set to 2 for the vignette build
+wine.peaks <- speaq::getWaveletPeaks(Y.spec=Spectra.wine, 
+                                     X.ppm=ppm.wine, 
+                                     baselineThresh = 10,
+                                     SNR.Th = -1, 
+                                     nCPU = 2, 
+                                     include_nearbyPeaks = TRUE) # nCPU set to 2 for the vignette build
 
 
-wine.grouped <- PeakGrouper(Y.peaks = wine.peaks,  
-                            min.samp.grp = 5, 
-                            grouping.window.width = 200)
+wine.grouped <- speaq::PeakGrouper(Y.peaks = wine.peaks,  
+                                   min.samp.grp = 5, 
+                                   grouping.window.width = 200)
 
 ```
 There are two notes to be made on some important parameters:
@@ -95,20 +95,20 @@ library(ggplot2)
 ROI.ppm <- 1.330
 roiWidth.ppm <- 0.025
 
-ROIplot(Y.spec = Spectra.wine, 
-        X.ppm = ppm.wine, 
-        ungrouped.peaks = wine.peaks,
-        grouped.peaks = wine.grouped, 
-        ROI.ppm = ROI.ppm,
-        roiWidth.ppm = roiWidth.ppm , 
-        groupLabels = as.factor(wine.color))
+speaq::ROIplot(Y.spec = Spectra.wine, 
+               X.ppm = ppm.wine, 
+               ungrouped.peaks = wine.peaks,
+               grouped.peaks = wine.grouped, 
+               ROI.ppm = ROI.ppm,
+               roiWidth.ppm = roiWidth.ppm, 
+               groupLabels = as.factor(wine.color))
 ```
 
 The plot above shows clearly what the basis of speaq 2.0 does, convert spectra accurately to peak data and group these peaks. The quality of the grouping can be checked by plotting the silhouette values. this can be done with the `SilhouetR()` function. 
 
 ```{r silhouette values,  results = "hide", dpi=dpi.LQ, fig.width=6, fig.height=3.5, out.width = 500}
-SilhouetteValues <- SilhouetR(DataMatrix = wine.grouped$peakPPM, 
-                              GroupIndices = wine.grouped$peakIndex)
+SilhouetteValues <- speaq::SilhouetR(DataMatrix = wine.grouped$peakPPM, 
+                                     GroupIndices = wine.grouped$peakIndex)
 
 Silh_plot <- ggplot(SilhouetteValues, aes(SilhouetteValues)) +
              geom_freqpoly(binwidth = 0.03) +
@@ -145,13 +145,13 @@ faulty.groupIndex <- sil_means[1,1]
 ROI.ppm <- ppm.wine[faulty.groupIndex]
 roiWidth.ppm <- 0.1
 
-ROIplot(Y.spec = Spectra.wine, 
-        X.ppm = ppm.wine, 
-        ungrouped.peaks = wine.peaks,
-        grouped.peaks = wine.grouped , 
-        ROI.ppm = ROI.ppm ,
-        roiWidth.ppm = roiWidth.ppm , 
-        groupLabels = as.factor(wine.color))
+speaq::ROIplot(Y.spec = Spectra.wine, 
+               X.ppm = ppm.wine, 
+               ungrouped.peaks = wine.peaks,
+               grouped.peaks = wine.grouped, 
+               ROI.ppm = ROI.ppm,
+               roiWidth.ppm = roiWidth.ppm, 
+               groupLabels = as.factor(wine.color))
 
 ```
 
@@ -166,10 +166,10 @@ We will use option 2 in this case to demonstrate the use of the `regroupR()` fun
 ```{r regroup}
 wrong.groups <- sort(sil_means[sil_means[,1]>=sil_means[1,1],1])[1:2]
 
-wine.regrouped <- regroupR(grouped.peaks = wine.grouped, 
-                           list.to.regroup = wrong.groups, 
-                           min.samp.grp = 5 ,
-                           max.dupli.prop = 0.1)
+wine.regrouped <- speaq::regroupR(grouped.peaks = wine.grouped,
+                                  list.to.regroup = wrong.groups, 
+                                  min.samp.grp = 5,
+                                  max.dupli.prop = 0.1)
 
 ```
 
@@ -184,13 +184,13 @@ roiWidth.ppm <- 0.1
 
 
 
-ROIplot(Y.spec = Spectra.wine, 
-        X.ppm = ppm.wine, 
-        ungrouped.peaks = wine.peaks,
-        grouped.peaks = wine.regrouped , 
-        ROI.ppm = ROI.ppm ,
-        roiWidth.ppm = roiWidth.ppm , 
-        groupLabels = as.factor(wine.color))
+speaq::ROIplot(Y.spec = Spectra.wine, 
+               X.ppm = ppm.wine, 
+               ungrouped.peaks = wine.peaks,
+               grouped.peaks = wine.regrouped, 
+               ROI.ppm = ROI.ppm,
+               roiWidth.ppm = roiWidth.ppm, 
+               groupLabels = as.factor(wine.color))
 
 
 ```
@@ -201,12 +201,12 @@ With this peaks regrouped we can continu the analysis. first peak filling is app
 
 ```{r data matrix, results = "hide", message=FALSE}
 
-wine.filled <- PeakFilling(Y.grouped = wine.regrouped, 
-                          Y.spec = Spectra.wine,  
-                          max.index.shift = 200,
-                          nCPU = 2) # nCPU set to 1 for the vignette build
+wine.filled <- speaq::PeakFilling(Y.grouped = wine.regrouped, 
+                                  Y.spec = Spectra.wine,  
+                                  max.index.shift = 200,
+                                  nCPU = 2) # nCPU set to 1 for the vignette build
 
-wine.Features <- BuildFeatureMatrix(wine.filled)
+wine.Features <- speaq::BuildFeatureMatrix(wine.filled)
 
 ```
 
@@ -216,8 +216,8 @@ Now that we have these peak data they can either be incorporated in larger metab
 Now that we have the feature matrix we can quickly perform a PCA (principal component analysis) as a way of visualising potential trends and groups in the data. Before any PCA it is advised to scale and center the data, here we will use the pareto scaling but other are available (see the `SCANT()` helpfile)
 
 ```{r scaling}
-wine.Features.scaled <- SCANT(data.matrix = wine.Features, 
-                              type = c("pareto", "center"))  
+wine.Features.scaled <- speaq::SCANT(data.matrix = wine.Features, 
+                                     type = c("pareto", "center"))  
 
 ```
 
@@ -270,8 +270,8 @@ From the PCA analysis it is already clear that there is a large difference betwe
 Next we can use the `relevant.features()` function in speaq which uses linear models to produce a p-value corresponding to the nulhypothesis that feature x is not related to the outcome vector. After a p-value correction for multiple testing (as with increasing numbers of even randomly generated features some will eventually be significantly related to the output vector) we can identify the relevant features. As noted in the paper this method is perfectly suited for outcome vectors containing either 2 classes or more classes with a numeric relationship. This is unfortunately not the case here as red, white and rosé are 3 categorical variables. Since there are only 2 rosé wines we will perform the analysis leaving these ones out. This does require however to rescale the raw data without the rosé wines, as otherwise they still have an influence on the dataset
 ### removing the rose wine
 ```{r no rose}
-red.white.scaled <- SCANT(wine.Features[wine.color!="rose",], 
-                         type = c("pareto", "center"))  
+red.white.scaled <- speaq::SCANT(wine.Features[wine.color!="rose",], 
+                                 type = c("pareto", "center"))  
 
 red.white.colors <- as.factor(as.character(wine.color)[wine.color!="rose"])
 
@@ -279,9 +279,9 @@ red.white.colors <- as.factor(as.character(wine.color)[wine.color!="rose"])
 ### A differential analysis based on linear models
 
 ```{r relevant peaks}
-p.all_bonf <- relevant.features.p(datamatrix = red.white.scaled,
-                                  responsevector = red.white.colors, 
-                                  p.adj = "bonferroni")
+p.all_bonf <- speaq::relevant.features.p(datamatrix = red.white.scaled,
+                                         responsevector = red.white.colors, 
+                                         p.adj = "bonferroni")
 
 significant.features <- p.all_bonf[p.all_bonf$p.values<=0.05, ]
 
@@ -309,20 +309,21 @@ roiWidth.ppm <- 0.03
 
 
 ggplot(p.all_bonf, aes(x=as.numeric(rownames(p.all_bonf)), y= -log10(p.values) )) + 
-      geom_point(data = p.all_bonf[-interest.peakIndex,],  
-                 aes(x=as.numeric(rownames(p.all_bonf[-interest.peakIndex,])), y= -log10(p.values) ),
-                 shape = 16) +
-      geom_point(data = p.all_bonf[interest.peakIndex,],  aes(x=interest.peakIndex, y= -log10(p.values) ),
-                 shape = 18, 
-                 size = 3, 
-                 colour ="#00B0F6" ) +
-    xlab("feature index") + 
-    ylab("- log10 p-value") + 
-    ggtitle("Bonferroni corrected p-values") +
-    geom_hline(aes(yintercept= -log10(0.05), color="red"),linetype = 2) + guides(color=FALSE)+
-    theme_bw() + 
-    theme(plot.title = element_text(lineheight = 0.8, face="bold", margin = margin(12,0,13,0),hjust = 0.5, size = 15), 
-          text = element_text(size=14))
+       geom_point(data = p.all_bonf[-interest.peakIndex,],  
+                  aes(x=as.numeric(rownames(p.all_bonf[-interest.peakIndex,])), y= -log10(p.values) ),
+                  shape = 16) +
+       geom_point(data = p.all_bonf[interest.peakIndex,],  aes(x=interest.peakIndex, y= -log10(p.values) ),
+                  shape = 18, 
+                  size = 3, 
+                  colour ="#00B0F6" ) +
+       xlab("feature index") + 
+       ylab("- log10 p-value") + 
+       ggtitle("Bonferroni corrected p-values") +
+       geom_hline(aes(yintercept= -log10(0.05), color="red"),linetype = 2) + 
+       guides(color=FALSE) +
+       theme_bw() + 
+       theme(plot.title = element_text(lineheight = 0.8, face="bold", margin = margin(12,0,13,0),hjust = 0.5, size = 15), 
+             text = element_text(size=14))
 
 
 
@@ -335,13 +336,13 @@ ggplot(p.all_bonf, aes(x=as.numeric(rownames(p.all_bonf)), y= -log10(p.values) )
 
 
 
-ROIplot(Y.spec = Spectra.wine, 
-        X.ppm = ppm.wine, 
-        ungrouped.peaks = wine.peaks,
-        grouped.peaks = wine.regrouped , 
-        ROI.ppm = ROI.ppm ,
-        roiWidth.ppm = roiWidth.ppm , 
-        groupLabels = as.factor(wine.color))
+speaq::ROIplot(Y.spec = Spectra.wine,
+               X.ppm = ppm.wine, 
+               ungrouped.peaks = wine.peaks,
+               grouped.peaks = wine.regrouped, 
+               ROI.ppm = ROI.ppm,
+               roiWidth.ppm = roiWidth.ppm, 
+               groupLabels = as.factor(wine.color))
 
 
 ```
@@ -373,36 +374,36 @@ Now that we have identified relevant features we can use the original `speaq` pa
 ```{r speaq 1.0,  dpi=dpi.HQ, fig.width=7, fig.height=4, message=F, out.width = figwidth.out}
 
 
-peakList <- detectSpecPeaks(as.matrix(Spectra.wine),   
-                            nDivRange = 128,                
-                            scales = seq(1, 16, 2),
-                            baselineThresh = 100,
-                            SNR.Th = -1,
-                            verbose=FALSE)
+peakList <- speaq::detectSpecPeaks(as.matrix(Spectra.wine),   
+                                   nDivRange = 128,   
+                                   scales = seq(1, 16, 2),
+                                   baselineThresh = 100,
+                                   SNR.Th = -1,
+                                   verbose=FALSE)
 
 resFindRef <- findRef(peakList)
 refInd <- resFindRef$refInd
 
-aligned.spectra <- dohCluster(as.matrix(Spectra.wine), 
-                              peakList = peakList,
-                              refInd = refInd,
-                              maxShift  = 200,
-                              acceptLostPeak = TRUE, verbose=FALSE)
+aligned.spectra <- speaq::dohCluster(as.matrix(Spectra.wine), 
+                                     peakList = peakList,
+                                     refInd = refInd,
+                                     maxShift  = 200,
+                                     acceptLostPeak = TRUE, verbose=FALSE)
       
                 
-drawSpecPPM(Y.spec = aligned.spectra[wine.color != "rose", ], 
-            X.ppm = ppm.wine, 
-            groupFactor = red.white.colors, 
-            title = paste("significant feature, p-value =",
-                          format(significant.features$p.values[peak_of_interest], 
-                                 scientific = TRUE, 
-                                 digits=2),
-                          sep=" "), 
-            legend.extra.x = 1.1, 
-            legend.extra.y = 0.9,
-            ROI = significant.features$index[peak_of_interest], 
-            roiWidth = 100, 
-            legendpos = "topright" )               
+speaq::drawSpecPPM(Y.spec = aligned.spectra[wine.color != "rose", ], 
+                   X.ppm = ppm.wine, 
+                   groupFactor = red.white.colors, 
+                   title = paste("significant feature, p-value =",
+                                 format(significant.features$p.values[peak_of_interest], 
+                                        scientific = TRUE, 
+                                        digits=2),
+                                 sep=" "), 
+                   legend.extra.x = 1.1, 
+                   legend.extra.y = 0.9,
+                   ROI = significant.features$index[peak_of_interest], 
+                   roiWidth = 100, 
+                   legendpos = "topright" )               
 ```
 
 
