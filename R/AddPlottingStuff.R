@@ -36,8 +36,8 @@ AddPlottingStuff <- function(Y.peaks, X.ppm = NULL, groupLabels = NULL) {
     
     if (!is.null(groupLabels)) {
         
-        if ("factor" %in% class(groupLabels)) {
-            groupLabels <- as.character(groupLabels)
+        if (! "factor" %in% class(groupLabels)) {
+            groupLabels <- as.factor(groupLabels)
         }
         if (length(groupLabels) != length(unique(Y.peaks$Sample))) {
             warning("There are not an equal amount of groupLabels as there are samples in Y.peaks")
