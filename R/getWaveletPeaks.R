@@ -3,7 +3,7 @@
 #' This function converts phase corrected NMR spectra to peak data by using wavelet based peak detection (with the MassSpecWavelet package)
 #'
 #' @param X.ppm The x/ppm values of the spectra (in single vector or matrix format).
-#' @param Y.spec The spectra in matrix format.
+#' @param Y.spec The spectra in matrix format (rows = samples, columns = measurement points ).
 #' @param sample.labels The sample labels (numeric), if not supplied these will simply be the sample numbers.
 #' @param window.width The width of the detection window for the wavelets. Because of the Fourier transform lengths of 512 ( window.width = 'small') of 1024 ( window.width = 'large') are preferable.
 #' @param window.split A positive, even and whole number indicating in how many parts the sliding window is split up. With every iteration the window slides one part further.
@@ -24,7 +24,7 @@
 #'
 #' test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
 #'                               X.ppm=subset.ppm ,
-#'                               nCPU = 2) # nCPU set to 2 for the vignette build
+#'                               nCPU = 1) # nCPU set to 2 for the vignette build
 #'
 #' @export
 #' 

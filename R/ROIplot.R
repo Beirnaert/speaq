@@ -32,7 +32,6 @@
 #' ROI.ppm <- 4.9
 #' roiWidth.ppm <- 0.15
 #'
-#' plots <- ROIplot(Y.spec = subset.spectra, 
 #'                  X.ppm =subset.ppm, 
 #'                  ungrouped.peaks = test.peaks,
 #'                  grouped.peaks = test.grouped ,
@@ -100,6 +99,7 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
             })
         }
     }
+    rownames(Y.spec) = groupLabels
     
     if(is.null(output)){
          
@@ -151,7 +151,7 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
     names(ROI.df) <- c("ppm", "sample", "intensity")
     ROI.df$class <-  groupLabels[ROI.df$sample]
 
-    pp0 <- ggplot(ROI.df, aes_string(x = "ppm", y = "intensity", group = "sample", colour = "class")) +
+    pp0 <- ggplot(ROI.df, aes_string(x = "ppm", y = "intensity",  colour = "class")) +
            scale_x_reverse()+
            theme_bw() +
            geom_line(size = 0.3) +

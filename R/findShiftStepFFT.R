@@ -4,7 +4,7 @@
 #' 
 #' @param refSpec The reference spectrum.
 #' @param tarSpec The target spectrum which needs to be aligned.
-#' @param maxShift The maximum number of points for a shift step. If this value is zero, the algo- rithm will check on the whole length of the spectra.
+#' @param maxShift The maximum number of points for a shift step. If this value is zero, the algorithm will check on the whole length of the spectra.
 #' @param scale Boolean value (TRUE/FALSE) for scaling data before Fast Fourier Transform cross-correlation step. If scale=NULL but mean/median of absolute data is too small (<1), the scaling will be applied. This might happen for very low abundant spectra like chromatograms. For normal NMR spectra, the scaling is usually not applied.
 #' 
 #' @return list of 2: corValue (The best correlation value) and stepAdj (The shift step found by the algorithm)
