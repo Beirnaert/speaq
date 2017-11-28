@@ -9,7 +9,7 @@ getWaveletPeaks(Y.spec, X.ppm, sample.labels = NULL, window.width = "small",
   SNR.Th = -1, nCPU = -1, include_nearbyPeaks = TRUE)
 }
 \arguments{
-\item{Y.spec}{The spectra in matrix format.}
+\item{Y.spec}{The spectra in matrix format (rows = samples, columns = measurement points ).}
 
 \item{X.ppm}{The x/ppm values of the spectra (in single vector or matrix format).}
 
@@ -42,7 +42,7 @@ subset.ppm = as.numeric(subset$PPM)
 
 test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
                               X.ppm=subset.ppm ,
-                              nCPU = 2) # nCPU set to 2 for the vignette build
+                              nCPU = 1) # nCPU set to 2 for the vignette build
 
 }
 \author{

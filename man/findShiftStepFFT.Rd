@@ -11,7 +11,7 @@ findShiftStepFFT(refSpec, tarSpec, maxShift = 0, scale = NULL)
 
 \item{tarSpec}{The target spectrum which needs to be aligned.}
 
-\item{maxShift}{The maximum number of points for a shift step. If this value is zero, the algo- rithm will check on the whole length of the spectra.}
+\item{maxShift}{The maximum number of points for a shift step. If this value is zero, the algorithm will check on the whole length of the spectra.}
 
 \item{scale}{Boolean value (TRUE/FALSE) for scaling data before Fast Fourier Transform cross-correlation step. If scale=NULL but mean/median of absolute data is too small (<1), the scaling will be applied. This might happen for very low abundant spectra like chromatograms. For normal NMR spectra, the scaling is usually not applied.}
 }
