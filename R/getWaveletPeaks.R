@@ -12,6 +12,7 @@
 #' @param SNR.Th The Signal-to-noise threshold, see \link[MassSpecWavelet]{peakDetectionCWT}.
 #' @param nCPU The amount of cpu's to be used for peak detection. If set to '-1' all available cores minus 1 will be used.
 #' @param include_nearbyPeaks If set to TRUE small peaks in the tails of larger ones will be included in the peak data, see \link[MassSpecWavelet]{peakDetectionCWT}.
+#' @param raw_peakheight (default = FALSE) Whether to use the raw peak height of a peak instead of the optimal CWT coefficient (which is a measure for AUC).
 #'
 #' @return The peaks detected with the wavelets.
 #' 
@@ -38,7 +39,8 @@
 #' 
 #' 
 getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = "small", window.split = 4, 
-                            scales = seq(1, 16, 1), baselineThresh = 1000, SNR.Th = -1, nCPU = -1, include_nearbyPeaks = TRUE) {
+                            scales = seq(1, 16, 1), baselineThresh = 1000, SNR.Th = -1, nCPU = -1, include_nearbyPeaks = TRUE,
+                            raw_peakheight = FALSE) {
     # require(data.table) require(MassSpecWavelet) require(parallel) require(foreach)
     
     # error checks and miscellaneous parameter fixing
@@ -310,6 +312,10 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
         
         WaveletPeaks <- WaveletPeaks[!is.na(WaveletPeaks$peakIndex), ,drop=FALSE]
         WaveletPeaks <- data.frame(WaveletPeaks)
+        
+        if(raw_peakheight){
+            WaveletPeaks$peakValue = Y.spec[as.matrix(WaveletPeaks[,c("Sample", "peakIndex")])]
+        }
         
     } else{
         print("No peaks detected")

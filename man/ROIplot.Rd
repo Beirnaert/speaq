@@ -49,6 +49,7 @@ test.grouped <- PeakGrouper(Y.peaks = test.peaks)
 ROI.ppm <- 4.9
 roiWidth.ppm <- 0.15
 
+plots <- ROIplot(Y.spec = subset.spectra,
                  X.ppm =subset.ppm, 
                  ungrouped.peaks = test.peaks,
                  grouped.peaks = test.grouped ,
