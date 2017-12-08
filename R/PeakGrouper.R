@@ -46,24 +46,17 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
         stop("NMR.peaks format is not a list or data.frame")
     }
     
-    
-    
     ##### Peak grouper
-    
     Samples <- unique(Y.peaks$Sample)
-    
     
     user.peaks.threshold <- 5
     Y.grouped <- matrix(NA, nrow = nrow(Y.peaks), ncol = ncol(Y.peaks))
     groupindex.start <- 1
     groupindex.stop <- 0
     groupindex.counter <- 0
-    
     maxFea <- max(Y.peaks$peakIndex)
     minFea <- min(Y.peaks$peakIndex)
-    
     nSamp <- length(unique(Y.peaks$Sample))
-    
     window.length <- grouping.window.width  # 100 by default
     window.variation.global <- 0.1
     window.breaks <- rep(NA, round(maxFea/window.length) * 2)
@@ -85,9 +78,7 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
     # end progress bar
     
     while (length(remaining.index) > 0 & iterator < max.iterator) {
-        
         iterator <- iterator + 1
-        
         # check that there is more than twice the window.length remaining in remaining.index
         if (length(remaining.index) > 2 * window.length) {
             # loop management checks
@@ -95,10 +86,8 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
             no.ending <- FALSE
             window.overexpanded <- FALSE
             window.overshrunk <- FALSE
-            
             min.edge <- round(window.length * (1 - window.variation))
             max.edge <- round(window.length * (1 + window.variation))
-            
             var.seq <- seq(from = min.edge, to = max.edge, by = 1)
             seq.peaks <- NULL
             for (l in 1:length(var.seq)) {
@@ -108,10 +97,7 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
                 seq.peaks[l] <- nrow(Y.peaks[Y.peaks$peakIndex >= min.index_b & Y.peaks$peakIndex <= 
                                                  max.index_b, , drop = F])
             }
-            
-            
-            
-            
+
             if (max(seq.peaks) < 5 | max(seq.peaks) < (nSamp * 0.3)) {
                 remaining.index <- remaining.index[-(1:min.edge)]
                 if (verbose == TRUE) 
@@ -119,9 +105,7 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
                 nsubpeaks.NotOK <- TRUE
                 # break # hop out of this loop and therefor delete this outlier peak (it is not part of a group)
             } else {
-                
                 peaks.edge.seq <- data.frame(var.seq, seq.peaks)
-                
                 seq.table <- data.frame(table(seq.peaks))
                 seq.table$seq.peaks <- as.numeric(as.character(seq.table$seq.peaks))
                 # endpoint.2nd.half = seq.table$seq.peaks[ seq.table$Freq == max(seq.table$Freq[
@@ -132,19 +116,14 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
                 }
                 
                 endpoint.peaks <- peaks.edge.seq[peaks.edge.seq$seq.peaks == endpoint.max, ]
-                
-                
                 min.edge <- endpoint.peaks$var.seq[1]
                 max.edge <- endpoint.peaks$var.seq[nrow(endpoint.peaks)]
-                
                 if (min.edge < (max.edge - 2)) {
                     confirmed.end <- TRUE
                 } else {
                     confirmed.end <- FALSE
                 }
-                
-                
-                
+        
                 if (is.null(confirmed.end) & (window.variation < window.variation.global * 2) & (window.variation > 
                                                                                                  window.variation.global/2) & (max(seq.peaks) < 10 * nSamp)) {
                     # no window.variation.global piece found with all zeros
@@ -203,17 +182,11 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
             
             remaining.index <- remaining.index[-(1:min.edge)]  # remove the chosen series (but not the buffer) from the remaining indexes
             window.variation <- window.variation.global  # reset window variation
-            
-            
-            
             current.peaks <- Y.peaks[Y.peaks$peakIndex >= startR & Y.peaks$peakIndex <= endR, , drop = FALSE]
             
-            
             ## A group is said to be a group when there are almost no duplicates in it
-            
             regrouped.peaks <- hclust.grouping(current.peaks, min.samp.grp = min.samp.grp, max.dupli.prop = max.dupli.prop, 
                                                        maxClust = maxClust, linkage = linkage)
-            
             
             if (nrow(regrouped.peaks) > 0) {
                 groupindex.stop <- groupindex.counter + nrow(regrouped.peaks)
@@ -225,21 +198,17 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
                     print(paste("Regrouped", nrow(regrouped.peaks), "peaks"))
             }
         }
-        
         utils::setTxtProgressBar(pb, maxPBindex - length(remaining.index))
     }
     close(pb)
     
-    
     Y.grouped <- data.frame(Y.grouped)
     colnames(Y.grouped) <- colnames(Y.peaks)
     Y.grouped <- Y.grouped[stats::complete.cases(Y.grouped$peakIndex), ]
-    
-    
+
     ###### Verify regroupment (check for faulty groupings where window splits occured)
     
     if(nrow(Y.grouped) != 0){
-    
     grouped.groupindexes <- unique(Y.grouped$peakIndex)
     window.breaks <- window.breaks[!is.na(window.breaks) & window.breaks >= min(grouped.groupindexes) & 
                                        window.breaks < max(grouped.groupindexes)]
@@ -255,21 +224,16 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
     colnames(empty.data) <- colnames(Y.grouped)
     Y.grouped <- rbind(Y.grouped, empty.data)
     
-    
     Jac <- rep(NA, length(grouped.groupindexes))
     reclustered.groups.accumulator <- matrix(NA, nrow = nrow(Y.grouped), ncol = ncol(Y.grouped))
     strt <- 1
     stp <- 0
     for (k in 2:(length(grouped.groupindexes) - 1)) {
-        
-        dat.to.regroup <- Y.grouped[Y.grouped$peakIndex %in% grouped.groupindexes[c(k - 1, k, k + 1)], 
-                                    ]
+        dat.to.regroup <- Y.grouped[Y.grouped$peakIndex %in% grouped.groupindexes[c(k - 1, k, k + 1)],]
         regroup.indexes <- grouped.groupindexes[c(k - 1, k, k + 1)]
         
         if (nrow(dat.to.regroup) > 1) {
-            
             Jac[k] <- sum(duplicated(dat.to.regroup$Sample))/length(unique(dat.to.regroup$Sample))
-            
             if (Jac[k] <= Jaccard.regroup.threshold) {
                 reclustered.groups <- hclust.grouping(dat.to.regroup, min.samp.grp = min.samp.grp, max.dupli.prop = max.dupli.prop, 
                                                               maxClust = maxClust, linkage = linkage)
@@ -287,7 +251,6 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
     }
     
     Y.grouped <- Y.grouped[stats::complete.cases(Y.grouped$peakIndex), ]
-    
     
     # append Y.grouped with some empty space to continuously add the reclustered peaks without rbind
     # (this would be slow)
@@ -311,7 +274,6 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
             Jaccard.index[k] <- sum(duplicated(Y.grouped$Sample[Y.grouped$peakIndex %in% c(left.group, 
                                                                                            right.group)]))/length(unique(Y.grouped$Sample[Y.grouped$peakIndex %in% c(left.group, 
                                                                                                                                                                      right.group)]))
-            
             if (Jaccard.index[k] <= Jaccard.regroup.threshold) {
                 
                 reclustered.groups <- hclust.grouping(Y.grouped[Y.grouped$peakIndex %in% c(left.group, 
@@ -330,11 +292,9 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
                 # 1 grouped.groupindexes.update = unique(Y.grouped$peakIndex[!is.na(Y.grouped$peakIndex)])
             }
         }
-        
         utils::setTxtProgressBar(pb, k + length(grouped.groupindexes))
     }
     close(pb)
-    
     Y.grouped <- Y.grouped[stats::complete.cases(Y.grouped$peakIndex), ]
     
     } else{
