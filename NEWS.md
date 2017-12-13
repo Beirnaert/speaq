@@ -1,3 +1,13 @@
+# speaq 2.2:
+### 13/12/2017
+
+
+* changed the relevant.feature.p function to include multiple responses
+* typo fixes
+* vignette updates
+
+
+
 # speaq 2.1:
 ### 14/09/2017
 
