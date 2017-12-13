@@ -1,5 +1,5 @@
 ---
-title: "How to process an NMR dataset with speaq2"
+title: "How to process an NMR dataset with speaq 2.0"
 author: "Charlie Beirnaert"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -15,26 +15,26 @@ knitr::opts_chunk$set(tidy = FALSE)
 figwidth.out <- 600
 ```
 
-## speaq2
+## speaq
 
-To illustrate the possibilities of **speaq2**, the spiritual successor to the original speaq package, we will analyse the onion intake in mice dataset (available form the University of Copenhagen at \emph{http://www.models.life.ku.dk/}). This is the same dataset as analysed in the paper and was originally analysed by Winning et al. (DOI: 10.1039/B918259D)
+To illustrate the new possibilities of **speaq**, the spiritual successor to the original speaq package, we will analyse the onion intake in mice dataset (available form the University of Copenhagen at \emph{http://www.models.life.ku.dk/}). This is the same dataset as analysed in the paper and was originally analysed by Winning et al. (DOI: 10.1039/B918259D)
 
 
-Before we start with the example let's first recap what the basic steps of speaq2 encompass:
+Before we start with the example let's first recap what the basic steps of the new speaq functionality encompass:
 
 1. Peak detection: `getWaveletPeaks()` 
 2. Peak grouping: `PeakGrouper()` 
 3. Peak filling: `PeakFilling()` 
 4. Feature matrix construction: `BuildFeatureMatrix()`
 
-These functions alongside other functionality from speaq2 will be demonstrated in this vignette. Note that there is a plotting function available in speaq2 (for raw spectra) but the features are naturally plotted with ggplot2. The code for these plots are also included in this vignette, although thet might seem rather elaborate, they are pretty straightforward and might provide inspiration for your own plots.
+These functions alongside other new functionality from speaq will be demonstrated in this vignette. Note that there is a plotting function available in speaq (for raw spectra) but the features are naturally plotted with ggplot2. The code for these plots are also included in this vignette, although thet might seem rather elaborate, they are pretty straightforward and might provide inspiration for your own plots.
 
 ### Loading the necessary dataset
 
 Adjust the location of the dataset if necessary
 
 ```{r load data}
-library(speaq2)
+library(speaq)
 load("Oniondata.rda")
 Spectra <- Oniondata$spectra 
 ppm.onion <- Oniondata$ppm 
@@ -86,7 +86,7 @@ onion.peaks <- getWaveletPeaks(Y.spec = Spectra,
 
 ```
 
-The next step in speaq2 is grouping.
+The next step in speaq 2.0 is grouping.
 
 ```{r detect onionpeaks,  results = "hide"}
 
@@ -409,7 +409,7 @@ There is little to nothing to be found in the PCA analysis, this is also what [W
 
 ### A differential analysis based on linear models
 
-Next we can use the `relevant.features()` function in speaq2 which uses linear models to produce a p-value corresponding to the nulhypothesis that feature x is not related to the outcome vector. After a p-value correction for multiple testing (as with increasing numbers of randomly generated features some will eventually be significantly related to the output vector) we can identify the relevant features.
+Next we can use the `relevant.features()` function in speaq 2.0 which uses linear models to produce a p-value corresponding to the nulhypothesis that feature x is not related to the outcome vector. After a p-value correction for multiple testing (as with increasing numbers of randomly generated features some will eventually be significantly related to the output vector) we can identify the relevant features.
 
 
 ```{r relevant}

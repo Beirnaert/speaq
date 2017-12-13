@@ -6,7 +6,8 @@
 \usage{
 getWaveletPeaks(Y.spec, X.ppm, sample.labels = NULL, window.width = "small",
   window.split = 4, scales = seq(1, 16, 1), baselineThresh = 1000,
-  SNR.Th = -1, nCPU = -1, include_nearbyPeaks = TRUE)
+  SNR.Th = -1, nCPU = -1, include_nearbyPeaks = TRUE,
+  raw_peakheight = FALSE)
 }
 \arguments{
 \item{Y.spec}{The spectra in matrix format (rows = samples, columns = measurement points ).}
@@ -28,6 +29,8 @@ getWaveletPeaks(Y.spec, X.ppm, sample.labels = NULL, window.width = "small",
 \item{nCPU}{The amount of cpu's to be used for peak detection. If set to '-1' all available cores minus 1 will be used.}
 
 \item{include_nearbyPeaks}{If set to TRUE small peaks in the tails of larger ones will be included in the peak data, see \link[MassSpecWavelet]{peakDetectionCWT}.}
+
+\item{raw_peakheight}{(default = FALSE) Whether to use the raw peak height of a peak instead of the optimal CWT coefficient (which is a measure for AUC).}
 }
 \value{
 The peaks detected with the wavelets.

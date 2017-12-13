@@ -1,0 +1,117 @@
+---
+title: "speaq analysis of a simulated case vs control dataset."
+author: "Charlie Beirnaert"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  rmarkdown::html_vignette: default
+vignette: |
+  %\VignetteIndexEntry{How to process an NMR dataset with speaq2} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy = FALSE)
+figwidth.out <- 600
+```
+
+## speaq 2.0
+
+To illustrate the new possibilities of **speaq** we will analyse a simulated case vs control dataset. More informastion on the construction of tis dataset can be found in the paper.
+
+Before we start with the example let's first recap what the basic steps of the new speaq encompass:
+
+1. Peak detection: `getWaveletPeaks()` 
+2. Peak grouping: `PeakGrouper()` 
+3. Peak filling: `PeakFilling()` 
+4. Feature matrix construction: `BuildFeatureMatrix()`
+
+
+### Loading the necessary dataset
+
+Adjust the location of the dataset if necessary
+
+```{r load data}
+library(speaq) 
+load("SimulatedDataSet.rda")
+Spectra <- SimulatedDataSet$Spectra
+PPMvector <- SimulatedDataSet$PPMvector
+ClassVector <- SimulatedDataSet$Groupvector
+GroundTruthPeaks = sort(c(SimulatedDataSet$PeaksSpectrum1, SimulatedDataSet$PeaksSpectrum2))
+```
+
+### Plotting the onion intake data
+
+```{r onion intake data, dpi=200, fig.width=7, fig.height=4, out.width = figwidth.out}
+# plot of all spectra
+drawSpecPPM(Y.spec = Spectra, 
+            X.ppm = PPMvector, 
+            groupFactor = as.factor(ClassVector), 
+            title = 'Simulated Case vs Conrol Spectra', 
+            legend.extra.x = 1, 
+            legend.extra.y = 1.1)
+```
+
+
+### From spectra via peaks to grouped peaks (features)
+
+Now that we've had a look at the spectra it is time to convert these to peaks by using the `getWaveletPeaks()` function. 
+
+```{r peak detection,  eval = TRUE, results = "hide"}
+
+Peaks = speaq::getWaveletPeaks(Y.spec = SimulatedDataSet$Spectra, 
+                               X.ppm = SimulatedDataSet$PPMvector,
+                               baselineThresh = median(SimulatedDataSet$Spectra)  )
+
+```
+
+The next steps are grouping and filling.
+
+```{r group fill,  results = "hide"}
+
+Groups = speaq::PeakGrouper(Y.peaks = Peaks)
+
+Filled = speaq::PeakFilling(Y.grouped = Groups, 
+                            Y.spec = Spectra)
+```
+
+With the peak filled data we can construct the feature matrix. This matrix can in turn be handed to the `relevant.features.p()` function which asigns a p-value to each feature. This p-value indicates which features are associated with the outcome vector.
+
+```{r features,  results = "hide"}
+Features <- BuildFeatureMatrix(Filled)
+
+
+SignificantFeatures <- speaq::relevant.features.p(Features, 
+                                                as.factor(ClassVector),
+                                                p.adj = "none")
+```
+
+
+### Performance analysis
+
+Since this is a simulated dataset for which a ground truth is known, we can evaluate the performance of the workflow. The question is whether speaq can clasify the interesting from the non intersesting peaks. Before we can evalueta the performance we must identify which peaks are relevant. These can be found in the `GroundTruthPeaks` object.
+
+```{r relevant peaks,  results = "hide"}
+## adding ppm values
+SignificantFeatures$ppm = PPMvector[SignificantFeatures$index]
+
+## finding relevant peaks
+truepeaks_index = RANN::nn2(SignificantFeatures$ppm, query = GroundTruthPeaks, k = 1)
+labels_speaq = rep(FALSE, nrow(SignificantFeatures))
+labels_speaq[truepeaks_index$nn.idx] = TRUE
+SignificantFeatures$truefeats = labels_speaq
+
+```
+
+
+Now we have the labels which indicate the interesting peaks from the non interesting peaks. We obtained these with a nearest neighbour serach between the ppm values of speaq peaks and the ppm values of the ground truth peaks.
+
+
+```{r performance,  results = "hide"}
+
+pred <- ROCR::prediction(1-SignificantFeatures$p.values,SignificantFeatures$truefeats)
+perf <- ROCR::performance(pred,"tpr","fpr")
+ROCR::plot(perf)
+
+```
+
