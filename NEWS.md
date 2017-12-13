@@ -5,6 +5,7 @@
 * changed the relevant.feature.p function to include multiple responses
 * typo fixes
 * vignette updates
+* peak picker supports raw peak height from now on
 
 
 
