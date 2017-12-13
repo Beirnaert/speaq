@@ -33,6 +33,7 @@ Adjust the location of the dataset if necessary
 
 ```{r load data}
 library(speaq) 
+# this data file can be found on https://github.com/Beirnaert/speaq/tree/master/speaq2_Extra
 load("SimulatedDataSet.rda")
 Spectra <- SimulatedDataSet$Spectra
 PPMvector <- SimulatedDataSet$PPMvector
@@ -104,7 +105,7 @@ SignificantFeatures$truefeats = labels_speaq
 ```
 
 
-Now we have the labels which indicate the interesting peaks from the non interesting peaks. We obtained these with a nearest neighbour serach between the ppm values of speaq peaks and the ppm values of the ground truth peaks.
+Now we have the labels which indicate the interesting peaks from the non interesting peaks. We obtained these with a nearest neighbour search between the ppm values of speaq peaks and the ppm values of the ground truth peaks. Now we can plot the performance by means of an ROC curve. Note that the decision values to be used in the calculation of the ROC curve are calculated as 1 minus the p.values (since low p-values indicate a high decision value).
 
 
 ```{r performance,  results = "hide"}

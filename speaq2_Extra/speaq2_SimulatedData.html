@@ -138,6 +138,7 @@ $(document).ready(function () {
 <h3>Loading the necessary dataset</h3>
 <p>Adjust the location of the dataset if necessary</p>
 <pre class="r"><code>library(speaq) 
+# this data file can be found on https://github.com/Beirnaert/speaq/tree/master/speaq2_Extra
 load(&quot;SimulatedDataSet.rda&quot;)
 Spectra &lt;- SimulatedDataSet$Spectra
 PPMvector &lt;- SimulatedDataSet$PPMvector
@@ -185,7 +186,7 @@ truepeaks_index = RANN::nn2(SignificantFeatures$ppm, query = GroundTruthPeaks, k
 labels_speaq = rep(FALSE, nrow(SignificantFeatures))
 labels_speaq[truepeaks_index$nn.idx] = TRUE
 SignificantFeatures$truefeats = labels_speaq</code></pre>
-<p>Now we have the labels which indicate the interesting peaks from the non interesting peaks. We obtained these with a nearest neighbour serach between the ppm values of speaq peaks and the ppm values of the ground truth peaks.</p>
+<p>Now we have the labels which indicate the interesting peaks from the non interesting peaks. We obtained these with a nearest neighbour search between the ppm values of speaq peaks and the ppm values of the ground truth peaks. Now we can plot the performance by means of an ROC curve. Note that the decision values to be used in the calculation of the ROC curve are calculated as 1 minus the p.values (since low p-values indicate a high decision value).</p>
 <pre class="r"><code>pred &lt;- ROCR::prediction(1-SignificantFeatures$p.values,SignificantFeatures$truefeats)
 perf &lt;- ROCR::performance(pred,&quot;tpr&quot;,&quot;fpr&quot;)
 ROCR::plot(perf)</code></pre>
