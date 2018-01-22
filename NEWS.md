@@ -4,7 +4,7 @@
 
 * changed the relevant.feature.p function to include multiple responses
 * typo fixes
-* vignette updates
+* vignette updates (now with performance analysis for a simulated dataset)
 * peak picker supports raw peak height from now on
 
 
