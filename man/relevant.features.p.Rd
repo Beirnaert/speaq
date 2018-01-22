@@ -2,22 +2,27 @@
 % Please edit documentation in R/relevant.features.p.R
 \name{relevant.features.p}
 \alias{relevant.features.p}
-\title{identify features (columns in the datamatrix) which are significantly associated with the outcome vector}
+\title{Identify features (columns in the datamatrix) which are significantly associated with the outcome.}
 \usage{
-relevant.features.p(datamatrix, responsevector, p.adj = "BH")
+relevant.features.p(datamatrix, response, p.adj = "BH", POI = 1,
+  responsevector = NULL)
 }
 \arguments{
-\item{datamatrix}{the data matrix with a column for each feature.}
+\item{datamatrix}{The data matrix with a column for each feature.}
 
-\item{responsevector}{the vector of outcomes/responses (e.g. class labels). the length of this vector should match the amount of rows in datamatrix.}
+\item{response}{A vector or matrix of outcomes/responses (e.g. class labels). the length of this vector or the amount of rows in this matrix should match the amount of rows in datamatrix.}
 
-\item{p.adj}{the adjustment method for the p-values. Any of 'holm', 'hochberg', 'hommel', 'bonferroni', 'BH' (default), 'BY', 'fdr' or 'none' are accepted.}
+\item{p.adj}{The adjustment method for the p-values. Any of 'holm', 'hochberg', 'hommel', 'bonferroni', 'BH' (default), 'BY', 'fdr' or 'none' are accepted.}
+
+\item{POI}{Only if 'response' is a matrix! The p values of interest. This is a number indicating which column of the 'response' matrix you are interested in. POI can range from 1 (default) to the number of columns in 'response'.}
+
+\item{responsevector}{(deprecated), please use the the more general 'response' variable instead.}
 }
 \value{
 data with the features and their (adjusted) p-values, one for every column in the datamatrix  .
 }
 \description{
-This function produces a p-value for every column in the datamatrix, corresponding to the null hypothesis that outcome/responsevector is independent of that feature.
+This function produces a p-value for every column in the datamatrix, corresponding to the null hypothesis that outcome/response is independent of that feature.
 }
 \examples{
 nSamples <- 10
@@ -25,11 +30,11 @@ nFeatures <- 20
 data.matrix <- matrix( stats::runif(n=nFeatures*nSamples, min=0,max=100), 
 ncol = nFeatures, nrow = nSamples)
 
-response <- c( rep(0,nSamples/2), rep(1,nSamples/2) )
-p_values <- relevant.features.p(datamatrix = data.matrix, responsevector = 
-response, p.adj = 'none')
+responseVec <- c( rep(0,nSamples/2), rep(1,nSamples/2) )
+p_values <- relevant.features.p(datamatrix = data.matrix, response = 
+responseVec, p.adj = 'none')
 p_values_adjusted <- relevant.features.p( datamatrix = data.matrix, 
-responsevector = response, p.adj = 'bonferroni')
+response = responseVec, p.adj = 'bonferroni')
 
 }
 \author{
