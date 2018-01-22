@@ -1,7 +1,0 @@
-data/ linguist-vendored = true
-*.md text
-*.rda text
-*.rds text
-inst/ linguist-documentation
-R/ linguist-vendored = false
-vignettes/ linguist-vendored = true
