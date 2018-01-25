@@ -201,7 +201,7 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
                     oldWarningLevel <- getOption("warn")
                     options(warn = -1)
                     
-                    if (Wavelet.Peaks[1] != -1) {
+                    if (head(Wavelet.Peaks, n = 1)[1] != -1) {
                         teller <- teller + 1
                         WavPeaks[[teller]] <- Wavelet.Peaks
                     }
