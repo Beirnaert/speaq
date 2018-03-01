@@ -1,5 +1,5 @@
 # speaq 2.2:
-### 13/12/2017
+### 01/03/2018
 
 
 * changed the relevant.feature.p function to include multiple responses
