@@ -112,40 +112,68 @@ hClustAlign <-function(refSpec, tarSpec, peakList, peakLabel, startP, endP,
     if (maxsubData1<minsubData2){
         endP1=maxsubData1+which.min(tarSpec[(maxsubData1+1) :(minsubData2-1)])[1];
         if (is.na(endP1)) endP1=maxsubData1;
+        if(endP1 > length(tarSpec)){
+            endP1 <- maxsubData1
+        }
         startP2=endP1+1;
         if (length(unique(subLabel1))>1){
             res=hClustAlign(refSpec,tarSpec,subData1,subLabel1,startP,endP1,
                             distanceMethod=distanceMethod,maxShift=maxShift,
                             acceptLostPeak=acceptLostPeak);
             tarSpec=res$tarSpec;
-            peakList[labelID1]=res$peakList;
+            if(length(labelID1) == length(res$peakList)){
+                peakList[labelID1] <- res$peakList
+            } else{ 
+                res$peakList <- c(res$peakList, rep(res$peakList[1], length(labelID1)- length(res$peakList) ) )
+                peakList[labelID1] <- res$peakList
+            }
         }        
         if (length(unique(subLabel2))>1){
             res=hClustAlign(refSpec,tarSpec,subData2,subLabel2,startP2,endP,
                             distanceMethod=distanceMethod,maxShift=maxShift,
                             acceptLostPeak=acceptLostPeak);
             tarSpec=res$tarSpec;
-            peakList[labelID2]=res$peakList;
+      
+            if(length(labelID2) == length(res$peakList)){
+                peakList[labelID2]=res$peakList
+            } else{ 
+                res$peakList <- c(res$peakList, rep(res$peakList[1], length(labelID2)- length(res$peakList) ) )
+                peakList[labelID2]=res$peakList
+            }
         }
     }else{        
         maxsubData2=max(subData2)[1];
         minsubData1=min(subData1)[1];
         endP2=maxsubData2+which.min(tarSpec[(maxsubData2+1) :(minsubData1-1)])[1];
         if (is.na(endP2)) endP2=maxsubData2;
+        if(endP2 > length(tarSpec)){
+            endP2 <- maxsubData2
+        }
         startP1=endP2+1;
         if (length(unique(subLabel2))>1){
             res=hClustAlign(refSpec,tarSpec,subData2,subLabel2,startP,endP2,
                             distanceMethod=distanceMethod,maxShift=maxShift,
                             acceptLostPeak=acceptLostPeak);
             tarSpec=res$tarSpec;
-            peakList[labelID2]=res$peakList;
+            
+            if(length(labelID2) == length(res$peakList)){
+                peakList[labelID2]=res$peakList
+            } else{ 
+                res$peakList <- c(res$peakList, rep(res$peakList[1], length(labelID2)- length(res$peakList) ) )
+                peakList[labelID2]=res$peakList
+            }
         }    
         if (length(unique(subLabel1))>1){
             res=hClustAlign(refSpec,tarSpec,subData1,subLabel1,startP1,endP,
                             distanceMethod=distanceMethod,maxShift=maxShift,
                             acceptLostPeak=acceptLostPeak);
             tarSpec=res$tarSpec;
-            peakList[labelID1]=res$peakList;
+            if(length(labelID1) == length(res$peakList)){
+                peakList[labelID1] <- res$peakList
+            } else{ 
+                res$peakList <- c(res$peakList, rep(res$peakList[1], length(labelID1)- length(res$peakList) ) )
+                peakList[labelID1] <- res$peakList
+            }
         }        
     }    
     return (list(tarSpec=tarSpec,peakList=peakList));
