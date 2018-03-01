@@ -50,10 +50,20 @@ hClustAlign <-function(refSpec, tarSpec, peakList, peakLabel, startP, endP,
     minpeakList=min(peakList)[1];
     maxpeakList=max(peakList)[1];
     startCheckP=startP+which.min(tarSpec[startP:(minpeakList-1)])[1]-1;
-    if (is.na(startCheckP)) startCheckP=startP;
+    if (is.na(startCheckP)) {
+        startCheckP=startP;
+    }
+    if(startCheckP < 1){
+        startCheckP <- startP
+    }
     
     endCheckP=maxpeakList+ which.min(tarSpec[(maxpeakList+1):endP])[1];
-    if (is.na(endCheckP)) endCheckP=endP;
+    if (is.na(endCheckP)){
+        endCheckP=endP;
+    } 
+    if(endCheckP > length(tarSpec)){
+        endCheckP <- endP
+    }
     
     if ((endCheckP-startCheckP)<2) {
         return (list(tarSpec=tarSpec,peakList=peakList));
@@ -73,7 +83,7 @@ hClustAlign <-function(refSpec, tarSpec, peakList, peakLabel, startP, endP,
             peakListTarget=which(peakLabel==0);
             peakList[peakListTarget]=peakList[peakListTarget]+adj$stepAdj;
             
-            lostPeaks = which(peakList <= 0 | peakList > length(tarSpec))
+            lostPeaks <- which(peakList <= 0 | peakList > length(tarSpec))
             if (length(lostPeaks) >0){
                 
                 peakList=peakList[-lostPeaks];

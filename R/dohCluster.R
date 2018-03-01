@@ -65,8 +65,14 @@ dohCluster <-function(X, peakList, refInd=0,
                                 maxShift=maxShift,acceptLostPeak=acceptLostPeak)
                 Y[tarInd,]=res$tarSpec;
                 
-                peakListNew[[tarInd]]=
-                    res$PeakList[(length(peakList[[refInd]])+1):length(myPeakList)]
+                if(length(myPeakList) > length(res$peakList)){ # bugfix charlie
+                    peakListNew[[tarInd]] <-
+                        res$peakList[(length(peakList[[refInd]])+1):length(res$peakList)]
+                } else{ # original code
+                    peakListNew[[tarInd]]=
+                        res$peakList[(length(peakList[[refInd]])+1):length(myPeakList)]
+                }
+                
             }
         
         if (verbose){
@@ -107,9 +113,17 @@ dohCluster <-function(X, peakList, refInd=0,
                 endP = length(targetSpec)
                 res = hClustAlign(refSpec, targetSpec, myPeakList, myPeakLabel, 
                                   startP, endP, maxShift = maxShift_val, acceptLostPeak = acceptLostPeak)
+                
                 Y[tarInd, ] = res$tarSpec
-                peakListNew[[tarInd]] = res$PeakList[(length(peakList[[refInd]]) + 
-                                                          1):length(myPeakList)]
+                
+                if(length(myPeakList) > length(res$peakList)){ #bugfix charlie
+                    peakListNew[[tarInd]] <-
+                        res$peakList[(length(peakList[[refInd]])+1):length(res$peakList)]
+                } else{ # original code
+                    peakListNew[[tarInd]]=
+                        res$peakList[(length(peakList[[refInd]])+1):length(myPeakList)]
+                }
+                
             }
             
             Z=stats::cor(t(Y))
