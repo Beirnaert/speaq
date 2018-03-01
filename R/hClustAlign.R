@@ -73,7 +73,7 @@ hClustAlign <-function(refSpec, tarSpec, peakList, peakLabel, startP, endP,
             peakListTarget=which(peakLabel==0);
             peakList[peakListTarget]=peakList[peakListTarget]+adj$stepAdj;
             
-            lostPeaks=which(peakList<=0);
+            lostPeaks = which(peakList <= 0 | peakList > length(tarSpec))
             if (length(lostPeaks) >0){
                 
                 peakList=peakList[-lostPeaks];

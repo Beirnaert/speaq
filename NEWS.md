@@ -6,6 +6,7 @@
 * typo fixes
 * vignette updates (now with performance analysis for a simulated dataset)
 * peak picker supports raw peak height from now on
+* fixed a "lostpeak" bug in dohClusterCustommedSegments(). Thanks to Manolis Matzapetakis for the alert.
 
 
 
