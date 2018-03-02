@@ -1,10 +1,10 @@
 Package: speaq
-Version: 2.1.9914
+Version: 2.1.9915
 Date: 2018-03-02
 Title: Tools for Nuclear Magnetic Resonance (NMR) Spectra Alignment, Peak Based Processing, Quantitative Analysis and Visualizations
 Author: Charlie Beirnaert, Trung Nghia Vu, Pieter Meysman, Kris Laukens and Dirk Valkenborg
 Maintainer: Charlie Beirnaert <charlie_beirnaert@icloud.com>
-Description: Makes Nuclear Magnetic Resonance spectroscopy (NMR spectroscopy) data analysis as easy as possible by only requiring a small set of functions to perform an entire analysis. 'speaq' offers the possibility of raw spectra alignment and quantitation but also an analysis based on features whereby the spectra are converted to peaks which are then grouped and turned into features. These features can be processed with any number of statistical tools either included in 'speaq' or available elsewhere on CRAN. More detail can be found in Vu et al. (2011) <doi:10.1186/1471-2105-12-405> and Beirnaert et al. (2017) <doi:10.1371/journal.pcbi.1006018>. 
+Description: Makes Nuclear Magnetic Resonance spectroscopy (NMR spectroscopy) data analysis as easy as possible by only requiring a small set of functions to perform an entire analysis. 'speaq' offers the possibility of raw spectra alignment and quantitation but also an analysis based on features whereby the spectra are converted to peaks which are then grouped and turned into features. These features can be processed with any number of statistical tools either included in 'speaq' or available elsewhere on CRAN. More detail can be found in Vu et al. (2011) <doi:10.1186/1471-2105-12-405> and Beirnaert et al. (2018) <doi:10.1371/journal.pcbi.1006018>. 
 Depends:
     R (>= 3.1.0),
 Imports:
