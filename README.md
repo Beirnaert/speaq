@@ -88,7 +88,7 @@ Features <- BuildFeatureMatrix(Y.data = groups)
 
 Vu TN, Valkenborg D, Smets K, Verwaest KA, Dommisse R, Lemière F, Verschoren A, Goethals B, Laukens K. An integrated workflow for robust alignment and simplified quantitative analysis of NMR spectrometry data. BMC Bioinformatics, 2011, 12:405, doi: https://doi.org/10.1186/1471-2105-12-405
 
-**preprint** Beirnaert C, Meysman P, Vu TN, Hermans N, Apers S, Pieters L, Covaci A, Laukens K (2017) speaq 2.0: a complete workflow for high-throughput 1D NMR spectra processing and quantification. bioRxiv preprint server, 2017, doi: https://doi.org/10.1101/138503
+Beirnaert C, Meysman P, Vu TN, Hermans N, Apers S, Pieters L, Covaci A, Laukens K (2017) speaq 2.0: a complete workflow for high-throughput 1D NMR spectra processing and quantification. PLoS Computational Biology, 2018, doi: https://doi.org/10.1371/journal.pcbi.1006018
 
 ### License
 

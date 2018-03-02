@@ -19,9 +19,9 @@ MassSpecWavelet is a Bioconductor package.
 ## R CMD check results
 There were no ERRORs or WARNINGs.
 
-Local OS X build generated NOTEs
+Local OS X build generated no NOTEs
 
-Travis.ci generated no NOTE
+Travis.ci generated no NOTEs
 
 Win-builder generated NOTEs
 
@@ -29,7 +29,6 @@ Win-builder generated NOTEs
 
 * possibly mis-spelled words in DESCRIPTION: These words are not mis-spelled.
 
-* Files ‘README.md’ or ‘NEWS.md’ cannot be checked without ‘pandoc’ being installed: These are common .md files 
 
 
 
