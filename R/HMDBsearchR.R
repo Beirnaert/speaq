@@ -1,7 +1,7 @@
 #' Submit 1H NMR peaks to HMDB for compound search 
 #'
 #' This function allows to search HMDB from within R by simply submitting the peaks you want to search for. 
-#' The function will open a webpage with the querry results or provide a link to the HMDB page with the results.
+#' The function will open a webpage with the query results or provide a link to the HMDB page with the results.
 #'
 #' @param peakVector A vector with ppm values of peaks
 #' @param ppmTol The ppm tolerance for the HMDB search (default = 0.02).

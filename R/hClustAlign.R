@@ -8,7 +8,7 @@
 #' @param peakLabel The list of the labels of the peaks
 #' @param startP The starting point of the segment.
 #' @param endP The ending point of the segment.
-#' @param distanceMethod The distance method for the hierarchial clustering algorithm.
+#' @param distanceMethod The distance method for the hierarchical clustering algorithm.
 #' @param maxShift The maximum number of points for a shift step.
 #' @param acceptLostPeak This is an option for users, TRUE is the default value. If the users believe that all the peaks in the peak list are true positive, change it to FALSE.
 #' 

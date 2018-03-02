@@ -1,13 +1,13 @@
 #' Build a raw data matrix (spectra) from spectra of unequal length
 #'
 #' This function can be used to build a data matrix from ill aligned spectra or of spectra of unequal length.
-#' the result is a matrix whereby the first column matches (approximately) with a sinle left ppm value and the 
-#' last column matches (approxiamtely) with a single right ppm value. Crucial is that the sample rates of the machine are the same
+#' the result is a matrix whereby the first column matches (approximately) with a single left ppm value and the 
+#' last column matches (approximately) with a single right ppm value. Crucial is that the sample rates of the machine are the same
 #' this should be always the case otherwise comparing intensities becomes meaningless.
 #' Note that, as standard in NMR spectra, the highest ppm value is on the left
 #'
 #' @param spectrum.list A list of the spectra (y-values). Since by definition some of these differ in length this has to be in list form with a single spectrum per list item.
-#' @param ppm.list The list of corresponding ppm values (x-values) with the highest ppm-value at the begining (left) as is the convention for NMR spectra. (This our ppm.edges.matrix has to be provided). 
+#' @param ppm.list The list of corresponding ppm values (x-values) with the highest ppm-value at the beginning (left) as is the convention for NMR spectra. (This our ppm.edges.matrix has to be provided). 
 #' @param ppm.edges.matrix The list with the starting and ending ppm values (highest ppm-value on the left/in the beginning). This or ppm.list has to be provided.
 #'
 #' @return SpectraAndPPM A list with 2 elements, the DataMatrix and the ppmMatrix.

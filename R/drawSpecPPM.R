@@ -19,8 +19,8 @@
 #' @param ROI.ppm If provided (a ppm value, not an index value) only this region of interest will be plotted. (supply no ROI or ROI.ppm values, for the full spectrum, or specify only 1, either ROI or ROI.ppm).
 #' @param roiWidth The width of the ROI (region of interest) plot in index points/measurement points. The plot will span from ROI/ROI.ppm - roiWidth to ROI/ROI.ppm + roiWidth. (only supply roiWidth or roiWidth.ppm if needed).
 #' @param roiWidth.ppm The width of the ROI (region of interest) plot in ppm. The plot will span from ROI/ROI.ppm - roiWidth.ppm to ROI/ROI.ppm + roiWidth.ppm. (only supply roiWidth or roiWidth.ppm if needed).
-#' @param legend.extra.x Increase (or decrease) the horizontal speace in the legend, this is useful for exporting larger figures.
-#' @param legend.extra.y Increase (or decrease) the vertical speace in the legend, this is useful for exporting larger figures.
+#' @param legend.extra.x Increase (or decrease) the horizontal space in the legend, this is useful for exporting larger figures.
+#' @param legend.extra.y Increase (or decrease) the vertical space in the legend, this is useful for exporting larger figures.
 #' @param legendpos The position of the legend (standard R legend positioning, default = 'topleft').
 #' @param colourstyle The colours used in the plot, either standard R or ggplot colours (default).
 #' @param manual.colours Provide specific colours to be used in the plot.

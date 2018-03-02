@@ -16,7 +16,7 @@ detectSpecPeaks(X, nDivRange = 128, scales = seq(1, 16, 2),
 
 \item{baselineThresh}{It will remove all peaks under an intensity set by baselineThresh.}
 
-\item{SNR.Th}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itseff re- compute this value.}
+\item{SNR.Th}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.}
 
 \item{verbose}{A boolean value to allow print out process information.}
 }

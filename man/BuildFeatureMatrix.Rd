@@ -9,7 +9,7 @@ BuildFeatureMatrix(Y.data, var = "peakValue", impute = "zero",
   thresholds.pass = "any-to-pass")
 }
 \arguments{
-\item{Y.data}{The dataset after (at least) peak detection and grouping with speaq 2.0. The dataset after peak filling is recomended.}
+\item{Y.data}{The dataset after (at least) peak detection and grouping with speaq 2.0. The dataset after peak filling is recommended.}
 
 \item{var}{The variable to be used in the Featurematrix. This can be any of 'peakIndex', 'peakPPM', 'peakValue' (default), 'peakSNR', 'peakScale', or 'Sample'.}
 
@@ -21,7 +21,7 @@ BuildFeatureMatrix(Y.data, var = "peakValue", impute = "zero",
 
 \item{snrThres}{The threshold for the signal-to-noise ratio of a peak.}
 
-\item{thresholds.pass}{This variable lets users deside whether a peak has to pass all the thresholds (both snrThres and baselineThresh), or just one. (If the peak does not need to surpass any thresholds set 'delete.below.threshold' to FALSE).}
+\item{thresholds.pass}{This variable lets users decide whether a peak has to pass all the thresholds (both snrThres and baselineThresh), or just one. (If the peak does not need to surpass any thresholds set 'delete.below.threshold' to FALSE).}
 }
 \value{
 a matrix, data.matrix, with samples for rows and features for columns. The values in the matrix are those of the 'var' variable.

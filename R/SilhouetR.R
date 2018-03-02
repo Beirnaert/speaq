@@ -3,7 +3,7 @@
 #' Calculate the Silhouette value for 
 #'
 #' @param DataMatrix a matrix with the raw data, 1 variable per column.
-#' @param GroupIndices The vector with the group indices (length must be equal to the amount of rwos in DataMatrix).
+#' @param GroupIndices The vector with the group indices (length must be equal to the amount of rows in DataMatrix).
 #' @param distance The distance metric to be used, see \link[cluster]{daisy}.
 #' @param stand whether to standardize the data before calculating the dissimilarities. See \link[cluster]{daisy}.
 #'

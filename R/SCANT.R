@@ -1,9 +1,9 @@
 #' SCAle, Normalize and Transform a data matrix
 #'
-#' This function allows the column-wise or row-wise scaling, normalization and tranformation operations on a data matrix.
+#' This function allows the column-wise or row-wise scaling, normalization and transformation operations on a data matrix.
 #'
 #' @param data.matrix the data matrix to be scaled, normalized or transformed.
-#' @param type the operations to be performed, this can be multiple and are performed sequantially. Any of 'unit', 'pareto', 'log10', 'log2', 'center', 'range', 'vast', 'prob.Q' or 'max' are accepted.
+#' @param type the operations to be performed, this can be multiple and are performed sequentially. Any of 'unit', 'pareto', 'log10', 'log2', 'center', 'range', 'vast', 'prob.Q' or 'max' are accepted.
 #' @param what to specify on which to perform the operations (row or column).
 #'
 #' @return The scaled, normalized and/or transformed matrix.

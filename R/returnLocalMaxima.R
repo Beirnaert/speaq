@@ -5,7 +5,7 @@
 #' @param spectrum A spectral sample in the vector format.
 #' 
 #' 
-#' @return list of 2: locMax (Locations of the found local maximum peaks) and pkMax (Intensities of the found local maxumum peaks)
+#' @return list of 2: locMax (Locations of the found local maximum peaks) and pkMax (Intensities of the found local maximum peaks)
 #' 
 #' @author Trung Nghia Vu
 #' 

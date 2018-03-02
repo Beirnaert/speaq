@@ -47,9 +47,9 @@ drawSpecPPM(Y.spec, X.ppm, LeftIndex = -1, RightIndex = -1,
 
 \item{roiWidth.ppm}{The width of the ROI (region of interest) plot in ppm. The plot will span from ROI/ROI.ppm - roiWidth.ppm to ROI/ROI.ppm + roiWidth.ppm. (only supply roiWidth or roiWidth.ppm if needed).}
 
-\item{legend.extra.x}{Increase (or decrease) the horizontal speace in the legend, this is useful for exporting larger figures.}
+\item{legend.extra.x}{Increase (or decrease) the horizontal space in the legend, this is useful for exporting larger figures.}
 
-\item{legend.extra.y}{Increase (or decrease) the vertical speace in the legend, this is useful for exporting larger figures.}
+\item{legend.extra.y}{Increase (or decrease) the vertical space in the legend, this is useful for exporting larger figures.}
 
 \item{legendpos}{The position of the legend (standard R legend positioning, default = 'topleft').}
 

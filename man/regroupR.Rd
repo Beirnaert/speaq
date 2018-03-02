@@ -12,9 +12,9 @@ regroupR(grouped.peaks, list.to.regroup, min.samp.grp = 1,
 
 \item{list.to.regroup}{The peak indices of groups to regroup (the groups, indicated by their peakIndex, in 1 list item will be merged and regrouped).}
 
-\item{min.samp.grp}{The minimal amount of samples needed te form a group.}
+\item{min.samp.grp}{The minimal amount of samples needed to form a group.}
 
-\item{max.dupli.prop}{The maximal duplication proportion allowed for a group to be considered a sigle group.}
+\item{max.dupli.prop}{The maximal duplication proportion allowed for a group to be considered a single group.}
 
 \item{maxClust}{The maximum number of clusters (depth of the tree).}
 }

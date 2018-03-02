@@ -3,8 +3,8 @@
 #' Internal function in the PeakGrouper function for generating the hierarchical clustering tree and cutting it.
 #'
 #' @param current.peaks A number of neighbouring peaks to be grouped.
-#' @param min.samp.grp The minimal amount of samples needed te form a group.
-#' @param max.dupli.prop The maximal duplication proportion allowed for a group to be considered a sigle group.
+#' @param min.samp.grp The minimal amount of samples needed to form a group.
+#' @param max.dupli.prop The maximal duplication proportion allowed for a group to be considered a single group.
 #' @param maxClust The maximum number of clusters (depth of the tree).
 #' @param linkage The linkage to be used in the hierarchical clustering. See the 'method' argument in \link[stats]{hclust}.
 #'

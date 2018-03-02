@@ -8,7 +8,7 @@
 #' @param nDivRange The size of a single small segment after division of spectra
 #' @param scales The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.
 #' @param baselineThresh It will remove all peaks under an intensity set by baselineThresh.
-#' @param SNR.Th The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itseff re- compute this value.
+#' @param SNR.Th The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.
 #' @param verbose A boolean value to allow print out process information.
 #'
 #' @return The peak lists of the spectra

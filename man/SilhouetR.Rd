@@ -9,7 +9,7 @@ SilhouetR(DataMatrix, GroupIndices, distance = "euclid", stand = TRUE)
 \arguments{
 \item{DataMatrix}{a matrix with the raw data, 1 variable per column.}
 
-\item{GroupIndices}{The vector with the group indices (length must be equal to the amount of rwos in DataMatrix).}
+\item{GroupIndices}{The vector with the group indices (length must be equal to the amount of rows in DataMatrix).}
 
 \item{distance}{The distance metric to be used, see \link[cluster]{daisy}.}
 

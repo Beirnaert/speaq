@@ -20,7 +20,7 @@ hClustAlign(refSpec, tarSpec, peakList, peakLabel, startP, endP,
 
 \item{endP}{The ending point of the segment.}
 
-\item{distanceMethod}{The distance method for the hierarchial clustering algorithm.}
+\item{distanceMethod}{The distance method for the hierarchical clustering algorithm.}
 
 \item{maxShift}{The maximum number of points for a shift step.}
 

@@ -4,8 +4,8 @@
 #'
 #' @param grouped.peaks The grouped peaks data.
 #' @param list.to.regroup The peak indices of groups to regroup (the groups, indicated by their peakIndex, in 1 list item will be merged and regrouped).
-#' @param min.samp.grp The minimal amount of samples needed te form a group.
-#' @param max.dupli.prop The maximal duplication proportion allowed for a group to be considered a sigle group.
+#' @param min.samp.grp The minimal amount of samples needed to form a group.
+#' @param max.dupli.prop The maximal duplication proportion allowed for a group to be considered a single group.
 #' @param maxClust The maximum number of clusters (depth of the tree).
 #'
 #' @return Returns a data frame with regrouped peaks.

@@ -18,7 +18,7 @@ Opens a webpage or returns a URL with the HMDB results
 }
 \description{
 This function allows to search HMDB from within R by simply submitting the peaks you want to search for. 
-The function will open a webpage with the querry results or provide a link to the HMDB page with the results.
+The function will open a webpage with the query results or provide a link to the HMDB page with the results.
 }
 \examples{
 HMDBsearchR(peakVector = c(3.2, 3.38), ppmTol = 0.2, returnURL = TRUE)

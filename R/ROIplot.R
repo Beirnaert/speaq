@@ -4,7 +4,7 @@
 #'
 #' @param Y.spec (required) The raw spectra in matrix format (1 sample per row) or numeric vector (in case of 1 spectrum)
 #' @param X.ppm (required) The vector with the ppm values
-#' @param ungrouped.peaks (required) The data resulting from peak detecion with wavelets
+#' @param ungrouped.peaks (required) The data resulting from peak detection with wavelets
 #' @param grouped.peaks (required) The data after grouping (with PeakGrouper)
 #' @param ROI If provided (with an index value, not a ppm value) only this region of interest will be plotted. (supply no ROI or ROI.ppm values, for the full spectrum, or specify only 1, either ROI or ROI.ppm).
 #' @param ROI.ppm If provided (a ppm value, not an index value) only this region of interest will be plotted. (supply no ROI or ROI.ppm values, for the full spectrum, or specify only 1, either ROI or ROI.ppm).

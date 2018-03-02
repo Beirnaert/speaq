@@ -11,13 +11,13 @@ PeakGrouper(Y.peaks, grouping.window.width = 100, verbose = FALSE,
 \arguments{
 \item{Y.peaks}{data frame obtained from the 'getWaveletPeaks' function.}
 
-\item{grouping.window.width}{The width of the sliding window (in measurement points). Measurments are taken for when this sliding window is taken too small, but best set this too a value that a normal peak is comfortably in a window. Note if large shifts occur in your dataset (like in the wine dataset) it is best to set this parameter larger.}
+\item{grouping.window.width}{The width of the sliding window (in measurement points). Measurements are taken for when this sliding window is taken too small, but best set this too a value that a normal peak is comfortably in a window. Note if large shifts occur in your dataset (like in the wine dataset) it is best to set this parameter larger.}
 
 \item{verbose}{If set to TRUE the window selection process is documented in real time (default = FALSE).}
 
-\item{min.samp.grp}{The minimal amount of samples needed te form a group, see \link[speaq]{hclust.grouping}.}
+\item{min.samp.grp}{The minimal amount of samples needed to form a group, see \link[speaq]{hclust.grouping}.}
 
-\item{max.dupli.prop}{The maximal duplication proportion allowed for a group to be considered a sigle group, see \link[speaq]{hclust.grouping}.}
+\item{max.dupli.prop}{The maximal duplication proportion allowed for a group to be considered a single group, see \link[speaq]{hclust.grouping}.}
 
 \item{maxClust}{The maximum number of clusters (depth of the tree), see \link[speaq]{hclust.grouping}.}
 

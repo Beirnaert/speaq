@@ -4,12 +4,12 @@
 #' 
 #' @param BW An array of the BW ratios.
 #' @param perc An array of the percentile ratios.
-#' @param X The spectral dataset in matrix format in which each row contains a single sam- ple.
-#' @param startP The starting point of the segment. If it is -1, the starting point is from begining of the spectra.
+#' @param X The spectral dataset in matrix format in which each row contains a single sample.
+#' @param startP The starting point of the segment. If it is -1, the starting point is from beginning of the spectra.
 #' @param endP The ending point of the segment. If it is -1, the ending point is the last point of the spectra.
 #' @param groupLabel The default value is NULL, it means that a single spectrum has a distinct color. Otherwise, the spectra is colored by their label.
-#' @param highBound Default value is -1, that means the plot covers also the highest intesity peaks in the figure. If the users want to limit the upper height of the figure, set this parameter by the limited value.
-#' @param lowBound Default value is -1, that means the plot covers also the lowest intesity peaks in the figure. If the users want to limit the under height of the figure, set this parameter by the limited value.
+#' @param highBound Default value is -1, that means the plot covers also the highest intensity peaks in the figure. If the users want to limit the upper height of the figure, set this parameter by the limited value.
+#' @param lowBound Default value is -1, that means the plot covers also the lowest intensity peaks in the figure. If the users want to limit the under height of the figure, set this parameter by the limited value.
 #' @param nAxisPos The number of ticks that will be displayed in the horizontal axis.
 #' @param offside The offside of values in x-axis for display.
 #'

@@ -9,7 +9,7 @@ SCANT(data.matrix, type = "unit", what = "columns")
 \arguments{
 \item{data.matrix}{the data matrix to be scaled, normalized or transformed.}
 
-\item{type}{the operations to be performed, this can be multiple and are performed sequantially. Any of 'unit', 'pareto', 'log10', 'log2', 'center', 'range', 'vast', 'prob.Q' or 'max' are accepted.}
+\item{type}{the operations to be performed, this can be multiple and are performed sequentially. Any of 'unit', 'pareto', 'log10', 'log2', 'center', 'range', 'vast', 'prob.Q' or 'max' are accepted.}
 
 \item{what}{to specify on which to perform the operations (row or column).}
 }
@@ -17,7 +17,7 @@ SCANT(data.matrix, type = "unit", what = "columns")
 The scaled, normalized and/or transformed matrix.
 }
 \description{
-This function allows the column-wise or row-wise scaling, normalization and tranformation operations on a data matrix.
+This function allows the column-wise or row-wise scaling, normalization and transformation operations on a data matrix.
 }
 \examples{
 Samples <- 10
