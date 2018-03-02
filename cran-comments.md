@@ -6,20 +6,21 @@ MassSpecWavelet is a Bioconductor package.
 Test environments
 -----------------
 
--   local OS X install, R 3.3.2
--   devtools win-builder, R-release (3.4.1)
--   devtools win-builder, R devel (unstable) (2017-09-12 r73242)
--   travis.ci Linux, x64, R release (3.4.1)
--   travis.ci Linux, x64, R devel (unstable) (2017-09-14 r73258)
+-   local OS X install, R 3.4.3
+-   devtools win-builder, R-release (3.4.3)
+-   devtools win-builder, R devel (unstable) (2018-03-01 r74337)
+-   travis.ci Linux, x64, R oldrel (3.3.3)
+-   travis.ci Linux, x64, R release (3.4.2)
+-   travis.ci Linux, x64, R devel (unstable) (2018-03-01 r74329)
 
 R CMD check results
 -------------------
 
 There were no ERRORs or WARNINGs.
 
-Local OS X build generated NOTEs
+Local OS X build generated no NOTEs
 
-Travis.ci generated no NOTE
+Travis.ci generated no NOTEs
 
 Win-builder generated NOTEs
 
@@ -32,9 +33,6 @@ Win-builder generated NOTEs
 
 -   possibly mis-spelled words in DESCRIPTION: These words are
     not mis-spelled.
-
--   Files ‘README.md’ or ‘NEWS.md’ cannot be checked without ‘pandoc’
-    being installed: These are common .md files
 
 Downstream dependencies
 -----------------------

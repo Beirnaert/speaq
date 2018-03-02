@@ -30,8 +30,6 @@ Win-builder generated NOTEs
 * possibly mis-spelled words in DESCRIPTION: These words are not mis-spelled.
 
 
-
-
 ## Downstream dependencies
 I have also run R CMD check on downstream dependencies of speaq. 
 All packages passed.
