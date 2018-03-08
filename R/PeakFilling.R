@@ -132,8 +132,13 @@ PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = 
                     
                     
                     res[sapply(res, is.null)] <- NA
-                    if (length(res) != 6) 
-                        res <- rep(NA, 6)  # !important after sapply <- NA! : sometimes the $peakCenterIndex from tuneInPeakInfo returns 'numeric(0)', throw it away
+                    # !important after sapply <- NA! : sometimes the $peakCenterIndex from tuneInPeakInfo returns 'numeric(0)', throw it away
+                    if (length(res) != 6) {
+                        res <- rep(NA, 6)
+                    }
+                    if(length(res) != length(unlist(res))){
+                        res <- rep(NA, 6)
+                    }
                     res <- unlist(res)
                     filled[k, ] <- res
                     
