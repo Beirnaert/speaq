@@ -1,3 +1,9 @@
+# speaq 2.3:
+### xx/xx/2018
+
+* fixed issue of condition length 1. Thanks to tomas kalibera for the alert.
+* fixed PeakFilling issue if MassSpecWaveet returns numeric(0).
+
 # speaq 2.2:
 ### 01/03/2018
 
