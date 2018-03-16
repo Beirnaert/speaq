@@ -7,7 +7,7 @@
 GetWinedata.subset()
 }
 \value{
-list of 3: spectra, ppm values, color and origin.
+list of 2: spectra, ppm values, color and origin.
 }
 \description{
 This functions extracts a small part of the Winedata to be used in code testing and code examples
