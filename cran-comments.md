@@ -1,17 +1,18 @@
 Bioconductor
 ------------
 
-MassSpecWavelet is a Bioconductor package.
+MassSpecWavelet and impute are Bioconductor packages.
 
 Test environments
 -----------------
 
 -   local OS X install, R 3.4.3
--   devtools win-builder, R-release (3.4.3)
--   devtools win-builder, R devel (unstable) (2018-03-01 r74337)
+-   devtools win-builder, R-oldrel (3.3.3)
+-   devtools win-builder, R-release (3.4.4)
+-   devtools win-builder, R devel (unstable) (2018-03-15 r74413)
 -   travis.ci Linux, x64, R oldrel (3.3.3)
 -   travis.ci Linux, x64, R release (3.4.2)
--   travis.ci Linux, x64, R devel (unstable) (2018-03-01 r74329)
+-   travis.ci Linux, x64, R devel (unstable) (2018-03-16 r74414)
 
 R CMD check results
 -------------------
@@ -22,7 +23,7 @@ Local OS X build generated no NOTEs
 
 Travis.ci generated no NOTEs
 
-Win-builder generated NOTEs
+Win-builder generated 1 NOTE
 
 -   Uses the superseded package: 'doSNOW': this is to provide
     continuously updated progress bars when performing parallel
