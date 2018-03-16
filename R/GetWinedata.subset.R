@@ -15,9 +15,9 @@
 #' @export
 #' 
 GetWinedata.subset <- function(){
-    Spectra <- speaq::Winedata$spectra[1:3, 1001:2000]
+    Spectra <- speaq::Winedata$spectra[1:2, 1001:2000]
     PPM.vector <- speaq::Winedata$ppm[1001:2000]
-    wine.color <- as.character(speaq::Winedata$wine.color[1:3])
-    wine.origin <- as.character(speaq::Winedata$origin[1:3])
+    wine.color <- as.character(speaq::Winedata$wine.color[1:2])
+    wine.origin <- as.character(speaq::Winedata$origin[1:2])
     return(list(Spectra = Spectra, PPM = PPM.vector, Color = wine.color, Origin = wine.origin))
 }

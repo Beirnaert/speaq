@@ -37,7 +37,8 @@ This function plots NMR spectra, peak plots and grouped peak plots all in figure
 }
 \examples{
 subset <- GetWinedata.subset()
-subset.spectra = as.matrix(subset$Spectra)
+# to reduce the example time we only select spectra 1 & 2
+subset.spectra = as.matrix(subset$Spectra)[1:2,] 
 subset.ppm = as.numeric(subset$PPM)
 
 test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 

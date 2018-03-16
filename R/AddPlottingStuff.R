@@ -17,10 +17,10 @@
 #' 
 #' test.peaks <- getWaveletPeaks(Y.spec=subset.spectra, 
 #'                               X.ppm=subset.ppm,
-#'                               nCPU = 2) # nCPU set to 2 for the vignette build
+#'                               nCPU = 1) # nCPU set to 2 for the vignette build
 #'                               
 #' test.peaks.plot = AddPlottingStuff(test.peaks, subset.ppm, subset$Color)
-#' head(test.peaks.plot)
+#' #head(test.peaks.plot)
 #' 
 #' @export
 AddPlottingStuff <- function(Y.peaks, X.ppm = NULL, groupLabels = NULL) {
