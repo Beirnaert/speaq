@@ -10,7 +10,7 @@
 #' @param maxClust The maximum number of clusters (depth of the tree), see \link[speaq]{hclust.grouping}.
 #' @param Jaccard.regroup.threshold If 2 neighbouring groups have a jaccard index smaller than this 'Jaccard.regroup.threshold' (indicating that they are quite complementary as they have little peaks samples in common), then they are merged and regrouped. This situation can occur if a group is accidentally cut in half by the window approach.
 #' @param linkage The linkage to be used in the hierarchical clustering. See the 'method' argument in \link[stats]{hclust}.
-#'
+#' 
 #' @return Returns a data frame with grouped peaks. Peaks in a group are indicated with an identical peakIndex
 #'
 #' @author Charlie Beirnaert, \email{charlie.beirnaert@@uantwerpen.be}
@@ -45,6 +45,21 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
         Y.peaks <- Y.peaks
     } else {
         stop("NMR.peaks format is not a list or data.frame")
+    }
+    
+    if(!"numeric" %in% class(Y.peaks$Sample)){
+        warning("The sample labels in Y.peaks are not numeric. Attempting conversion to numeric for internal purposes.")
+        if(!"factor" %in% class(Y.peaks$Sample)){
+            Y.peaks$Sample = as.factor(Y.peaks$Sample)
+        }
+        original.levels = levels(Y.peaks$Sample)
+        # renaming levels to numeric
+        levels(Y.peaks$Sample) <- seq(1,length(levels(Y.peaks$Sample)))
+        new.levels = levels(Y.peaks$Sample)
+        Y.peaks$Sample = as.numeric(as.character(Y.peaks$Sample))
+        SampleLabel_Reconversion = TRUE
+    } else{
+        SampleLabel_Reconversion = FALSE
     }
     
     ##### Peak grouper
@@ -296,7 +311,20 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
         utils::setTxtProgressBar(pb, k + length(grouped.groupindexes))
     }
     close(pb)
+    
     Y.grouped <- Y.grouped[stats::complete.cases(Y.grouped$peakIndex), ]
+    
+    if(SampleLabel_Reconversion){
+        Y.grouped$Sample <- as.factor(Y.grouped$Sample)
+        if(all(levels(Y.grouped$Sample) == new.levels)){
+            levels(Y.grouped$Sample) <- original.levels
+        }else{
+            for(lv in 1:length(levels(Y.grouped$Sample))){
+                levelMatch <- which(new.levels == levels(Y.grouped$Sample)[lv] )
+                levels(Y.grouped$Sample)[lv] <- original.levels[levelMatch]
+            }
+        }
+    }
     
     } else{
         print("no groups found, check settings and data")

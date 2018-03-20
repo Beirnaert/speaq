@@ -30,7 +30,7 @@ hclust.grouping <- function(current.peaks, min.samp.grp = 1, max.dupli.prop = 0.
             maxClust <- nrow(current.peaks) - 1
         }
         
-        dissE <- cluster::daisy(matrix(c(current.peaks$peakPPM), ncol = 1), metric = "euclid", stand = TRUE)  # the variables are not standardized 
+        dissE <- cluster::daisy(matrix(c(current.peaks$peakPPM), ncol = 1), metric = "euclid", stand = TRUE, warnType = FALSE)  # the variables are not standardized 
         
         fit <- stats::hclust(dissE, method = linkage)
         # silhouet = numeric(maxClust) silhouet[1]= 0

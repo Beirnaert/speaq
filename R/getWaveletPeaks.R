@@ -4,7 +4,7 @@
 #'
 #' @param X.ppm The x/ppm values of the spectra (in single vector or matrix format).
 #' @param Y.spec The spectra in matrix format (rows = samples, columns = measurement points ).
-#' @param sample.labels The sample labels (numeric), if not supplied these will simply be the sample numbers.
+#' @param sample.labels The sample labels (optional), if not supplied these will simply be the sample numbers.
 #' @param window.width The width of the detection window for the wavelets. Because of the Fourier transform lengths of 512 ( window.width = 'small') of 1024 ( window.width = 'large') are preferable.
 #' @param window.split A positive, even and whole number indicating in how many parts the sliding window is split up. With every iteration the window slides one part further.
 #' @param scales The scales to be used in the wavelet based peak detection, see \link[MassSpecWavelet]{peakDetectionCWT}.
@@ -13,6 +13,7 @@
 #' @param nCPU The amount of cpu's to be used for peak detection. If set to '-1' all available cores minus 1 will be used.
 #' @param include_nearbyPeaks If set to TRUE small peaks in the tails of larger ones will be included in the peak data, see \link[MassSpecWavelet]{peakDetectionCWT}.
 #' @param raw_peakheight (default = FALSE) Whether to use the raw peak height of a peak instead of the optimal CWT coefficient (which is a measure for AUC).
+#' @param duplicate_detection_multiplier (default 1) In case users want to process other spectra besides NMR, this parameter will increase the limit for two peaks to be considered a duplicate detection. When dealing with more destorted spectra this parameter can be increased (recomended to not increase above 10). 
 #'
 #' @return The peaks detected with the wavelets.
 #' 
@@ -41,7 +42,7 @@
 #' 
 getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = "small", window.split = 4, 
                             scales = seq(1, 16, 1), baselineThresh = 1000, SNR.Th = -1, nCPU = -1, include_nearbyPeaks = TRUE,
-                            raw_peakheight = FALSE) {
+                            raw_peakheight = FALSE, duplicate_detection_multiplier = 1) {
     # require(data.table) require(MassSpecWavelet) require(parallel) require(foreach)
     
     # error checks and miscellaneous parameter fixing
@@ -115,13 +116,27 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
     }
     
     
-    # the actual function
     
     if (is.null(sample.labels)) {
         sample.labels <- seq(from = 1, to = nSamp)
     } else if (nSamp != length(sample.labels)) {
         warning("Sample labels do not match amount of rows in Y matrix, default row numbers will be used as sample labels")
         sample.labels <- seq(from = 1, to = nSamp)
+    }
+    
+    if(!"numeric" %in% class(sample.labels)){
+        warning("sample.labels is not numeric. Attempting conversion to numeric for internal purposes.")
+        if(!"factor" %in% class(sample.labels)){
+            sample.labels = as.factor(sample.labels)
+        }
+        original.levels = levels(sample.labels)
+        # renaming levels to numeric
+        levels(sample.labels) <- seq(1,length(levels(sample.labels)))
+        new.levels = levels(sample.labels)
+        sample.labels = as.numeric(as.character(sample.labels))
+        SampleLabel_Reconversion = TRUE
+    } else{
+        SampleLabel_Reconversion = FALSE
     }
     
     noiseEsp <- 0.005
@@ -262,7 +277,7 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
                 check.distM <- as.matrix(check.dist)
                 check.distM[lower.tri(check.distM,diag=T)] <- 100 # only take the top triangle (identical to down triangle) and remove the diag because this is obviously 0 and of no interest
                 # take the first quartile as a maximal distance
-                indices = which(check.distM <= 0.005,arr.ind = TRUE) # which indices have a distance smaller 
+                indices = which(check.distM <= 0.005*duplicate_detection_multiplier,arr.ind = TRUE) # which indices have a distance smaller 
                 
                 
                 distance.data <- matrix(NA,nrow = nrow(indices), ncol = 9)
@@ -321,6 +336,18 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
     } else{
         print("No peaks detected")
     } 
+    
+    if(SampleLabel_Reconversion){
+        WaveletPeaks$Sample <- as.factor(WaveletPeaks$Sample)
+        if(all(levels(WaveletPeaks$Sample) == new.levels)){
+            levels(WaveletPeaks$Sample) <- original.levels
+        }else{
+            for(lv in 1:length(levels(WaveletPeaks$Sample))){
+                levelMatch <- which(new.levels == levels(WaveletPeaks$Sample)[lv] )
+                levels(WaveletPeaks$Sample)[lv] <- original.levels[levelMatch]
+            }
+        }
+    }
     
     return(WaveletPeaks)
     

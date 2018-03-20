@@ -88,7 +88,7 @@ SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclid", stand = TRU
         utils::setTxtProgressBar(pb, i)
     }
     close(pb)
-    SilhouetteValues.df <- data.frame(matrix(c(individual_indices, SilhouetteValues, GroupIndices), ncol = 3, 
+    SilhouetteValues.df <- data.frame(matrix(c(original.order[individual_indices], SilhouetteValues, GroupIndices), ncol = 3, 
         byrow = FALSE))
     colnames(SilhouetteValues.df) <- c("index", "SilhouetteValues", "GroupIndices")
     

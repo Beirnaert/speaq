@@ -7,14 +7,14 @@
 getWaveletPeaks(Y.spec, X.ppm, sample.labels = NULL, window.width = "small",
   window.split = 4, scales = seq(1, 16, 1), baselineThresh = 1000,
   SNR.Th = -1, nCPU = -1, include_nearbyPeaks = TRUE,
-  raw_peakheight = FALSE)
+  raw_peakheight = FALSE, duplicate_detection_multiplier = 1)
 }
 \arguments{
 \item{Y.spec}{The spectra in matrix format (rows = samples, columns = measurement points ).}
 
 \item{X.ppm}{The x/ppm values of the spectra (in single vector or matrix format).}
 
-\item{sample.labels}{The sample labels (numeric), if not supplied these will simply be the sample numbers.}
+\item{sample.labels}{The sample labels (optional), if not supplied these will simply be the sample numbers.}
 
 \item{window.width}{The width of the detection window for the wavelets. Because of the Fourier transform lengths of 512 ( window.width = 'small') of 1024 ( window.width = 'large') are preferable.}
 
@@ -31,6 +31,8 @@ getWaveletPeaks(Y.spec, X.ppm, sample.labels = NULL, window.width = "small",
 \item{include_nearbyPeaks}{If set to TRUE small peaks in the tails of larger ones will be included in the peak data, see \link[MassSpecWavelet]{peakDetectionCWT}.}
 
 \item{raw_peakheight}{(default = FALSE) Whether to use the raw peak height of a peak instead of the optimal CWT coefficient (which is a measure for AUC).}
+
+\item{duplicate_detection_multiplier}{(default 1) In case users want to process other spectra besides NMR, this parameter will increase the limit for two peaks to be considered a duplicate detection. When dealing with more destorted spectra this parameter can be increased (recomended to not increase above 10).}
 }
 \value{
 The peaks detected with the wavelets.

@@ -1,7 +1,16 @@
+# speaq 2.3.1
+### 20/03/2018
+
+* fixed an issue with the SilhouetR which did not return the correct index values of the groups.
+* peakGrouper now allows the use of non numeric sample labels (character vectors, factors). It would produce errors otherwise. Thanks to Guillaume Marti for the alert.
+* getWaveletPeaks now contains a multiplier for the duplicate detection limit. This is usefull when working with non NMR spectra that are possibly a bit more distorted than NMR spectra. It allows a wider window to indicate peaks as multiple detections.
+
+
+
 # speaq 2.3:
 ### 16/03/2018
 
-* fixed issue of condition length 1. Thanks to tomas kalibera for the alert.
+* fixed issue of condition length 1. Thanks to Tomas Kalibera for the alert.
 * fixed PeakFilling issue if MassSpecWaveet returns numeric(0).
 
 # speaq 2.2:
