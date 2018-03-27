@@ -12,7 +12,7 @@
 
 <meta name="author" content="Charlie Beirnaert" />
 
-<meta name="date" content="2018-03-16" />
+<meta name="date" content="2018-03-27" />
 
 <title>speaq 2.0 function illustrations</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">speaq 2.0 function illustrations</h1>
 <h4 class="author"><em>Charlie Beirnaert</em></h4>
-<h4 class="date"><em>2018-03-16</em></h4>
+<h4 class="date"><em>2018-03-27</em></h4>
 
 
 
@@ -123,12 +123,16 @@ speaq::<span class="kw">drawSpecPPM</span>(<span class="dt">Y.spec =</span> Spec
                                      <span class="dt">baselineThresh =</span> <span class="dv">10</span>,
                                      <span class="dt">SNR.Th =</span> -<span class="dv">1</span>, 
                                      <span class="dt">nCPU =</span> <span class="dv">2</span>, 
-                                     <span class="dt">include_nearbyPeaks =</span> <span class="ot">TRUE</span>) <span class="co"># nCPU set to 2 for the vignette build</span>
-
-
-wine.grouped &lt;-<span class="st"> </span>speaq::<span class="kw">PeakGrouper</span>(<span class="dt">Y.peaks =</span> wine.peaks,  
+                                     <span class="dt">include_nearbyPeaks =</span> <span class="ot">TRUE</span>) <span class="co"># nCPU set to 2 for the vignette build</span></code></pre></div>
+<pre><code>## Warning in speaq::getWaveletPeaks(Y.spec = Spectra.wine, X.ppm =
+## ppm.wine, : sample.labels is not numeric. Attempting conversion to numeric
+## for internal purposes.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wine.grouped &lt;-<span class="st"> </span>speaq::<span class="kw">PeakGrouper</span>(<span class="dt">Y.peaks =</span> wine.peaks,  
                                    <span class="dt">min.samp.grp =</span> <span class="dv">5</span>, 
                                    <span class="dt">grouping.window.width =</span> <span class="dv">200</span>)</code></pre></div>
+<pre><code>## Warning in speaq::PeakGrouper(Y.peaks = wine.peaks, min.samp.grp = 5,
+## grouping.window.width = 200): The sample labels in Y.peaks are not numeric.
+## Attempting conversion to numeric for internal purposes.</code></pre>
 <p>There are two notes to be made on some important parameters: 1. The <code>include_nearbyPeaks = TRUE</code> option also detects peaks in the tails of larger other peaks. At first this might seem the prefered option as you want to detect as much peaks as possible but we will see later that often it is better to exclude them as these small peaks can cause problems later on. 2. The <code>grouping.window.width</code> parameter is chosen to be twice the size of the default value: it is advised to choose this larger when working with spectra that exhibit large between sample shifts. The wine dataset is an extreme example of large between sample shifts (caused by the substantial pH differences between wines of different colour)</p>
 <p>Now we can plot the detected peaks and the grouped peaks. The dataset after grouping contains both the original ppm values of every peak (in the <code>peakPPM</code> variable) but also the group information (found in the <code>peakIndex</code> variable). By calling the <code>AddPlottingStuff()</code> function the groupPPM variable is added so we also have the ppm value of the groups (the link is: <code>groupPPM &lt;- ppm.wine[peakIndex]</code>)</p>
 </div>

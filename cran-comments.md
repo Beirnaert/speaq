@@ -9,10 +9,10 @@ Test environments
 -   local OS X install, R 3.4.3
 -   devtools win-builder, R-oldrel (3.3.3)
 -   devtools win-builder, R-release (3.4.4)
--   devtools win-builder, R devel (unstable) (2018-03-18 r74422)
+-   devtools win-builder, R devel 3.5.0 alpha (2018-03-25 r74469)
 -   travis.ci Linux, x64, R oldrel (3.3.3)
 -   travis.ci Linux, x64, R release (3.4.4)
--   travis.ci Linux, x64, R devel (unstable) (2018-03-20 r74428)
+-   travis.ci Linux, x64, R devel (unstable) (2018-03-27 r74473)
 
 R CMD check results
 -------------------
