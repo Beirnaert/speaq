@@ -1,5 +1,5 @@
 # speaq 2.3.1
-### 20/03/2018
+### 27/03/2018
 
 * fixed an issue with the SilhouetR which did not return the correct index values of the groups.
 * peakGrouper now allows the use of non numeric sample labels (character vectors, factors). It would produce errors otherwise. Thanks to Guillaume Marti for the alert.

@@ -11,10 +11,10 @@ MassSpecWavelet and impute are Bioconductor packages.
 * local OS X install, R 3.4.3
 * devtools win-builder, R-oldrel (3.3.3)
 * devtools win-builder, R-release (3.4.4)
-* devtools win-builder, R devel (unstable) (2018-03-15 r74413)
+* devtools win-builder, R devel (unstable) (2018-03-18 r74422)
 * travis.ci Linux, x64, R oldrel (3.3.3)
-* travis.ci Linux, x64, R release (3.4.2)
-* travis.ci Linux, x64, R devel (unstable) (2018-03-16 r74414) 
+* travis.ci Linux, x64, R release (3.4.4)
+* travis.ci Linux, x64, R devel (unstable) (2018-03-20 r74428) 
 
 
 ## R CMD check results
