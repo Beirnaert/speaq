@@ -1,3 +1,10 @@
+# speaq 2.3.2
+### 19/04/2018
+
+* fixed an issue with the detectSpecPeaks. An error would occur if no peaks are found in a spectrum.
+* fixed an issue with getWaveletPeaks. In case very short spectra where analysed an error would occur because of an optimization step that required spectra to be at least 512 or 1024 measurement points long (for the FFT). This is fixed now.  
+
+
 # speaq 2.3.1
 ### 27/03/2018
 
