@@ -301,12 +301,12 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
     
     if(nrow(WaveletPeaks) != 0){
         
-        if( sign(nshifts) != -1 ){
             ###### Fixing the duplicate detections
             print("fixing duplicate detections")
             
             window.increment <- FFTwindow/min(window.split)  # determine width of window increment (take the smalest window width)
             nshifts <- ceiling(nPPM/window.increment) - window.split + 1  # determine how many increments there where
+            if( sign(nshifts) != -1 ){
             startR <- rep(NA,nshifts)
             endR <- rep(NA,nshifts)
             for (j in 1:nshifts) {
