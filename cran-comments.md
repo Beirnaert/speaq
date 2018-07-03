@@ -7,12 +7,11 @@ Test environments
 -----------------
 
 -   local OS X install, R 3.4.3
--   devtools win-builder, R-oldrel (3.3.3)
--   devtools win-builder, R-release (3.4.4)
--   devtools win-builder, R devel 3.5.0 alpha (2018-03-25 r74469)
--   travis.ci Linux, x64, R oldrel (3.3.3)
--   travis.ci Linux, x64, R release (3.4.4)
--   travis.ci Linux, x64, R devel (unstable) (2018-03-27 r74473)
+-   devtools win-builder, R-release (3.5.1)
+-   devtools win-builder, R devel (unstable) (2018-07-01 r74946)
+-   travis.ci Linux, x64, R oldrel (3.4.4)
+-   travis.ci Linux, x64, R release (3.5.0)
+-   travis.ci Linux, x64, R devel (unstable) (2018-06-20 r74923)
 
 R CMD check results
 -------------------
@@ -39,4 +38,5 @@ Downstream dependencies
 -----------------------
 
 I have also run R CMD check on downstream dependencies of speaq. All
-packages passed.
+packages passed except specmine for which certain dependencies could not
+be installed.
