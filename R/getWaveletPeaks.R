@@ -117,7 +117,7 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
     
     
     if (is.null(sample.labels)) {
-        sample.labels <- seq(from = 1, to = nSamp)
+        sample.labels <- as.numeric(seq(from = 1, to = nSamp))
     } else if (nSamp != length(sample.labels)) {
         warning("Sample labels do not match amount of rows in Y matrix, default row numbers will be used as sample labels")
         sample.labels <- seq(from = 1, to = nSamp)
