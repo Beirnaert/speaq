@@ -66,10 +66,21 @@ drawSpecPPM <- function(Y.spec, X.ppm, LeftIndex = -1, RightIndex = -1, groupFac
         Y.spec <- as.matrix(Y.spec)
     }
     
+    if (any(is.na(X.ppm))) {
+        warning("X.ppm contains NA's, trying to remove these.")
+        Y.spec <- Y.spec[,!is.na(X.ppm)]
+        X.ppm <- X.ppm[!is.na(X.ppm)]
+    }
+    if(any(is.na(Y.spec))){
+        stop("Y.spec contains NA's. Don't know how to deal with these.")
+    }
+    
     groupFactor_name <- groupFactor
     
     if (X.ppm[1] < X.ppm[2]) {
-        stop("The whole point of this function is to plot with an inverted axis (specific for NMR spectroscopy). X.ppm is not inverted.")
+        message("X.ppm is not inverted. Inverting X.ppm and Y.spec")
+        Y.spec <- Y.spec[,order(X.ppm, decreasing = T)]
+        X.ppm <- rev(X.ppm)
     }
     
     

@@ -1,3 +1,9 @@
+# speaq 2.3.4
+### 20/07/2018
+
+* fixed an issue with DrawSpecPPM and detectSpecPeaks. If the ppm vector or the spectra matrix contained NA's, the function would throw an uninformative error. Now the software tries to fix it, and throws an informative error if it can't. Thanks to Precious Kwadzo Pomary for the alert.
+
+
 # speaq 2.3.3
 ### 03/07/2018
 

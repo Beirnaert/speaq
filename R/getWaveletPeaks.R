@@ -115,6 +115,15 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
     }
     
     
+    if (any(is.na(X.ppm))) {
+        warning("X.ppm contains NA's, trying to remove these.")
+        Y.spec <- Y.spec[,!is.na(X.ppm)]
+        X.ppm <- X.ppm[!is.na(X.ppm)]
+    }
+    if(any(is.na(Y.spec))){
+        stop("Y.spec contains NA's. Don't know how to deal with these.")
+    }
+    
     
     if (is.null(sample.labels)) {
         sample.labels <- as.numeric(seq(from = 1, to = nSamp))
