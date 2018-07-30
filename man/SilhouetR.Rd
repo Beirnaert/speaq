@@ -4,22 +4,23 @@
 \alias{SilhouetR}
 \title{SilhouetR}
 \usage{
-SilhouetR(DataMatrix, GroupIndices, distance = "euclid", stand = TRUE)
+SilhouetR(DataMatrix, GroupIndices, distance = "euclidean", stand = TRUE)
 }
 \arguments{
 \item{DataMatrix}{a matrix with the raw data, 1 variable per column.}
 
 \item{GroupIndices}{The vector with the group indices (length must be equal to the amount of rows in DataMatrix).}
 
-\item{distance}{The distance metric to be used, see \link[cluster]{daisy}.}
-
-\item{stand}{whether to standardize the data before calculating the dissimilarities. See \link[cluster]{daisy}.}
+\item{distance}{The distance metric to be used, "euclidean" or "manhattan".}
 }
 \value{
 Returns the silhouette values. Note if a group contains only 1 no Silhouette value can be calculated (will give NA)
 }
 \description{
-Calculate the Silhouette value for
+This function calculate Silhouette values. The function is generic, 
+as such silhouette values can be calculated between samples of different classes or 
+it can be used to calculate silhouette values between different groups of peaks. 
+This is the way in which it is used for the speaq package (see the example).
 }
 \examples{
 subset <- GetWinedata.subset()
@@ -35,8 +36,7 @@ test.grouped <- PeakGrouper(Y.peaks = test.peaks)
 
 Silhouette.values = SilhouetR(DataMatrix = test.grouped$peakPPM, 
                               test.grouped$peakIndex, 
-                              distance = 'euclid', 
-                              stand = TRUE)
+                              distance = "euclidean")
                               
 hist(Silhouette.values$SilhouetteValues)
 

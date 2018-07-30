@@ -7,8 +7,7 @@
 #'
 #' @param DataMatrix a matrix with the raw data, 1 variable per column.
 #' @param GroupIndices The vector with the group indices (length must be equal to the amount of rows in DataMatrix).
-#' @param distance The distance metric to be used, see \link[cluster]{daisy}.
-#' @param stand whether to standardize the data before calculating the dissimilarities. See \link[cluster]{daisy}.
+#' @param distance The distance metric to be used, "euclidean" or "manhattan".
 #'
 #' @return Returns the silhouette values. Note if a group contains only 1 no Silhouette value can be calculated (will give NA)
 #' 
@@ -28,18 +27,17 @@
 #'
 #' Silhouette.values = SilhouetR(DataMatrix = test.grouped$peakPPM, 
 #'                               test.grouped$peakIndex, 
-#'                               distance = 'euclid', 
-#'                               stand = TRUE)
+#'                               distance = "euclidean")
 #'                               
 #' hist(Silhouette.values$SilhouetteValues)
 #' 
 #' 
 #' @export
 #' 
-#' @importFrom cluster daisy
+#' @importFrom Rfast dista
 #' @importFrom utils head tail txtProgressBar
 #' 
-SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclid", stand = TRUE) {
+SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclidean", stand = TRUE) {
     
     if (!"matrix" %in% class(DataMatrix) & !"data.frame" %in% class(DataMatrix)) {
         DataMatrix <- matrix(DataMatrix, ncol = 1)
@@ -64,11 +62,6 @@ SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclid", stand = TRU
     }
     
     
-    
-    print("Computing dissimilarity matrix")
-    # dissimilarity matrix
-    dissSim <- as.matrix(cluster::daisy(DataMatrix, metric = distance, stand = stand))
-    
     print("Computing silhouette values")
     pb <- utils::txtProgressBar(min = 0, max = Nindividuals, style = 3, width = 100)
     
@@ -77,14 +70,19 @@ SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclid", stand = TRU
     SilhouetteValues <- rep(NA, Nindividuals)
     for (i in 1:Nindividuals) {
         ABvalues <- rep(NA, Ngroups)
+        if(ncol(DataMatrix) == 1){
+            dissSim <- abs(DataMatrix - DataMatrix[i,])
+        } else{
+            dissSim <- Rfast::dista(xnew = DataMatrix[i, , drop = FALSE], x = DataMatrix, type = distance)
+        }
         for (grp in 1:Ngroups) {
             # ABvalues[grp] = mean(dissSim[i,GroupIndices == groups[grp] & individual_indices!=i])
-            ABvalues[grp] <- mean(dissSim[i, start_stop_indices[grp, 1]:start_stop_indices[grp, 2]])
+            ABvalues[grp] <- mean(dissSim[start_stop_indices[grp, 1]:start_stop_indices[grp, 2]])
         }
         individual_grp <- which(groups == GroupIndices[i])
         # A = ABmatrix[i,individual_grp] B = min(ABmatrix[i,-individual_grp])
-        ABvalues[individual_grp] <- mean(dissSim[i, GroupIndices == GroupIndices[i] & individual_indices != 
-            i])
+        ABvalues[individual_grp] <- mean(dissSim[GroupIndices == GroupIndices[i] & individual_indices != 
+                                                     i])
         A <- ABvalues[individual_grp]
         B <- min(ABvalues[-individual_grp])
         SilhouetteValues[i] <- (B - A)/max(c(A, B))
@@ -92,7 +90,7 @@ SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclid", stand = TRU
     }
     close(pb)
     SilhouetteValues.df <- data.frame(matrix(c(original.order[individual_indices], SilhouetteValues, GroupIndices), ncol = 3, 
-        byrow = FALSE))
+                                             byrow = FALSE))
     colnames(SilhouetteValues.df) <- c("index", "SilhouetteValues", "GroupIndices")
     
     SilhouetteValues.df$SilhouetteValues[is.nan(SilhouetteValues.df$SilhouetteValues)] = NA
