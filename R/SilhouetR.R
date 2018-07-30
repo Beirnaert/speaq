@@ -1,6 +1,9 @@
 #' SilhouetR
 #'
-#' Calculate the Silhouette value for 
+#' This function calculate Silhouette values. The function is generic, 
+#' as such silhouette values can be calculated between samples of different classes or 
+#' it can be used to calculate silhouette values between different groups of peaks. 
+#' This is the way in which it is used for the speaq package (see the example).
 #'
 #' @param DataMatrix a matrix with the raw data, 1 variable per column.
 #' @param GroupIndices The vector with the group indices (length must be equal to the amount of rows in DataMatrix).
