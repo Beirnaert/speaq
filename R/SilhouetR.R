@@ -44,6 +44,12 @@ SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclidean", stand = 
         message("DataMatrix is not a matrix, attempting conversion with the assumption of only 1 variable (1 column)")
     }
     
+    if(any(is.na(GroupIndices))){
+        message("GroupIndices contains NA values. These will be deleted together with the corresponding DataMatrix entries.")
+        DataMatrix = DataMatrix[!is.na(GroupIndices), , drop = FALSE]
+        GroupIndices = GroupIndices[!is.na(GroupIndices)]
+    }
+    
     # order the Datamatrix according to increasing GroupIndex, this is to speed up the code later on by
     # calling indices instead of comparing to group
     DataMatrix <- DataMatrix[order(GroupIndices), , drop = FALSE]
@@ -55,12 +61,20 @@ SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclidean", stand = 
     Nindividuals <- nrow(DataMatrix)
     individual_indices <- 1:Nindividuals
     
-    start_stop_indices <- matrix(NA, ncol = 2, nrow = Ngroups)
-    for (k in 1:Ngroups) {
-        start_stop_indices[k, 1] <- utils::head(which(GroupIndices == groups[k]), n = 1)
-        start_stop_indices[k, 2] <- utils::tail(which(GroupIndices == groups[k]), n = 1)
-    }
     
+    if(Ngroups > 2){
+        start_stop_indices <- matrix(NA, ncol = 2, nrow = Ngroups)
+        start_stop_indices[1,1] <- 1
+        start_stop_indices[Ngroups,2] <- length(GroupIndices)
+        start_stop_indices[1:(Ngroups-1),2] <- which(diff(GroupIndices)==1)
+        start_stop_indices[2:Ngroups,1] <- which(diff(GroupIndices)==1) + 1
+    } else{
+        start_stop_indices <- matrix(NA, ncol = 2, nrow = Ngroups)
+        for (k in 1:Ngroups) {
+            start_stop_indices[k, 1] <- utils::head(which(GroupIndices == groups[k]), n = 1)
+            start_stop_indices[k, 2] <- utils::tail(which(GroupIndices == groups[k]), n = 1)
+        }
+    }
     
     print("Computing silhouette values")
     pb <- utils::txtProgressBar(min = 0, max = Nindividuals, style = 3, width = 100)
@@ -73,11 +87,11 @@ SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclidean", stand = 
         if(ncol(DataMatrix) == 1){
             dissSim <- abs(DataMatrix - DataMatrix[i,])
         } else{
-            dissSim <- Rfast::dista(xnew = DataMatrix[i, , drop = FALSE], x = DataMatrix, type = distance)
+            dissSim <- Rfast::dista(xnew = DataMatrix[i, , drop = FALSE], x = DataMatrix, type = distance )
         }
         for (grp in 1:Ngroups) {
-            # ABvalues[grp] = mean(dissSim[i,GroupIndices == groups[grp] & individual_indices!=i])
-            ABvalues[grp] <- mean(dissSim[start_stop_indices[grp, 1]:start_stop_indices[grp, 2]])
+            ABvals <- dissSim[start_stop_indices[grp, 1]:start_stop_indices[grp, 2]]
+            ABvalues[grp] <- sum(ABvals)/length(ABvals)
         }
         individual_grp <- which(groups == GroupIndices[i])
         # A = ABmatrix[i,individual_grp] B = min(ABmatrix[i,-individual_grp])
@@ -98,4 +112,5 @@ SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclidean", stand = 
     SilhouetteValues.df = SilhouetteValues.df[order(original.order),]
     
     return(SilhouetteValues.df)
+    
 }

@@ -1,8 +1,8 @@
-# speaq 2.3.4
-### 30/07/2018
+# speaq 2.4
+### 31/07/2018
 
 * fixed an issue with DrawSpecPPM and detectSpecPeaks. If the ppm vector or the spectra matrix contained NA's, the function would throw an uninformative error. Now the software tries to fix it, and throws an informative error if it can't. Thanks to Precious Kwadzo Pomary for the alert.
-* updated SilhouetR function. It is now faster and hugely more capable of dealing with larger datasets. 
+* updated SilhouetR function. It is now faster and more capable of dealing with larger datasets. 
 
 # speaq 2.3.3
 ### 03/07/2018
