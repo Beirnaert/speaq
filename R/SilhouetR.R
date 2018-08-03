@@ -66,8 +66,8 @@ SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclidean", stand = 
         start_stop_indices <- matrix(NA, ncol = 2, nrow = Ngroups)
         start_stop_indices[1,1] <- 1
         start_stop_indices[Ngroups,2] <- length(GroupIndices)
-        start_stop_indices[1:(Ngroups-1),2] <- which(diff(GroupIndices)==1)
-        start_stop_indices[2:Ngroups,1] <- which(diff(GroupIndices)==1) + 1
+        start_stop_indices[1:(Ngroups-1),2] <- which(diff(GroupIndices)>0)
+        start_stop_indices[2:Ngroups,1] <- which(diff(GroupIndices)>0) + 1
     } else{
         start_stop_indices <- matrix(NA, ncol = 2, nrow = Ngroups)
         for (k in 1:Ngroups) {
