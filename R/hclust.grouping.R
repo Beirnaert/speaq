@@ -136,7 +136,7 @@ hclust.grouping <- function(current.peaks, min.samp.grp = 1, max.dupli.prop = 0.
                 overlapping.groups <- which((starts[2:ngrps] - stops[1:ngrps - 1]) < 0)
                 all.overlapping.groups <- matrix(c(overlapping.groups, overlapping.groups + 1), ncol = 2)
                 # note that the way this is implemented multiple groups can overlap and they will all be merged
-                for (jj in nrow(all.overlapping.groups):1) {
+                for (jj in seq(from = nrow(all.overlapping.groups), to = 1, by = -1)) {
                   group[group == all.overlapping.groups[jj, 2]] <- all.overlapping.groups[jj, 1]
                 }
                 ngrps <- ngrps - nrow(all.overlapping.groups)

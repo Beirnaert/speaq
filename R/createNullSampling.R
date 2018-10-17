@@ -53,7 +53,7 @@ createNullSampling <-function(X, groupLabel, N=100,
         groupMean[[i]]=mi;    
     }  
     
-    for (i in 1:nrow(samplePool)){
+    for (i in seq_len(nrow(samplePool))){
         samplePool[i,]=
             X[i,]-groupMean[[which(levels(groupLabel)==groupLabel[i])]];
     }

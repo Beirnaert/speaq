@@ -41,14 +41,14 @@ drawSpec <-function(X, startP=-1, endP=-1, groupLabel=NULL, useLog=-1,
     colnames(X)=c(1:ncol(X));
     X=as.matrix(X);
     if (highBound!=-1){
-        for (i in 1:nrow(X)){
+        for (i in seq_len(nrow(X))){
             myIndex=which(X[i,]>highBound);
             X[i,myIndex]=highBound;
         }        
     }
     
     if (lowBound!=-1){
-        for (i in 1:nrow(X)){
+        for (i in seq_len(nrow(X))){
             myIndex=which(X[i,]<lowBound);
             X[i,myIndex]=lowBound;
         }        

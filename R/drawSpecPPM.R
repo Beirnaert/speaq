@@ -107,13 +107,13 @@ drawSpecPPM <- function(Y.spec, X.ppm, LeftIndex = -1, RightIndex = -1, groupFac
     }
     
     if (maxHeight != -1) {
-        for (i in 1:nrow(Y.spec)) {
+        for (i in seq_len(nrow(Y.spec))) {
             myIndex <- which(Y.spec[i, ] > maxHeight)
             Y.spec[i, myIndex] <- maxHeight
         }
     }
     if (minHeight != -1) {
-        for (i in 1:nrow(Y.spec)) {
+        for (i in seq_len(nrow(Y.spec))) {
             myIndex <- which(Y.spec[i, ] < minHeight)
             Y.spec[i, myIndex] <- minHeight
         }
