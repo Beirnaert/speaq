@@ -63,7 +63,7 @@ hclust.grouping <- function(current.peaks, min.samp.grp = 1, max.dupli.prop = 0.
         
         
         
-        for (s in 1:length(current.peaks$Sample)) {
+        for (s in seq_along(current.peaks$Sample)) {
             
             groupassignment[s, maxClust + 1] <- suppressWarnings(min(groupassignment[s, 1:maxClust], 
                 na.rm = TRUE))
@@ -75,7 +75,7 @@ hclust.grouping <- function(current.peaks, min.samp.grp = 1, max.dupli.prop = 0.
         grps <- unique(groupassignment[, maxClust + 1])
         grps <- grps[!is.infinite(grps)]
         if (length(grps) > 0) {
-            for (cl in 1:length(grps)) {
+            for (cl in seq_along(grps)) {
                 group[groupassignment[, maxClust + 1] == grps[cl]] <- cl
             }
             ngrps <- max(group)
@@ -104,7 +104,7 @@ hclust.grouping <- function(current.peaks, min.samp.grp = 1, max.dupli.prop = 0.
                   group.meanSNR <- mean(current.peaks$peakSNR[group == gg][!current.peaks$Sample[group == 
                     gg] %in% duplicated.samples])  # get the average SNR for all the samples without duplicates
                   
-                  for (ds in 1:length(duplicated.samples)) {
+                  for (ds in seq_along(duplicated.samples)) {
                     
                     dat.mat <- matrix(c(group.meanppm, current.peaks$peakPPM[group == gg & current.peaks$Sample == 
                       duplicated.samples[ds]], group.meanSNR, current.peaks$peakSNR[group == gg & current.peaks$Sample == 
@@ -143,7 +143,7 @@ hclust.grouping <- function(current.peaks, min.samp.grp = 1, max.dupli.prop = 0.
                 # check if the groups are stil sequentially ordered, if not do this
                 if (any(!(seq(1, ngrps) %in% group))) {
                   curr.grps <- sort(unique(group[group > 0]))
-                  for (gg in 1:length(curr.grps)) {
+                  for (gg in seq_along(curr.grps)) {
                     group[group == curr.grps[gg]] <- gg
                   }
                 }

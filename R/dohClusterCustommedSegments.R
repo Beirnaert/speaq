@@ -108,7 +108,7 @@ dohClusterCustommedSegments <-function(X, peakList, refInd, segmentInfoMat,
                         mysegments[i,1]," to ",mysegments[i,2]," ...");
                 
                 segmentpeakList=peakList;
-                for (j in 1:length(peakList)){
+                for (j in seq_along(peakList)){
                     segmentpeakList[[j]]=
                         findSegPeakList(peakList[[j]],mysegments[i,1],mysegments[i,2]);
                 }    

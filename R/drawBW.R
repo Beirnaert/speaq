@@ -47,7 +47,7 @@
 #' #compute percentile of alpha
 #' perc = double(ncol(Y));
 #' alpha_corr = alpha/sum(returnLocalMaxima(Y[2,])$pkMax>50000);
-#' for (i in 1 : length(perc)){
+#' for (i in seq_along(perc)) {
 #'     perc[i] = quantile(H0[,i],1-alpha_corr, type = 3);
 #' }
 #' drawBW(BW, perc,Y, groupLabel = groupLabel)

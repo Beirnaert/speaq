@@ -27,7 +27,7 @@
 #' 
 SCANT <- function(data.matrix, type = "unit", what = "columns") {
     
-    for (N in 1:length(type)) {
+    for (N in seq_along(type)) {
         if (!(type[N] %in% c("unit", "pareto", "log10", "log2", "center", "range", "vast", "prob.Q", "max"))) {
             stop("No appropriate type of normalization/scaling selected")
         }
@@ -51,7 +51,7 @@ SCANT <- function(data.matrix, type = "unit", what = "columns") {
     
     scaled.data <- data.matrix
     
-    for (N in 1:length(type)) {
+    for (N in seq_along(type)) {
         Curr.type <- type[N]
         
         # standard ones

@@ -176,7 +176,7 @@ drawSpecPPM <- function(Y.spec, X.ppm, LeftIndex = -1, RightIndex = -1, groupFac
         xPos.user <- NULL
         if (!"numeric" %in% class(ticks)) 
             ticks <- as.numeric(as.character(ticks))
-        for (tk in 1:length(ticks)) {
+        for (tk in seq_along(ticks)) {
             xPos.user[tk] <- which(abs(X.ppm - ticks[tk]) == min(abs(X.ppm - ticks[tk])))[1]
             if (min(abs(X.ppm - ticks[tk])) > min(abs(diff(ticks)))) 
                 stop(paste("tickmark", as.character(ticks[tk]), "is not close to any value in the provided ppm vector"))
@@ -201,7 +201,7 @@ drawSpecPPM <- function(Y.spec, X.ppm, LeftIndex = -1, RightIndex = -1, groupFac
         ppm.ticks <- seq(left.tick.ppm, right.tick.ppm, -ppm.tickwidth)
         ppm.mindiff <- min(abs(diff(ppm.ticks)))
         xPos.auto <- NULL
-        for (tk in 1:length(ppm.ticks)) {
+        for (tk in seq_along(ppm.ticks)) {
             xPos.auto[tk] <- which(abs(X.ppm.sub - ppm.ticks[tk]) == min(abs(X.ppm.sub - ppm.ticks[tk])))[1]
             if (min(abs(X.ppm.sub - ppm.ticks[tk])) > ppm.mindiff/5) {
                 xPos.auto[tk] <- NA
@@ -225,7 +225,7 @@ drawSpecPPM <- function(Y.spec, X.ppm, LeftIndex = -1, RightIndex = -1, groupFac
     
     for (i in 1:length(levels(groupFactor))) {
         groupFactorIdx <- which(groupFactor == levels(groupFactor)[i])
-        for (j in 1:length(groupFactorIdx)) {
+        for (j in seq_along(groupFactorIdx)) {
             graphics::lines(yn[groupFactorIdx[j], ], col = plotcols[i], lwd = lwd)
         }
     }

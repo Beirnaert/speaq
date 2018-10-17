@@ -61,7 +61,7 @@ BWR <-function(X, groupLabel)
     }  
     
     BW=double(ncol(B));
-    for (i in 1:length(BW)){
+    for (i in seq_along(BW)){
         BW_denominator=0;
         for (j in 1:groupNum){
             BW_denominator=BW_denominator+sum(groupW[[j]][,i]);
