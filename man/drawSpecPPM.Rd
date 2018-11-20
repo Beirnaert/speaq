@@ -5,12 +5,12 @@
 \title{Plot NMR spectra from a spectra data matrix}
 \usage{
 drawSpecPPM(Y.spec, X.ppm, LeftIndex = -1, RightIndex = -1,
-  groupFactor = NULL, useLog = FALSE, maxHeight = -1, minHeight = -1,
-  nAxisPos = 4, xlab = NULL, ylab = NULL, title = NULL, ticks = NULL,
-  ROI = NULL, ROI.ppm = NULL, roiWidth = 100, roiWidth.ppm = NULL,
-  legend.extra.x = 2, legend.extra.y = 2, legendpos = NULL,
-  colourstyle = "ggplot", manual.colours = NULL, lwd = 1,
-  noLegend = FALSE)
+  groupFactor = NULL, useLog = FALSE, maxHeight = -1,
+  minHeight = -1, nAxisPos = 4, xlab = NULL, ylab = NULL,
+  title = NULL, ticks = NULL, ROI = NULL, ROI.ppm = NULL,
+  roiWidth = 100, roiWidth.ppm = NULL, legend.extra.x = 2,
+  legend.extra.y = 2, legendpos = NULL, colourstyle = "ggplot",
+  manual.colours = NULL, lwd = 1, noLegend = FALSE)
 }
 \arguments{
 \item{Y.spec}{(required) The raw spectra in matrix format (1 sample per row) or numeric vector (in case of 1 spectrum)}

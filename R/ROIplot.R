@@ -101,7 +101,6 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
             })
         }
     }
-    rownames(Y.spec) = groupLabels
     
     if(is.null(output)){
          
@@ -153,7 +152,7 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
     names(ROI.df) <- c("ppm", "sample", "intensity")
     ROI.df$class <-  groupLabels[ROI.df$sample]
 
-    pp0 <- ggplot(ROI.df, aes_string(x = "ppm", y = "intensity",  colour = "class")) +
+    pp0 <- ggplot(ROI.df, aes_string(x = "ppm", y = "intensity",  colour = "class", group = "sample")) +
            scale_x_reverse()+
            theme_bw() +
            geom_line(size = 0.3) +

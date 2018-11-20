@@ -4,7 +4,8 @@
 \alias{SilhouetR}
 \title{SilhouetR}
 \usage{
-SilhouetR(DataMatrix, GroupIndices, distance = "euclidean", stand = TRUE)
+SilhouetR(DataMatrix, GroupIndices, distance = "euclidean",
+  stand = TRUE)
 }
 \arguments{
 \item{DataMatrix}{a matrix with the raw data, 1 variable per column.}

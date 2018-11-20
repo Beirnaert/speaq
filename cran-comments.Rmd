@@ -1,5 +1,5 @@
 ---
-title: "cram-comments"
+title: "cran-comments"
 author: "Charlie Beirnaert"
 date: "`r Sys.Date()`"
 output: md_document

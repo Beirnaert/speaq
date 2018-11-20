@@ -69,7 +69,6 @@ SNR.Th = -1, verbose = TRUE)
                     
                     if(!is.null(majorPeakInfo)){
                         if (length(majorPeakInfo$peakIndex) > 0) {
-                            print(paste("j =",j," peak =" , majorPeakInfo$peakIndex," savedpeak = ", (majorPeakInfo$peakIndex + startR - 1), sep = "" ))
                             myPeakRes <- c(myPeakRes, majorPeakInfo$peakIndex + startR - 1)
                         }
                     }
