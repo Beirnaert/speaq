@@ -31,7 +31,7 @@
 #' 
 findSegPeakList <-function(peakList, startP, endP){
     res=0;  
-    for (i in 1:length(peakList)){    
+    for (i in seq_along(peakList)) {    
         if (peakList[i]>startP&&peakList[i]<endP){    
             res=c(res,peakList[i]-startP+1);
         }    

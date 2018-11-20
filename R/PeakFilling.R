@@ -68,7 +68,7 @@ PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = 
     
     groups.to.fill <- rep(NA, length(groups))
     # determine which groups (peakIndex) do not contain a peak for every sample
-    for (g in 1:length(groups)) {
+    for (g in seq_along(groups)) {
         if (length(unique(Y.grouped$Sample[Y.grouped$peakIndex == groups[g]])) != nSamples) 
             groups.to.fill[g] <- groups[g]
     }
@@ -104,7 +104,7 @@ PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = 
             groups.to.fill.subset = groups.to.fill[group.division == Parcounter]
             Peaks.filled <- list()
             
-            for (gg in 1:length(groups.to.fill.subset)) {
+            for (gg in seq_along(groups.to.fill.subset)) {
                 # for (gg in 1:length(28)){
                 grpdata <- Y.grouped[Y.grouped$peakIndex == groups.to.fill.subset[gg], ]
                 
@@ -115,7 +115,7 @@ PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = 
                 samples.to.fill <- Samples[!Samples %in% grpdata$Sample]
                 filled <- matrix(ncol = 6, nrow = length(samples.to.fill))
                 
-                for (k in 1:length(samples.to.fill)) {
+                for (k in seq_along(samples.to.fill)) {
                     
                     res <- tryCatch({
                         res.in.try <- MassSpecWavelet::tuneInPeakInfo(Y.spec[samples.to.fill[k], (Med.index - 

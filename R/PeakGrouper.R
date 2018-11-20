@@ -106,7 +106,7 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
             max.edge <- round(window.length * (1 + window.variation))
             var.seq <- seq(from = min.edge, to = max.edge, by = 1)
             seq.peaks <- NULL
-            for (l in 1:length(var.seq)) {
+            for (l in seq_along(var.seq)) {
                 min.index_b <- remaining.index[1]
                 max.index_b <- remaining.index[var.seq[l]]
                 
@@ -244,7 +244,7 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
     reclustered.groups.accumulator <- matrix(NA, nrow = nrow(Y.grouped), ncol = ncol(Y.grouped))
     strt <- 1
     stp <- 0
-    for (k in 2:(length(grouped.groupindexes) - 1)) {
+    for (k in seq(from = 2, to = length(grouped.groupindexes) - 1, by = 1)) {
         dat.to.regroup <- Y.grouped[Y.grouped$peakIndex %in% grouped.groupindexes[c(k - 1, k, k + 1)],]
         regroup.indexes <- grouped.groupindexes[c(k - 1, k, k + 1)]
         
@@ -277,7 +277,7 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
     Jaccard.index <- rep(NA, length(window.breaks))
     strt <- 1
     stp <- 0
-    for (k in 1:length(window.breaks)) {
+    for (k in seq_along(window.breaks)) {
         
         # warnings are supressed since if min and max return 0 or Inf no further action is taken
         left.group <- suppressWarnings(max(grouped.groupindexes.update[grouped.groupindexes.update <= 
@@ -319,7 +319,7 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
         if(all(levels(Y.grouped$Sample) == new.levels)){
             levels(Y.grouped$Sample) <- original.levels
         }else{
-            for(lv in 1:length(levels(Y.grouped$Sample))){
+            for(lv in seq_along(levels(Y.grouped$Sample))){
                 levelMatch <- which(new.levels == levels(Y.grouped$Sample)[lv] )
                 levels(Y.grouped$Sample)[lv] <- original.levels[levelMatch]
             }

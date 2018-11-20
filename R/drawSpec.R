@@ -41,14 +41,14 @@ drawSpec <-function(X, startP=-1, endP=-1, groupLabel=NULL, useLog=-1,
     colnames(X)=c(1:ncol(X));
     X=as.matrix(X);
     if (highBound!=-1){
-        for (i in 1:nrow(X)){
+        for (i in seq_len(nrow(X))){
             myIndex=which(X[i,]>highBound);
             X[i,myIndex]=highBound;
         }        
     }
     
     if (lowBound!=-1){
-        for (i in 1:nrow(X)){
+        for (i in seq_len(nrow(X))){
             myIndex=which(X[i,]<lowBound);
             X[i,myIndex]=lowBound;
         }        
@@ -83,9 +83,9 @@ drawSpec <-function(X, startP=-1, endP=-1, groupLabel=NULL, useLog=-1,
     xPos=c(0:nAxisPos) * tempVal; 
     axis(1,at=xPos,labels=xPos+startP+offside);
     
-    for(i in 1:length(levels(groupLabel))){
+    for(i in seq_along(levels(groupLabel))) {
         groupLabelIdx=which(groupLabel==levels(groupLabel)[i]);
-        for (j in 1:length(groupLabelIdx)){
+        for (j in seq_along(groupLabelIdx)){
             lines(yn[groupLabelIdx[j],],col=as.integer(levels(groupLabel)[i]))        
         }
     }

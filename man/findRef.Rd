@@ -30,7 +30,7 @@ cat("\\n Find the spectrum reference...")
 resFindRef<- findRef(peakList);
 refInd <- resFindRef$refInd;
 cat("\\n Order of spectrum for reference  \\n");
-for (i in 1:length(resFindRef$orderSpec))
+for (i in seq_along(resFindRef$orderSpec))
     cat(paste(i, ":",resFindRef$orderSpec[i],sep=""), " ");
 cat("\\n The reference is: ", refInd);
 

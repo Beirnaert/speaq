@@ -31,7 +31,7 @@ regroupR <- function(grouped.peaks, list.to.regroup, min.samp.grp = 1, max.dupli
     
     all.regrouped.peaks <- list()
     list.counter <- 0
-    for (iter in 1:length(list.to.regroup)) {
+    for (iter in seq_along(list.to.regroup)) {
         
         Indexes.to.regroup <- list.to.regroup[[iter]]
         
@@ -76,7 +76,7 @@ regroupR <- function(grouped.peaks, list.to.regroup, min.samp.grp = 1, max.dupli
         
         
         
-        for (s in 1:length(current.peaks$Sample)) {
+        for (s in seq_along(current.peaks$Sample)) {
             
             groupassignment[s, maxClust + 1] <- suppressWarnings(min(groupassignment[s, 1:maxClust], 
                 na.rm = TRUE))
@@ -88,7 +88,7 @@ regroupR <- function(grouped.peaks, list.to.regroup, min.samp.grp = 1, max.dupli
         grps <- unique(groupassignment[, maxClust + 1])
         grps <- grps[!is.infinite(grps)]
         if (length(grps) > 0) {
-            for (cl in 1:length(grps)) {
+            for (cl in seq_along(grps)) {
                 group[groupassignment[, maxClust + 1] == grps[cl]] <- cl
             }
             ngrps <- max(group)
@@ -117,7 +117,7 @@ regroupR <- function(grouped.peaks, list.to.regroup, min.samp.grp = 1, max.dupli
                   group.meanSNR <- mean(current.peaks$peakSNR[group == gg][!current.peaks$Sample[group == 
                     gg] %in% duplicated.samples])  # get the average SNR for all the samples without duplicates
                   
-                  for (ds in 1:length(duplicated.samples)) {
+                  for (ds in seq_along(duplicated.samples)) {
                     
                     dat.mat <- matrix(c(group.meanppm, current.peaks$peakPPM[group == gg & current.peaks$Sample == 
                       duplicated.samples[ds]], group.meanSNR, current.peaks$peakSNR[group == gg & current.peaks$Sample == 

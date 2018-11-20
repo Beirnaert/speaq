@@ -110,7 +110,7 @@ makeSimulatedData <- function(){
         
         groupLabel=as.factor(c(rep("Group 1",groupSize1),rep("Group 2",groupSize2)))
         X=NULL;
-        for (i in 1:length(groupLabel)){
+        for (i in seq_along(groupLabel)){
             groupType=groupLabel[i];
             
             x2=doShift(x1,shiftStep=sample(maxShift*2,1)-maxShift)
