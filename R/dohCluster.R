@@ -51,14 +51,14 @@ dohCluster <-function(X, peakList, refInd=0,
         
         if (verbose) startTime=proc.time();  
         refSpec=Y[refInd,];        
-        for (tarInd in 1: nrow(X))
+        for (tarInd in seq_len(nrow(X)))
             if (tarInd!=refInd)
             {
                 if (verbose) cat("\n aligning spectrum ",tarInd);
                 targetSpec=Y[tarInd,];
                 myPeakList=c(peakList[[refInd]],peakList[[tarInd]]);
                 myPeakLabel=double(length(myPeakList));
-                for (i in 1:length(peakList[[refInd]]) ) myPeakLabel[i]=1;
+                for (i in seq_along(peakList[[refInd]]) ) myPeakLabel[i]=1;
                 startP=1;
                 endP=length(targetSpec);
                 res=hClustAlign(refSpec,targetSpec,myPeakList,myPeakLabel,startP,endP,
@@ -103,7 +103,7 @@ dohCluster <-function(X, peakList, refInd=0,
             Y = X
             peakListNew = peakList
             refSpec = Y[refInd, ]
-            for (tarInd in 1:nrow(X)) if (tarInd != refInd) {
+            for (tarInd in seq_len(nrow(X))) if (tarInd != refInd) {
                 #if (verbose) cat("\n aligning spectrum ", tarInd)
                 targetSpec = Y[tarInd, ]
                 myPeakList = c(peakList[[refInd]], peakList[[tarInd]])

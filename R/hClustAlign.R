@@ -37,7 +37,7 @@
 #' tarSpec=X[tarInd,];
 #' mergedPeakList=c(peakList[[refInd]],peakList[[tarInd]]);
 #' mergedPeakLabel=double(length(mergedPeakList));
-#' for (i in 1:length(peakList[[refInd]]) ) mergedPeakLabel[i]=1;
+#' for (i in seq_along(peakList[[refInd]]) ) mergedPeakLabel[i]=1;
 #' startP=1;
 #' endP=length(tarSpec);
 #' res=hClustAlign(refSpec,tarSpec,mergedPeakList,mergedPeakLabel,startP,endP,

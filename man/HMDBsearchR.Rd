@@ -21,7 +21,9 @@ This function allows to search HMDB from within R by simply submitting the peaks
 The function will open a webpage with the query results or provide a link to the HMDB page with the results.
 }
 \examples{
+\dontrun{
 HMDBsearchR(peakVector = c(3.2, 3.38), ppmTol = 0.2, returnURL = TRUE)
+}
 
 }
 \author{

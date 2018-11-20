@@ -45,7 +45,7 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
                             raw_peakheight = FALSE, duplicate_detection_multiplier = 1) {
     
     # error checks and miscellaneous parameter fixing
-    for (w in 1:length(window.split)) {
+    for (w in seq_along(window.split)) {
         if (!window.split[w] %in% c(2, 4, 16, 32, 64)) {
             warning(paste(" 'window.split value", as.character(window.split[w]), "is not a power of 2 (max 64). It is set to the default: 4", 
                           sep = " "))
@@ -170,7 +170,7 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
         WavPeaks <- list()
         currentSpec <- as.numeric(Y.spec[Parcounter, ])
         ppm_vector <- X.ppm.matrix[Parcounter, ]
-        for (kw in 1:length(window.split)) {
+        for (kw in seq_along(window.split)) {
             window.increment <- FFTwindow/window.split[kw]  # determine width of window increment
             nshifts <- ceiling(nPPM/window.increment) - window.split + 1  # determine how many increments there have to be
             
@@ -412,7 +412,7 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
         if(all(levels(WaveletPeaks$Sample) == new.levels)){
             levels(WaveletPeaks$Sample) <- original.levels
         }else{
-            for(lv in 1:length(levels(WaveletPeaks$Sample))){
+            for(lv in seq_along(levels(WaveletPeaks$Sample))){
                 levelMatch <- which(new.levels == levels(WaveletPeaks$Sample)[lv] )
                 levels(WaveletPeaks$Sample)[lv] <- original.levels[levelMatch]
             }

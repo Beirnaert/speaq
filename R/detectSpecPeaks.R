@@ -43,7 +43,7 @@ SNR.Th = -1, verbose = TRUE)
     for (i in 1:nSamp) {
         myPeakRes <- NULL
         mySpec <- X[i, ]
-        for (k in 1:length(nDivRange)) {
+        for (k in seq_along(nDivRange)) {
             divR <- nDivRange[k]
             for (j in 1:(trunc(nFea/divR) - 3)) {
                 startR <- (j - 1) * divR + 1

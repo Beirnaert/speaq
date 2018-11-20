@@ -12,7 +12,9 @@
 #' @author Charlie Beirnaert, \email{charlie.beirnaert@@uantwerpen.be}
 #'
 #' @examples
+#' \dontrun{
 #' HMDBsearchR(peakVector = c(3.2, 3.38), ppmTol = 0.2, returnURL = TRUE)
+#' }
 #' 
 #' @importFrom rvest html_session html_form set_values submit_form
 #' @importFrom xml2 read_html
