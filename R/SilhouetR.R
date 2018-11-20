@@ -37,7 +37,7 @@
 #' @importFrom Rfast dista
 #' @importFrom utils head tail txtProgressBar
 #' 
-SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclidean", stand = TRUE) {
+SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclidean") {
     
     if (!"matrix" %in% class(DataMatrix) & !"data.frame" %in% class(DataMatrix)) {
         DataMatrix <- matrix(DataMatrix, ncol = 1)

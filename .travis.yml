@@ -13,4 +13,9 @@ r: # also include oldrel and devel when finished
 
 bioc_packages:
   - MassSpecWavelet
+  
+addons:
+   apt: 
+   packages:
+   libgsl-dev
  

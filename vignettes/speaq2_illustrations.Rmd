@@ -13,8 +13,8 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy = FALSE)
 figwidth.out <- 600
-dpi.HQ <- 150
-dpi.LQ <- 120
+dpi.HQ <- 140
+dpi.LQ <- 110
 ```
 
 ## speaq 2.0
