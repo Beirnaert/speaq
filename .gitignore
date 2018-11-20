@@ -5,3 +5,5 @@ doc
 .RData
 .Ruserdata
 .DS_Store
+
+revdep/.cache.rds
