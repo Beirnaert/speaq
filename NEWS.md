@@ -1,11 +1,12 @@
 
 # speaq 2.4
-### 31/07/2018
+### 20/11/2018
 
 * fixed an issue with DrawSpecPPM and detectSpecPeaks. If the ppm vector or the spectra matrix contained NA's, the function would throw an uninformative error. Now the software tries to fix it, and throws an informative error if it can't. Thanks to Precious Kwadzo Pomary for the alert.
 * updated SilhouetR function. It is now faster and more capable of dealing with larger datasets. 
 * fixed ROIplot bug (sample would not be plotted individually in some cases)
 * fixed detectSpecPeaks bug, too much info would be printed out.
+* other code improvements and fixes, thanks to Sergio Oller Moreno
 
 # speaq 2.3.3
 ### 03/07/2018
