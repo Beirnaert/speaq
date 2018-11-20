@@ -13,7 +13,7 @@
 #' @param nCPU The amount of cpu's to be used for peak detection. If set to '-1' all available cores minus 1 will be used.
 #' @param include_nearbyPeaks If set to TRUE small peaks in the tails of larger ones will be included in the peak data, see \link[MassSpecWavelet]{peakDetectionCWT}.
 #' @param raw_peakheight (default = FALSE) Whether to use the raw peak height of a peak instead of the optimal CWT coefficient (which is a measure for AUC).
-#' @param duplicate_detection_multiplier (default 1) In case users want to process other spectra besides NMR, this parameter will increase the limit for two peaks to be considered a duplicate detection. When dealing with more destorted spectra this parameter can be increased (recomended to not increase above 10). 
+#' @param duplicate_detection_multiplier (default 1) In case users want to process other spectra besides NMR, this parameter will increase the limit for two peaks to be considered a duplicate detection. When dealing with more distorted spectra this parameter can be increased (recommended to not increase above 10). 
 #'
 #' @return The peaks detected with the wavelets.
 #' 

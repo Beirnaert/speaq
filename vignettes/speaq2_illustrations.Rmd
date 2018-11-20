@@ -48,7 +48,7 @@ speaq::drawSpecPPM(Y.spec = Spectra.wine,
 
 The `drawSpecPPM()` plotting function indicates that there might be a gap in the data (which is correct as the original authors deleted the region between 5.0 and 4.5 ppm). This warning can be of importance for the interpretation of the plot as in this case the original authors deleted the data, not by setting the values to 0, but by effectively removing it from the matrix and ppm vector. This produces a plot that appears continuous but is in fact not. 
 
-The `drawSpecPPM()` function also indicates that the groupFactor is not a factor and (succesfully) attempts to do the conversion. The next plot is an excerpt of the wine NMR spectra.
+The `drawSpecPPM()` function also indicates that the groupFactor is not a factor and (successfully) attempts to do the conversion. The next plot is an excerpt of the wine NMR spectra.
 ```{r wine excerpt, dpi=dpi.HQ, fig.width=7, fig.height=4, out.width = figwidth.out}
 # small excerpt by defining the region of interest
 speaq::drawSpecPPM(Y.spec = Spectra.wine, 
@@ -82,7 +82,7 @@ wine.grouped <- speaq::PeakGrouper(Y.peaks = wine.peaks,
 
 ```
 There are two notes to be made on some important parameters:
-1. The `include_nearbyPeaks = TRUE` option also detects peaks in the tails of larger other peaks. At first this might seem the prefered option as you want to detect as much peaks as possible but we will see later that often it is better to exclude them as these small peaks can cause problems later on.
+1. The `include_nearbyPeaks = TRUE` option also detects peaks in the tails of larger other peaks. At first this might seem the preferred option as you want to detect as much peaks as possible but we will see later that often it is better to exclude them as these small peaks can cause problems later on.
 2. The `grouping.window.width` parameter is chosen to be twice the size of the default value: it is advised to choose this larger when working with spectra that exhibit large between sample shifts. The wine dataset is an extreme example of large between sample shifts (caused by the substantial pH differences between wines of different colour)
  
  Now we can plot the detected peaks and the grouped peaks. The dataset after grouping contains both the original ppm values of every peak (in the `peakPPM` variable) but also the group information (found in the `peakIndex` variable). By calling the `AddPlottingStuff()` function the groupPPM variable is added so we also have the ppm value of the groups (the link is: `groupPPM <- ppm.wine[peakIndex]`)
@@ -117,7 +117,7 @@ Silh_plot
 
 
 ```
-It is clear that the grouping is very good. To be absolutely shure we can check the mean silhouette value of every group to see if there are groups that should be regrouped. This regrouping, if needed, can be done with the `regroupR()` function. 
+It is clear that the grouping is very good. To be absolutely sure we can check the mean silhouette value of every group to see if there are groups that should be regrouped. This regrouping, if needed, can be done with the `regroupR()` function. 
 
 
 ```{r average silhouette, tidy = TRUE}
@@ -137,7 +137,7 @@ head(sil_means)
 
 ```
 
-As it turns out, there is a group with a low average silhouette value (0.25) but a fairly high average signal-to-noise ratio (if this group had a low SNR ratio it could just be a noise group). This indicates that these are non-noise peaks which are grouped incorrectly, the follwoing plot acknowledges this
+As it turns out, there is a group with a low average silhouette value (0.25) but a fairly high average signal-to-noise ratio (if this group had a low SNR ratio it could just be a noise group). This indicates that these are non-noise peaks which are grouped incorrectly, the following plot acknowledges this
 
 ```{r wrong grouping plot,  dpi=dpi.HQ, fig.width=7, fig.height=10, fig.keep = "last", out.width = figwidth.out, warnings = FALSE}
 
@@ -195,7 +195,7 @@ speaq::ROIplot(Y.spec = Spectra.wine,
 
 ```
 
-With this peaks regrouped we can continu the analysis. first peak filling is applied and secondly the grouped peak data is converted to a so called feature matrix with samples for rows and features (peak groups) for columns whereby 1 matrix element indicates the peakvalue for a specific group and sample combo. 
+With this peaks regrouped we can continue the analysis. first peak filling is applied and secondly the grouped peak data is converted to a so called feature matrix with samples for rows and features (peak groups) for columns whereby 1 matrix element indicates the peakvalue for a specific group and sample combo. 
 
 
 
@@ -210,10 +210,10 @@ wine.Features <- speaq::BuildFeatureMatrix(wine.filled)
 
 ```
 
-Now that we have these peak data they can either be incorporated in larger metabolomic experiments, where NMR spectroscopy data is often combined with LC-MS data (which is processed always in peak data format), or it can be anaysed on its own, as we will demonstrate here.
+Now that we have these peak data they can either be incorporated in larger metabolomic experiments, where NMR spectroscopy data is often combined with LC-MS data (which is processed always in peak data format), or it can be analysed on its own, as we will demonstrate here.
 
 ### Intermezzo: PCA
-Now that we have the feature matrix we can quickly perform a PCA (principal component analysis) as a way of visualising potential trends and groups in the data. Before any PCA it is advised to scale and center the data, here we will use the pareto scaling but other are available (see the `SCANT()` helpfile)
+Now that we have the feature matrix we can quickly perform a PCA (principal component analysis) as a way of visualizing potential trends and groups in the data. Before any PCA it is advised to scale and center the data, here we will use the pareto scaling but other are available (see the `SCANT()` help file)
 
 ```{r scaling}
 wine.Features.scaled <- speaq::SCANT(data.matrix = wine.Features, 
@@ -267,7 +267,7 @@ From the PCA analysis it is already clear that there is a large difference betwe
 
 
 
-Next we can use the `relevant.features()` function in speaq which uses linear models to produce a p-value corresponding to the nulhypothesis that feature x is not related to the outcome vector. After a p-value correction for multiple testing (as with increasing numbers of even randomly generated features some will eventually be significantly related to the output vector) we can identify the relevant features. As noted in the paper this method is perfectly suited for outcome vectors containing either 2 classes or more classes with a numeric relationship. This is unfortunately not the case here as red, white and rosé are 3 categorical variables. Since there are only 2 rosé wines we will perform the analysis leaving these ones out. This does require however to rescale the raw data without the rosé wines, as otherwise they still have an influence on the dataset
+Next we can use the `relevant.features()` function in speaq which uses linear models to produce a p-value corresponding to the null hypothesis that feature x is not related to the outcome vector. After a p-value correction for multiple testing (as with increasing numbers of even randomly generated features some will eventually be significantly related to the output vector) we can identify the relevant features. As noted in the paper this method is perfectly suited for outcome vectors containing either 2 classes or more classes with a numeric relationship. This is unfortunately not the case here as red, white and rosé are 3 categorical variables. Since there are only 2 rosé wines we will perform the analysis leaving these ones out. This does require however to rescale the raw data without the rosé wines, as otherwise they still have an influence on the dataset
 ### removing the rose wine
 ```{r no rose}
 red.white.scaled <- speaq::SCANT(wine.Features[wine.color!="rose",], 

@@ -19,7 +19,7 @@ DPI.out <- 120
 
 ## Preface
 
-This introduction was written for the *speaq* package up until version 1.2.3. Since version 2.0 a lot of functionality is added but the original functionality is maintained. This vignette can therefor still be used as it decribes one part of the package dealing with spectral alignment and quantitation.
+This introduction was written for the *speaq* package up until version 1.2.3. Since version 2.0 a lot of functionality is added but the original functionality is maintained. This vignette can therefor still be used as it describes one part of the package dealing with spectral alignment and quantitation.
 
 
 
@@ -180,7 +180,7 @@ Yc <- dohClusterCustommedSegments(X,
 ## Spectral plots
 
 
-We could draw a segment to see the performance of the alignement.
+We could draw a segment to see the performance of the alignment.
 
 ```{r AlignedSpectral_plots, dpi=DPI.out, fig.width=6, fig.height=5, out.width = figwidth.out}
 drawSpec(Y);

@@ -33,7 +33,7 @@ getWaveletPeaks(Y.spec, X.ppm, sample.labels = NULL,
 
 \item{raw_peakheight}{(default = FALSE) Whether to use the raw peak height of a peak instead of the optimal CWT coefficient (which is a measure for AUC).}
 
-\item{duplicate_detection_multiplier}{(default 1) In case users want to process other spectra besides NMR, this parameter will increase the limit for two peaks to be considered a duplicate detection. When dealing with more destorted spectra this parameter can be increased (recomended to not increase above 10).}
+\item{duplicate_detection_multiplier}{(default 1) In case users want to process other spectra besides NMR, this parameter will increase the limit for two peaks to be considered a duplicate detection. When dealing with more distorted spectra this parameter can be increased (recommended to not increase above 10).}
 }
 \value{
 The peaks detected with the wavelets.

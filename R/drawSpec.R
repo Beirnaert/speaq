@@ -6,7 +6,7 @@
 #' @param startP The starting point of the segment. If it is -1, the starting point is from beginning of the spectra.
 #' @param endP The ending point of the segment. If it is -1, the ending point is the last point of the spectra.
 #' @param groupLabel The default value is NULL, it means that a single spectrum has a distinct color. Otherwise, the spectra is colored by their label.
-#' @param useLog The default value is -1, that means do not use a logarit transformation. If users want to transform the intensities to logarit values before plotting, set it to 1.
+#' @param useLog The default value is -1, that means do not use a log transformation. If users want to transform the intensities to logarit values before plotting, set it to 1.
 #' @param highBound Default value is -1, that means the plot covers also the highest intensity peaks in the figure. If the users want to limit the upper height of the figure, set this parameter by the limited value.
 #' @param lowBound Default value is -1, that means the plot covers also the lowest intensity peaks in the figure. If the users want to limit the under height of the figure, set this parameter by the limited value.
 #' @param xlab The default value is NULL, if so, "index" is displayed at the horizontal axis.

@@ -17,7 +17,7 @@ drawSpec(X, startP = -1, endP = -1, groupLabel = NULL, useLog = -1,
 
 \item{groupLabel}{The default value is NULL, it means that a single spectrum has a distinct color. Otherwise, the spectra is colored by their label.}
 
-\item{useLog}{The default value is -1, that means do not use a logarit transformation. If users want to transform the intensities to logarit values before plotting, set it to 1.}
+\item{useLog}{The default value is -1, that means do not use a log transformation. If users want to transform the intensities to logarit values before plotting, set it to 1.}
 
 \item{highBound}{Default value is -1, that means the plot covers also the highest intensity peaks in the figure. If the users want to limit the upper height of the figure, set this parameter by the limited value.}
 
