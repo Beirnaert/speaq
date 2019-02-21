@@ -7,6 +7,7 @@
 #' @param max.index.shift Maximal shift in index between a filled peak and the group it belongs to.
 #' @param window.width The width of the detection window for the wavelets. Because of the Fourier transform lengths of 512 ( window.width = 'small') of 1024 ( window.width = 'large') are preferable.
 #' @param nCPU The amount of cpu's to be used for peak detection. If set to '-1' all available cores minus 1 will be used.
+#' @param FilMethod A more robust method for peak filling has been implemented. This is now the default. The former method can be used by specifying FilMethod == "old" however this will be deprecated.
 #'
 #' @return Returns a data frame with grouped peaks and possibly extra peaks obtained from the raw data (these peaks have SNR = NA).
 #'
@@ -40,7 +41,7 @@
 #' @importFrom doSNOW registerDoSNOW
 
 #'
-PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = "small", nCPU = -1) {
+PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = "small", nCPU = -1, FilMethod = "new") {
     
     
     groups <- unique(Y.grouped$peakIndex)
@@ -65,6 +66,9 @@ PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = 
         nCPU <- nSamples
     }
     
+    if(FilMethod == "old"){
+        warning("The old peak filling method will be deprecated in the next versions.")
+    }
     
     groups.to.fill <- rep(NA, length(groups))
     # determine which groups (peakIndex) do not contain a peak for every sample
@@ -104,67 +108,144 @@ PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = 
             groups.to.fill.subset = groups.to.fill[group.division == Parcounter]
             Peaks.filled <- list()
             
-            for (gg in seq_along(groups.to.fill.subset)) {
-                # for (gg in 1:length(28)){
-                grpdata <- Y.grouped[Y.grouped$peakIndex == groups.to.fill.subset[gg], ]
-                
-                Mn.ppm <- mean(grpdata$peakPPM)
-                Med.index <- stats::median(grpdata$peakIndex)
-                Med.scale <- stats::median(grpdata$peakScale)
-                
-                samples.to.fill <- Samples[!Samples %in% grpdata$Sample]
-                filled <- matrix(ncol = 6, nrow = length(samples.to.fill))
-                
-                for (k in seq_along(samples.to.fill)) {
+            if(FilMethod == "old"){
+                for (gg in seq_along(groups.to.fill.subset)) {
+                    # for (gg in 1:length(28)){
+                    grpdata <- Y.grouped[Y.grouped$peakIndex == groups.to.fill.subset[gg], ]
                     
-                    res <- tryCatch({
-                        res.in.try <- MassSpecWavelet::tuneInPeakInfo(Y.spec[samples.to.fill[k], (Med.index - 
-                                                                                                      floor((FFTwindow - 1)/2)):(Med.index + ceiling((FFTwindow - 1)/2))], peakIndex = FFTwindow/2, 
-                                                                      peakScale = round(Med.scale)) 
-                        # This rounding of Med.scale is very important as Massspecwavelet gives warnings in 
-                        # the function tuneInPeakInfo -> getLocalMaximumCWT -> localMaximum
-                    }, warning = function(warn) {
-                        res.in.try <- rep(NA, 6)  # this will result in FWHM=-1 and resolving_power = -1 for this run
-                        return(res.in.try)
-                    }, error = function(err) {
-                        res.in.try <- rep(NA, 6)  # this will result in FWHM=-1 and resolving_power = -1 for this run
-                        return(res.in.try)
-                    })  # end trycatch
+                    Mn.ppm <- mean(grpdata$peakPPM)
+                    Med.index <- stats::median(grpdata$peakIndex)
+                    Med.scale <- stats::median(grpdata$peakScale)
                     
+                    samples.to.fill <- Samples[!Samples %in% grpdata$Sample]
+                    filled <- matrix(ncol = 6, nrow = length(samples.to.fill))
                     
-                    res[sapply(res, is.null)] <- NA
-                    # !important after sapply <- NA! : sometimes the $peakCenterIndex from tuneInPeakInfo returns 'numeric(0)', throw it away
-                    if (length(res) != 6) {
-                        res <- rep(NA, 6)
+                    for (k in seq_along(samples.to.fill)) {
+                        
+                        res <- tryCatch({
+                            res.in.try <- MassSpecWavelet::tuneInPeakInfo(Y.spec[samples.to.fill[k], (Med.index - 
+                                                                                                          floor((FFTwindow - 1)/2)):(Med.index + ceiling((FFTwindow - 1)/2))], peakIndex = FFTwindow/2, 
+                                                                          peakScale = round(Med.scale)) 
+                            # This rounding of Med.scale is very important as Massspecwavelet gives warnings in 
+                            # the function tuneInPeakInfo -> getLocalMaximumCWT -> localMaximum
+                        }, warning = function(warn) {
+                            res.in.try <- rep(NA, 6)  # this will result in FWHM=-1 and resolving_power = -1 for this run
+                            return(res.in.try)
+                        }, error = function(err) {
+                            res.in.try <- rep(NA, 6)  # this will result in FWHM=-1 and resolving_power = -1 for this run
+                            return(res.in.try)
+                        })  # end trycatch
+                        
+                        
+                        res[sapply(res, is.null)] <- NA
+                        # !important after sapply <- NA! : sometimes the $peakCenterIndex from tuneInPeakInfo returns 'numeric(0)', throw it away
+                        if (length(res) != 6) {
+                            res <- rep(NA, 6)
+                        }
+                        if(length(res) != length(unlist(res))){
+                            res <- rep(NA, 6)
+                        }
+                        res <- unlist(res)
+                        filled[k, ] <- res
+                        
                     }
-                    if(length(res) != length(unlist(res))){
-                        res <- rep(NA, 6)
-                    }
-                    res <- unlist(res)
-                    filled[k, ] <- res
+                    colnames(filled) <- c("peakIndex", "peakValue", "peakCenterIndex", "peakSNR", "peakScale", 
+                                          "unProcessedPeak")
+                    filled <- data.frame(filled)
+                    filled$Sample <- samples.to.fill
+                    filled$peakPPM <- Mn.ppm
+                    filled$grp.index <- Med.index
                     
+                    # delete the new peaks who's center index is shifted too far from the original center of the group
+                    # (larger than +/- max.index.shift)
+                    filled <- filled[filled$peakCenterIndex <= (FFTwindow/2 + max.index.shift) & filled$peakCenterIndex >= 
+                                         (FFTwindow/2 - max.index.shift), , drop = F]
+                    # delete the ones where tuneInPeakInfo returned 6 NA
+                    filled <- filled[rowSums(is.na(filled[, 1:6])) != 6, , drop = F]
+                    # delete the peaks where the wavelet search returned NaN for peakValue
+                    filled <- filled[!is.nan(filled$peakValue), ]
+                    
+                    Peaks.filled[[gg]] <- filled
+                    
+                    # update progress bar
+                    #utils::setTxtProgressBar(pb, gg)
                 }
-                colnames(filled) <- c("peakIndex", "peakValue", "peakCenterIndex", "peakSNR", "peakScale", 
-                                      "unProcessedPeak")
-                filled <- data.frame(filled)
-                filled$Sample <- samples.to.fill
-                filled$peakPPM <- Mn.ppm
-                filled$grp.index <- Med.index
-                
-                # delete the new peaks who's center index is shifted too far from the original center of the group
-                # (larger than +/- max.index.shift)
-                filled <- filled[filled$peakCenterIndex <= (FFTwindow/2 + max.index.shift) & filled$peakCenterIndex >= 
-                                     (FFTwindow/2 - max.index.shift), , drop = F]
-                # delete the ones where tuneInPeakInfo returned 6 NA
-                filled <- filled[rowSums(is.na(filled[, 1:6])) != 6, , drop = F]
-                # delete the peaks where the wavelet search returned NaN for peakValue
-                filled <- filled[!is.nan(filled$peakValue), ]
-                
-                Peaks.filled[[gg]] <- filled
-                
-                # update progress bar
-                #utils::setTxtProgressBar(pb, gg)
+            } else{
+                for (gg in seq_along(groups.to.fill.subset)) {
+                    grpdata <- Y.grouped[Y.grouped$peakIndex == groups.to.fill.subset[gg], 
+                                         ]
+                    Mn.ppm <- mean(grpdata$peakPPM)
+                    Med.index <- stats::median(grpdata$peakIndex)
+                    Med.scale <- stats::median(grpdata$peakScale)
+                    samples.to.fill <- Samples[!Samples %in% grpdata$Sample]
+                    filled <- matrix(ncol = 6, nrow = length(samples.to.fill))
+                    
+                    
+                    fill_index_start <- Med.index - floor((FFTwindow - 1)/2)
+                    fill_index_stop <- Med.index + ceiling((FFTwindow - 1)/2)
+                    
+                    
+                    if(fill_index_start < 0 | fill_index_stop > ncol(Y.spec)){
+                        index_seq <- seq(from = fill_index_start, to = fill_index_stop, by = 1)
+                        index_seq <- index_seq[index_seq >= 1 & index_seq <= ncol(Y.spec)] 
+                        
+                        
+                        fill_index_start <- index_seq[1]
+                        fill_index_stop <- tail(index_seq,1)
+                        peak_fill_location <- which(index_seq == Med.index)
+                    }else{
+                        peak_fill_location <- FFTwindow/2
+                    }
+                    
+                    scales = seq(1, 16, 1)
+                    for (k in seq_along(samples.to.fill)) {
+                        res <- tryCatch({
+                            Peaks_again = MassSpecWavelet::peakDetectionCWT(Y.spec[samples.to.fill[k], fill_index_start:fill_index_stop], 
+                                                                            scales = scales, 
+                                                                            SNR.Th = -1, nearbyPeak = TRUE)
+                            PeaksInfo <- Peaks_again$majorPeakInfo
+                            if( length(PeaksInfo$allPeakIndex > (peak_fill_location - max.index.shift) & PeaksInfo$allPeakIndex < (peak_fill_location + max.index.shift))>0){
+                                peak_ind = as.numeric(which(PeaksInfo$allPeakIndex > (peak_fill_location - max.index.shift) & PeaksInfo$allPeakIndex < (peak_fill_location + max.index.shift)))
+                                
+                                peak_location = as.numeric(PeaksInfo$allPeakIndex[peak_ind])
+                                peak_scale =  as.numeric(PeaksInfo$peakScale[peak_ind])
+                            }
+                            
+                            res.in.try <- MassSpecWavelet::tuneInPeakInfo(Y.spec[samples.to.fill[k], fill_index_start:fill_index_stop], peakScale = peak_scale, peakIndex=peak_location)
+                            
+                            
+                        }, warning = function(warn) {
+                            res.in.try <- rep(NA, 6)
+                            return(res.in.try)
+                        }, error = function(err) {
+                            res.in.try <- rep(NA, 6)
+                            return(res.in.try)
+                        })
+                        res[sapply(res, is.null)] <- NA
+                        if (length(res) != 6) {
+                            res <- rep(NA, 6)
+                        }
+                        if (length(res) != length(unlist(res))) {
+                            res <- rep(NA, 6)
+                        }
+                        res <- unlist(res)
+                        filled[k, ] <- res
+                    }
+                    colnames(filled) <- c("peakIndex", "peakValue", 
+                                          "peakCenterIndex", "peakSNR", "peakScale", 
+                                          "unProcessedPeak")
+                    filled <- data.frame(filled)
+                    filled$Sample <- samples.to.fill
+                    filled$peakPPM <- Mn.ppm
+                    filled$grp.index <- Med.index
+                    filled <- filled[rowSums(is.na(filled[, 1:6])) != 
+                                         6, , drop = F]
+                    filled <- filled[!is.na(filled$peakValue), ]
+                    Peaks.filled[[gg]] <- filled
+                }
             }
+            
+            
             Peaks.filled <- data.table::rbindlist(Peaks.filled)
             Peaks.filled <- data.frame(Peaks.filled$grp.index, Peaks.filled$peakPPM, Peaks.filled$peakValue, 
                                        Peaks.filled$peakSNR, Peaks.filled$peakScale, Peaks.filled$Sample)

@@ -5,7 +5,7 @@
 \title{Peak filling of any missed peaks}
 \usage{
 PeakFilling(Y.grouped, Y.spec, max.index.shift = 10,
-  window.width = "small", nCPU = -1)
+  window.width = "small", nCPU = -1, FilMethod = "new")
 }
 \arguments{
 \item{Y.grouped}{Peaks groups (output from the 'PeakGrouper' function).}
@@ -17,6 +17,8 @@ PeakFilling(Y.grouped, Y.spec, max.index.shift = 10,
 \item{window.width}{The width of the detection window for the wavelets. Because of the Fourier transform lengths of 512 ( window.width = 'small') of 1024 ( window.width = 'large') are preferable.}
 
 \item{nCPU}{The amount of cpu's to be used for peak detection. If set to '-1' all available cores minus 1 will be used.}
+
+\item{FilMethod}{A more robust method for peak filling has been implemented. This is now the default. The former method can be used by specifying FilMethod == "old" however this will be deprecated.}
 }
 \value{
 Returns a data frame with grouped peaks and possibly extra peaks obtained from the raw data (these peaks have SNR = NA).

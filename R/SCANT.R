@@ -4,7 +4,8 @@
 #'
 #' @param data.matrix the data matrix to be scaled, normalized or transformed.
 #' @param type the operations to be performed, this can be multiple and are performed sequentially. Any of 'unit', 'pareto', 'log10', 'log2', 'center', 'range', 'vast', 'prob.Q' or 'max' are accepted.
-#' @param what to specify on which to perform the operations (row or column).
+#' @param feature_orientation default = "columns". This corresponds to the default feature matrix with samples as rows and features as columns. The other option is "rows": samples as columns and different features as different rows.
+#' @param what (deprecated, use feature_orientation) to specify on which to perform the operations (row or column).
 #'
 #' @return The scaled, normalized and/or transformed matrix.
 #'
@@ -16,7 +17,7 @@
 #' data.matrix <- matrix(runif(n=Features*Samples, min=0,max=100), 
 #' ncol = Features, nrow = Samples) 
 #' 
-#' changed_matrix = SCANT(data.matrix, type=c('pareto', 'center'), what = 'columns')
+#' changed_matrix = SCANT(data.matrix, type=c('pareto', 'center'), feature_orientation = 'columns')
 #' 
 #' @references van den Berg RA, Hoefsloot HCJ, Westerhuis JA, et al. Centering, scaling, and transformations: improving the biological information content of metabolomics data. BMC Genomics 2006; 7:142.
 #' 
@@ -25,7 +26,7 @@
 #' @importFrom mQTL normalise
 #' @importFrom stats sd
 #' 
-SCANT <- function(data.matrix, type = "unit", what = "columns") {
+SCANT <- function(data.matrix, type = "unit", feature_orientation = "columns", what = NA) {
     
     for (N in seq_along(type)) {
         if (!(type[N] %in% c("unit", "pareto", "log10", "log2", "center", "range", "vast", "prob.Q", "max"))) {
@@ -33,8 +34,13 @@ SCANT <- function(data.matrix, type = "unit", what = "columns") {
         }
     }
     
-    if (!(what %in% c("columns", "rows"))) {
-        stop("No appropriate 'what' is selected")
+    if(!is.na(what)){
+        warning("The use of the 'what' parameter is deprecated. Please use 'feature_orientation' instead. For now feature_orientation has been set in accordance with the supplied 'what' parameter.")
+        feature_orientation = what
+    }
+    
+    if (!(feature_orientation %in% c("columns", "rows"))) {
+        stop("No appropriate 'feature_orientation' is selected")
     }
     
     if (!("matrix" %in% class(data.matrix))) {
@@ -43,7 +49,7 @@ SCANT <- function(data.matrix, type = "unit", what = "columns") {
     }
     
     trans <- FALSE
-    if (what == "rows") {
+    if (feature_orientation == "rows") {
         trans <- TRUE
         data.matrix <- t(data.matrix)
     }
@@ -90,7 +96,9 @@ SCANT <- function(data.matrix, type = "unit", what = "columns") {
         if (Curr.type == "max") {
             scaled.data <- apply(scaled.data, 2, function(x) (x/max(x)))
         }
-        
+        if (Curr.type == "TotSum"){
+            scaled.data <-apply(scaled.data, 1, function(x) (x/sum(x)))
+        }
         
     }
     

@@ -5,7 +5,8 @@
 \title{Build a Feature matrix from the with speaq 2.0 processed data}
 \usage{
 BuildFeatureMatrix(Y.data, var = "peakValue", impute = "zero",
-  delete.below.threshold = FALSE, baselineThresh = 500, snrThres = 3,
+  imputation_val = NA, delete.below.threshold = FALSE,
+  baselineThresh = 500, snrThres = 3,
   thresholds.pass = "any-to-pass")
 }
 \arguments{
@@ -13,7 +14,9 @@ BuildFeatureMatrix(Y.data, var = "peakValue", impute = "zero",
 
 \item{var}{The variable to be used in the Featurematrix. This can be any of 'peakIndex', 'peakPPM', 'peakValue' (default), 'peakSNR', 'peakScale', or 'Sample'.}
 
-\item{impute}{What to impute when a certain peak is missing for a certain sample and feature combo. Options are 'zero' (or 'zeros'), median (imputation with median), randomForest (imputation with missForest function from package missForest) or kNN followed by a number indicating the amount of neighbours to use e.g. kNN5 or kNN10 (as per the method of Troyanskaya, 2001). Any other statement will produce NA's.}
+\item{impute}{What to impute when a certain peak is missing for a certain sample and feature combo. Options are "zero" (or "zeros", the default), "median" (imputation with feature median), "randomForest" (imputation with missForest function from package missForest) or kNN followed by a number indicating the amount of neighbours to use e.g. "kNN5" or "kNN10" (as per the method of Troyanskaya, 2001) or lasty "User_value" (this will allow the use of any value specified with the imputation_val argument e.g. the median of the raw spectra). Any other statement will produce NA's.}
+
+\item{imputation_val}{If the "User_value" imputation option is chosen this value will be used to impute the missing values.}
 
 \item{delete.below.threshold}{Whether to ignore peaks for which the 'var' variable has a value below 'baselineThresh' (default = FALSE).}
 

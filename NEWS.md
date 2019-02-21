@@ -1,5 +1,11 @@
+# speaq 2.5.0
+### 21/01/2019
 
-# speaq 2.4
+* The peak filling function has been overhauled and is now more robust to cases at the spectral boundaries. An additional peak detection step is implemented so overall peak filling time can increase slightly. Thanks to Tai-Sheng Yeh for the bug alert that led to the fix and eventual redesign. 
+* The BuildFeatureMatrix function now has the option of imputation with a user specified value.
+* The SCANT is updated with a new, less ambiguous, parameter to define the shape of the matrix (samples as rows and features as columns or the other way around). Also total sum scaling functionality is added.
+
+# speaq 2.4.0
 ### 20/11/2018
 
 * fixed an issue with DrawSpecPPM and detectSpecPeaks. If the ppm vector or the spectra matrix contained NA's, the function would throw an uninformative error. Now the software tries to fix it, and throws an informative error if it can't. Thanks to Precious Kwadzo Pomary for the alert.
