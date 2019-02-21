@@ -102,13 +102,13 @@ PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = 
         progress <- function(n) setTxtProgressBar(pb, n)
         opts <- list(progress=progress)
         
-        FilledList <- foreach::foreach(Parcounter = 1:nRuns, .options.snow=opts, .inorder = FALSE, .packages = c("stats", "MassSpecWavelet")) %dopar% 
-        {
-            
-            groups.to.fill.subset = groups.to.fill[group.division == Parcounter]
-            Peaks.filled <- list()
-            
-            if(FilMethod == "old"){
+        if(FilMethod == "old"){
+            FilledList <- foreach::foreach(Parcounter = 1:nRuns, .options.snow=opts, .inorder = FALSE, .packages = c("stats", "MassSpecWavelet")) %dopar% 
+            {
+                
+                groups.to.fill.subset = groups.to.fill[group.division == Parcounter]
+                Peaks.filled <- list()
+                
                 for (gg in seq_along(groups.to.fill.subset)) {
                     # for (gg in 1:length(28)){
                     grpdata <- Y.grouped[Y.grouped$peakIndex == groups.to.fill.subset[gg], ]
@@ -170,7 +170,22 @@ PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = 
                     # update progress bar
                     #utils::setTxtProgressBar(pb, gg)
                 }
-            } else{
+                
+                
+                
+                Peaks.filled <- data.table::rbindlist(Peaks.filled)
+                Peaks.filled <- data.frame(Peaks.filled$grp.index, Peaks.filled$peakPPM, Peaks.filled$peakValue, 
+                                           Peaks.filled$peakSNR, Peaks.filled$peakScale, Peaks.filled$Sample)
+                colnames(Peaks.filled) <- colnames(Y.grouped)
+                return(Peaks.filled)   
+            }
+        } else{
+            FilledList <- foreach::foreach(Parcounter = 1:nRuns, .options.snow=opts, .inorder = FALSE, .packages = c("stats", "MassSpecWavelet")) %dopar% 
+            {
+                
+                groups.to.fill.subset = groups.to.fill[group.division == Parcounter]
+                Peaks.filled <- list()
+                
                 for (gg in seq_along(groups.to.fill.subset)) {
                     grpdata <- Y.grouped[Y.grouped$peakIndex == groups.to.fill.subset[gg], 
                                          ]
@@ -243,15 +258,21 @@ PeakFilling <- function(Y.grouped, Y.spec, max.index.shift = 10, window.width = 
                     filled <- filled[!is.na(filled$peakValue), ]
                     Peaks.filled[[gg]] <- filled
                 }
+                
+                
+                
+                Peaks.filled <- data.table::rbindlist(Peaks.filled)
+                Peaks.filled <- data.frame(Peaks.filled$grp.index, Peaks.filled$peakPPM, Peaks.filled$peakValue, 
+                                           Peaks.filled$peakSNR, Peaks.filled$peakScale, Peaks.filled$Sample)
+                colnames(Peaks.filled) <- colnames(Y.grouped)
+                return(Peaks.filled)   
             }
-            
-            
-            Peaks.filled <- data.table::rbindlist(Peaks.filled)
-            Peaks.filled <- data.frame(Peaks.filled$grp.index, Peaks.filled$peakPPM, Peaks.filled$peakValue, 
-                                       Peaks.filled$peakSNR, Peaks.filled$peakScale, Peaks.filled$Sample)
-            colnames(Peaks.filled) <- colnames(Y.grouped)
-            return(Peaks.filled)   
         }
+        
+        
+        
+        
+        
         close(pb)  # close progress bar
         parallel::stopCluster(cl)
         FilledList = data.table::rbindlist(FilledList)
