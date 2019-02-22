@@ -204,7 +204,7 @@ With this peaks regrouped we can continue the analysis. first peak filling is ap
 wine.filled <- speaq::PeakFilling(Y.grouped = wine.regrouped, 
                                   Y.spec = Spectra.wine,  
                                   max.index.shift = 50,
-                                  nCPU = 2) # nCPU set to 1 for the vignette build
+                                  nCPU = 1) # nCPU set to 1 for the vignette build
 
 wine.Features <- speaq::BuildFeatureMatrix(wine.filled)
 
