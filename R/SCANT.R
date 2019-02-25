@@ -29,7 +29,7 @@
 SCANT <- function(data.matrix, type = "unit", feature_orientation = "columns", what = NA) {
     
     for (N in seq_along(type)) {
-        if (!(type[N] %in% c("unit", "pareto", "log10", "log2", "center", "range", "vast", "prob.Q", "max"))) {
+        if (!(type[N] %in% c("unit", "pareto", "log10", "log2", "center", "range", "vast", "prob.Q", "max", "TotSum"))) {
             stop("No appropriate type of normalization/scaling selected")
         }
     }
