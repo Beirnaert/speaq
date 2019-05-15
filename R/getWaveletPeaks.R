@@ -401,6 +401,7 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
         
         if(raw_peakheight){
             WaveletPeaks$peakValue = Y.spec[as.matrix(WaveletPeaks[,c("Sample", "peakIndex")])]
+            message("Note that when using raw peakheights a baseline removal procedure can/should be used.")
         }
         
     } else{
