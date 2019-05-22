@@ -1,5 +1,5 @@
-# speaq 2.5.1
-### 25/01/2019
+# speaq 2.6.0
+### 22/05/2019
 
 * SCANT function bug fix. Thanks to Tai-Sheng Yeh for the alert. 
 

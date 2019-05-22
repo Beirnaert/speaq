@@ -7,7 +7,6 @@ notifications:
   email: false
 
 r: # also include oldrel and devel when finished
-  - oldrel
   - release
   - devel
 
