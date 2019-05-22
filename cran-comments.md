@@ -7,11 +7,10 @@ Test environments
 -----------------
 
 -   local OS X install, R 3.4.3
--   devtools win-builder, R release (3.5.2)
--   devtools win-builder, R devel (unstable) (2019-02-19 r76133)
--   travis.ci Linux, x64, R oldrel (3.4.4)
--   travis.ci Linux, x64, R release (3.5.2)
--   travis.ci Linux, x64, R devel (unstable) (2019-02-21 r76143)
+-   devtools win-builder, R release (3.6.0)
+-   devtools win-builder, R devel  (unstable) (2019-05-21 r76566)
+-   travis.ci Linux, x64, R release (3.6.0)
+-   travis.ci Linux, x64, R devel 
 
 R CMD check results
 -------------------
