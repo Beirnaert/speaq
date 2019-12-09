@@ -4,11 +4,20 @@
 \alias{getWaveletPeaks}
 \title{Convert raw NMR spectra to peak data by using wavelets}
 \usage{
-getWaveletPeaks(Y.spec, X.ppm, sample.labels = NULL,
-  window.width = "small", window.split = 4, scales = seq(1, 16, 1),
-  baselineThresh = 1000, SNR.Th = -1, nCPU = -1,
-  include_nearbyPeaks = TRUE, raw_peakheight = FALSE,
-  duplicate_detection_multiplier = 1)
+getWaveletPeaks(
+  Y.spec,
+  X.ppm,
+  sample.labels = NULL,
+  window.width = "small",
+  window.split = 4,
+  scales = seq(1, 16, 1),
+  baselineThresh = 1000,
+  SNR.Th = -1,
+  nCPU = -1,
+  include_nearbyPeaks = TRUE,
+  raw_peakheight = FALSE,
+  duplicate_detection_multiplier = 1
+)
 }
 \arguments{
 \item{Y.spec}{The spectra in matrix format (rows = samples, columns = measurement points ).}

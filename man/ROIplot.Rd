@@ -4,9 +4,18 @@
 \alias{ROIplot}
 \title{Plot NMR spectra, together with raw and grouped peaks}
 \usage{
-ROIplot(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL,
-  ROI.ppm = NULL, roiWidth = 100, roiWidth.ppm = NULL,
-  groupLabels = NULL, output = NULL)
+ROIplot(
+  Y.spec,
+  X.ppm,
+  ungrouped.peaks,
+  grouped.peaks,
+  ROI = NULL,
+  ROI.ppm = NULL,
+  roiWidth = 100,
+  roiWidth.ppm = NULL,
+  groupLabels = NULL,
+  output = NULL
+)
 }
 \arguments{
 \item{Y.spec}{(required) The raw spectra in matrix format (1 sample per row) or numeric vector (in case of 1 spectrum)}

@@ -4,8 +4,7 @@
 \alias{BuildRawDataMatrix}
 \title{Build a raw data matrix (spectra) from spectra of unequal length}
 \usage{
-BuildRawDataMatrix(spectrum.list, ppm.list = NULL,
-  ppm.edges.matrix = NULL)
+BuildRawDataMatrix(spectrum.list, ppm.list = NULL, ppm.edges.matrix = NULL)
 }
 \arguments{
 \item{spectrum.list}{A list of the spectra (y-values). Since by definition some of these differ in length this has to be in list form with a single spectrum per list item.}

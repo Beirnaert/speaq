@@ -4,8 +4,14 @@
 \alias{detectSpecPeaks}
 \title{Peak detection for spectra}
 \usage{
-detectSpecPeaks(X, nDivRange = 128, scales = seq(1, 16, 2),
-  baselineThresh = 50000, SNR.Th = -1, verbose = TRUE)
+detectSpecPeaks(
+  X,
+  nDivRange = 128,
+  scales = seq(1, 16, 2),
+  baselineThresh = 50000,
+  SNR.Th = -1,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{X}{The spectral dataset in matrix format in which each row contains a single sample}

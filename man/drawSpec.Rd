@@ -4,9 +4,20 @@
 \alias{drawSpec}
 \title{Spectral plot}
 \usage{
-drawSpec(X, startP = -1, endP = -1, groupLabel = NULL, useLog = -1,
-  highBound = -1, lowBound = -1, xlab = NULL, ylab = NULL,
-  main = NULL, nAxisPos = 4, offside = 0)
+drawSpec(
+  X,
+  startP = -1,
+  endP = -1,
+  groupLabel = NULL,
+  useLog = -1,
+  highBound = -1,
+  lowBound = -1,
+  xlab = NULL,
+  ylab = NULL,
+  main = NULL,
+  nAxisPos = 4,
+  offside = 0
+)
 }
 \arguments{
 \item{X}{The spectral dataset in matrix format in which each row contains a single sample.}

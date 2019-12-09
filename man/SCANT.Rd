@@ -4,8 +4,7 @@
 \alias{SCANT}
 \title{SCAle, Normalize and Transform a data matrix}
 \usage{
-SCANT(data.matrix, type = "unit", feature_orientation = "columns",
-  what = NA)
+SCANT(data.matrix, type = "unit", feature_orientation = "columns", what = NA)
 }
 \arguments{
 \item{data.matrix}{the data matrix to be scaled, normalized or transformed.}

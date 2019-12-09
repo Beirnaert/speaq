@@ -67,7 +67,7 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
     }
     
     
-    if (class(Y.spec) != "matrix") {
+    if (!"matrix" %in% class(Y.spec)) {
         print("the raw spectra, Y.spec, are not in matrix format, attempting conversion")
         warning("the raw spectra, Y.spec, are not in matrix format, conversion attempted")
         if ("numeric" %in% class(Y.spec)) {

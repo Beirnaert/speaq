@@ -30,9 +30,9 @@ peakList <- detectSpecPeaks(X,
                             SNR.Th = -1,
                             verbose=FALSE
                             );
-cat("\\n ", peakList[[1]])
+cat("\n ", peakList[[1]])
 segmentpeakList= findSegPeakList(peakList[[1]],400,600);
-cat("\\n ", segmentpeakList)     
+cat("\n ", segmentpeakList)     
                        
 }
 \seealso{

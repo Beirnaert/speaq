@@ -4,8 +4,13 @@
 \alias{regroupR}
 \title{Regroup faulty grouped peaks}
 \usage{
-regroupR(grouped.peaks, list.to.regroup, min.samp.grp = 1,
-  max.dupli.prop = 0.1, maxClust = 10)
+regroupR(
+  grouped.peaks,
+  list.to.regroup,
+  min.samp.grp = 1,
+  max.dupli.prop = 0.1,
+  maxClust = 10
+)
 }
 \arguments{
 \item{grouped.peaks}{The grouped peaks data.}

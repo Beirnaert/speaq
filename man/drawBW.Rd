@@ -4,8 +4,18 @@
 \alias{drawBW}
 \title{BW and percentile ratios plot}
 \usage{
-drawBW(BW, perc, X, startP = -1, endP = -1, groupLabel = NULL,
-  highBound = -1, lowBound = -1, nAxisPos = 4, offside = 0)
+drawBW(
+  BW,
+  perc,
+  X,
+  startP = -1,
+  endP = -1,
+  groupLabel = NULL,
+  highBound = -1,
+  lowBound = -1,
+  nAxisPos = 4,
+  offside = 0
+)
 }
 \arguments{
 \item{BW}{An array of the BW ratios.}

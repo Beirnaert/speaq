@@ -4,8 +4,17 @@
 \alias{hClustAlign}
 \title{CluPA function for two spectra.}
 \usage{
-hClustAlign(refSpec, tarSpec, peakList, peakLabel, startP, endP,
-  distanceMethod = "average", maxShift = 0, acceptLostPeak = FALSE)
+hClustAlign(
+  refSpec,
+  tarSpec,
+  peakList,
+  peakLabel,
+  startP,
+  endP,
+  distanceMethod = "average",
+  maxShift = 0,
+  acceptLostPeak = FALSE
+)
 }
 \arguments{
 \item{refSpec}{The reference spectrum.}

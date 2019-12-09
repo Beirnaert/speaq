@@ -4,8 +4,13 @@
 \alias{hclust.grouping}
 \title{Grouping with hierarchical clustering (used in the PeakGrouper function)}
 \usage{
-hclust.grouping(current.peaks, min.samp.grp = 1, max.dupli.prop = 0.25,
-  maxClust = 10, linkage = "average")
+hclust.grouping(
+  current.peaks,
+  min.samp.grp = 1,
+  max.dupli.prop = 0.25,
+  maxClust = 10,
+  linkage = "average"
+)
 }
 \arguments{
 \item{current.peaks}{A number of neighbouring peaks to be grouped.}

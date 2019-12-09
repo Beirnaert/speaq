@@ -4,10 +4,16 @@
 \alias{BuildFeatureMatrix}
 \title{Build a Feature matrix from the with speaq 2.0 processed data}
 \usage{
-BuildFeatureMatrix(Y.data, var = "peakValue", impute = "zero",
-  imputation_val = NA, delete.below.threshold = FALSE,
-  baselineThresh = 500, snrThres = 3,
-  thresholds.pass = "any-to-pass")
+BuildFeatureMatrix(
+  Y.data,
+  var = "peakValue",
+  impute = "zero",
+  imputation_val = NA,
+  delete.below.threshold = FALSE,
+  baselineThresh = 500,
+  snrThres = 3,
+  thresholds.pass = "any-to-pass"
+)
 }
 \arguments{
 \item{Y.data}{The dataset after (at least) peak detection and grouping with speaq 2.0. The dataset after peak filling is recommended.}

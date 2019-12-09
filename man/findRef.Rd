@@ -26,13 +26,13 @@ peakList <- detectSpecPeaks(X,
                             SNR.Th = -1,
                             verbose=FALSE
 );
-cat("\\n Find the spectrum reference...")
+cat("\n Find the spectrum reference...")
 resFindRef<- findRef(peakList);
 refInd <- resFindRef$refInd;
-cat("\\n Order of spectrum for reference  \\n");
+cat("\n Order of spectrum for reference  \n");
 for (i in seq_along(resFindRef$orderSpec))
     cat(paste(i, ":",resFindRef$orderSpec[i],sep=""), " ");
-cat("\\n The reference is: ", refInd);
+cat("\n The reference is: ", refInd);
 
 }
 \references{

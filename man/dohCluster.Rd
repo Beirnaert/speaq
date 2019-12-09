@@ -4,8 +4,14 @@
 \alias{dohCluster}
 \title{CluPA function for multiple spectra.}
 \usage{
-dohCluster(X, peakList, refInd = 0, maxShift = 100,
-  acceptLostPeak = TRUE, verbose = TRUE)
+dohCluster(
+  X,
+  peakList,
+  refInd = 0,
+  maxShift = 100,
+  acceptLostPeak = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{X}{The spectral dataset in the matrix format in which each row contains a single sample}

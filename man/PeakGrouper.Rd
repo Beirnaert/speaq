@@ -4,9 +4,16 @@
 \alias{PeakGrouper}
 \title{Peak grouping with hierarchical clustering}
 \usage{
-PeakGrouper(Y.peaks, grouping.window.width = 100, verbose = FALSE,
-  min.samp.grp = 1, max.dupli.prop = 0.25, maxClust = 10,
-  Jaccard.regroup.threshold = 0.25, linkage = "average")
+PeakGrouper(
+  Y.peaks,
+  grouping.window.width = 100,
+  verbose = FALSE,
+  min.samp.grp = 1,
+  max.dupli.prop = 0.25,
+  maxClust = 10,
+  Jaccard.regroup.threshold = 0.25,
+  linkage = "average"
+)
 }
 \arguments{
 \item{Y.peaks}{data frame obtained from the 'getWaveletPeaks' function.}

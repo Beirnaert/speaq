@@ -4,8 +4,14 @@
 \alias{PeakFilling}
 \title{Peak filling of any missed peaks}
 \usage{
-PeakFilling(Y.grouped, Y.spec, max.index.shift = 10,
-  window.width = "small", nCPU = -1, FilMethod = "new")
+PeakFilling(
+  Y.grouped,
+  Y.spec,
+  max.index.shift = 10,
+  window.width = "small",
+  nCPU = -1,
+  FilMethod = "new"
+)
 }
 \arguments{
 \item{Y.grouped}{Peaks groups (output from the 'PeakGrouper' function).}

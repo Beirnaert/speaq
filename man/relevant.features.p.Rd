@@ -4,8 +4,13 @@
 \alias{relevant.features.p}
 \title{Identify features (columns in the datamatrix) which are significantly associated with the outcome.}
 \usage{
-relevant.features.p(datamatrix, response, p.adj = "BH", POI = 1,
-  responsevector = NULL)
+relevant.features.p(
+  datamatrix,
+  response,
+  p.adj = "BH",
+  POI = 1,
+  responsevector = NULL
+)
 }
 \arguments{
 \item{datamatrix}{The data matrix with a column for each feature.}

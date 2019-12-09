@@ -4,9 +4,16 @@
 \alias{dohClusterCustommedSegments}
 \title{Use CluPA for alignment with additional information}
 \usage{
-dohClusterCustommedSegments(X, peakList, refInd, segmentInfoMat,
-  minSegSize = 128, maxShift = 100, acceptLostPeak = TRUE,
-  verbose = TRUE)
+dohClusterCustommedSegments(
+  X,
+  peakList,
+  refInd,
+  segmentInfoMat,
+  minSegSize = 128,
+  maxShift = 100,
+  acceptLostPeak = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{X}{The spectral dataset in the matrix format in which each row contains a single sample}
@@ -48,7 +55,7 @@ Each column could be explained as the following:
 It is worth to note that only segments with forAlign=1 (column 3) will be taken into account for spectral alignment.
 }
 \examples{
-cat("\\n Please see more examples in the vignettes file.")
+cat("\n Please see more examples in the vignettes file.")
 res=makeSimulatedData();
 X=res$data;
 groupLabel=res$label;
