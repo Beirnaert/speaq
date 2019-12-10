@@ -1,5 +1,5 @@
 # speaq 2.6.1
-### 09/12/2019
+### 10/12/2019
 
 * Function compatibility change to accomodate future R 4.0 update whereby matrix inherits from class array. 
 
