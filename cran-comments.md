@@ -7,8 +7,8 @@ Test environments
 -----------------
 
 -   local OS X install, R 3.6.1
--   devtools win-builder, R oldrel
--   devtools win-builder, R release (3.5.2)
+-   devtools win-builder, R oldrel 3.5.3 (2019-03-11)
+-   devtools win-builder, R release 3.6.1 (2019-07-05)
 -   devtools win-builder, R devel (unstable) (2019-12-02 r77499)
 -   travis.ci Linux, x64, R release 3.6.1 (2017-01-27)
 -   travis.ci Linux, x64, R devel (unstable) (2019-12-10 r77548)
