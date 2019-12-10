@@ -39,7 +39,7 @@
 #' 
 SilhouetR <- function(DataMatrix, GroupIndices, distance = "euclidean") {
     
-    if (!"matrix" %in% class(DataMatrix) & !"data.frame" %in% class(DataMatrix)) {
+    if (!inherits(DataMatrix, "matrix") & !inherits(DataMatrix, "data.frame")) {
         DataMatrix <- matrix(DataMatrix, ncol = 1)
         message("DataMatrix is not a matrix, attempting conversion with the assumption of only 1 variable (1 column)")
     }

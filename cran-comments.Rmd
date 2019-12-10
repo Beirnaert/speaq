@@ -8,11 +8,10 @@ output: md_document
 MassSpecWavelet and impute are Bioconductor packages.
 
 ## Test environments
-* local OS X install, R 3.4.3
+* local OS X install, R 3.6.1
 * devtools win-builder, R release (3.5.2)
-* devtools win-builder, R devel (unstable) (2019-02-19 r76133)
-* travis.ci Linux, x64, R oldrel (3.4.4)
-* travis.ci Linux, x64, R release (3.5.2)
+* devtools win-builder, R devel (unstable) (2019-12-02 r77499)
+* travis.ci Linux, x64, R release (3.6.1)
 * travis.ci Linux, x64, R devel (unstable) (2019-02-21 r76143) 
 
 

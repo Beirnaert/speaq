@@ -53,12 +53,12 @@ drawSpecPPM <- function(Y.spec, X.ppm, LeftIndex = -1, RightIndex = -1, groupFac
     ROI = NULL, ROI.ppm = NULL, roiWidth = 100, roiWidth.ppm = NULL, legend.extra.x = 2, legend.extra.y = 2, 
     legendpos = NULL, colourstyle = "ggplot", manual.colours = NULL, lwd = 1, noLegend = FALSE) {
     
-    if ("matrix" %in% class(X.ppm)) {
+    if ( inherits(X.ppm, "matrix")) {
         stop("X.ppm is a matrix, for the plotting function only a numeric vector is allowed.")
-    } else if (!"numeric" %in% class(X.ppm)) {
+    } else if ( !inherits(X.ppm, "numeric")) {
         X.ppm <- as.numeric(as.character(X.ppm))
     }
-    if ("numeric" %in% class(Y.spec)) {
+    if ( inherits(Y.spec, "numeric")) {
         Y.spec <- matrix(Y.spec, nrow = 1, ncol = length(Y.spec))
     } else {
         Y.spec <- as.data.frame(Y.spec)
@@ -122,7 +122,7 @@ drawSpecPPM <- function(Y.spec, X.ppm, LeftIndex = -1, RightIndex = -1, groupFac
         groupFactor <- c(1:nrow(Y.spec))
         groupFactor <- as.factor(groupFactor)
     } else {
-        if (!"factor" %in% class(groupFactor)) {
+        if (!inherits(groupFactor, "factor")) {
             warning("groupFactor is not a factor, attempting conversion.")
             groupFactor <- tryCatch({
                 groupFactor <- as.factor(groupFactor)
@@ -174,7 +174,7 @@ drawSpecPPM <- function(Y.spec, X.ppm, LeftIndex = -1, RightIndex = -1, groupFac
     } else if (!is.null(ticks)) {
         ticks <- sort(ticks, decreasing = TRUE)
         xPos.user <- NULL
-        if (!"numeric" %in% class(ticks)) 
+        if ( !inherits(ticks, "numeric")) 
             ticks <- as.numeric(as.character(ticks))
         for (tk in seq_along(ticks)) {
             xPos.user[tk] <- which(abs(X.ppm - ticks[tk]) == min(abs(X.ppm - ticks[tk])))[1]

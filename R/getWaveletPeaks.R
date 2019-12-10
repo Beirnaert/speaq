@@ -67,10 +67,10 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
     }
     
     
-    if (!"matrix" %in% class(Y.spec)) {
+    if (!inherits(Y.spec, "matrix")) {
         print("the raw spectra, Y.spec, are not in matrix format, attempting conversion")
         warning("the raw spectra, Y.spec, are not in matrix format, conversion attempted")
-        if ("numeric" %in% class(Y.spec)) {
+        if (inherits(Y.spec, "numeric")) {
             Y.spec <- matrix(Y.spec, nrow = 1, ncol = length(Y.spec))
         } else {
             Y.spec <- as.data.frame(Y.spec)
@@ -85,7 +85,7 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
         nCPU <- nSamp
     }
     
-    if("data.frame" %in% class(X.ppm)){
+    if( inherits(X.ppm, "data.frame")){
         print("X.ppm is a data frame, attempting conversion." )
         warning("X.ppm was in data frame format. Conversion to numeric vector or matrix attempted")
         if(1 %in% dim(X.ppm)){
@@ -132,9 +132,9 @@ getWaveletPeaks <- function(Y.spec, X.ppm, sample.labels = NULL, window.width = 
         sample.labels <- seq(from = 1, to = nSamp)
     }
     
-    if(!"numeric" %in% class(sample.labels)){
+    if(!inherits(sample.labels, "numeric")){
         warning("sample.labels is not numeric. Attempting conversion to numeric for internal purposes.")
-        if(!"factor" %in% class(sample.labels)){
+        if(!inherits(sample.labels, "factor")){
             sample.labels = as.factor(sample.labels)
         }
         original.levels = levels(sample.labels)

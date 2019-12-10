@@ -43,7 +43,7 @@ SCANT <- function(data.matrix, type = "unit", feature_orientation = "columns", w
         stop("No appropriate 'feature_orientation' is selected")
     }
     
-    if (!("matrix" %in% class(data.matrix))) {
+    if (!inherits(data.matrix, "matrix") ) {
         data.matrix <- as.matrix(data.matrix)
         print("data.matrix was not a matrix, it has subsequently been converted. To make sure no problems arise, do this in advance.")
     }
