@@ -39,17 +39,17 @@ PeakGrouper <- function(Y.peaks, grouping.window.width = 100, verbose = FALSE, m
                         maxClust = 10, Jaccard.regroup.threshold = 0.25, linkage = "average") {
     # Y.peaks is the result from detectspecPeaks.charlie in list or 1 large dataframe format
     
-    if (is(Y.peaks, "list")) {
+    if (inherits(Y.peaks, "list")) {
         Y.peaks <- data.table::rbindlist(Y.peaks)
-    } else if (is(Y.peaks, "data.frame")) {
+    } else if (inherits(Y.peaks, "data.frame")) {
         #Y.peaks <- Y.peaks
     } else {
         stop("NMR.peaks format is not a list or data.frame")
     }
     
-    if(   !is(Y.peaks$Sample, "numeric") ){
+    if(   !inherits(Y.peaks$Sample, "numeric") ){
         warning("The sample labels in Y.peaks are not numeric. Attempting conversion to numeric for internal purposes.")
-        if(!is(Y.peaks$Sample, "factor")){
+        if(!inherits(Y.peaks$Sample, "factor")){
             Y.peaks$Sample = as.factor(Y.peaks$Sample)
         }
         original.levels = levels(Y.peaks$Sample)

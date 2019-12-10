@@ -92,7 +92,7 @@ ROIplot <- function(Y.spec, X.ppm, ungrouped.peaks, grouped.peaks, ROI = NULL, R
         groupLabels <- c(1:nrow(Y.spec))
         groupLabels <- as.factor(groupLabels)
     } else {
-        if (!is(groupLabels, "factor")) {
+        if (!inherits(groupLabels, "factor")) {
             warning("groupLabels is not a factor, attempting conversion.")
             groupLabels <- tryCatch({
                 groupLabels <- as.factor(groupLabels)

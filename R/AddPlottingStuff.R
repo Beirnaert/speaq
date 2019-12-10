@@ -26,9 +26,9 @@
 AddPlottingStuff <- function(Y.peaks, X.ppm = NULL, groupLabels = NULL) {
     
     if (!is.null(X.ppm)) {
-        if ( is(X.ppm, "matrix")) {
+        if ( inherits(X.ppm, "matrix")) {
             stop("X.ppm is a matrix, for the plotting stuff only a numeric vector is allowed.")
-        } else if (!is(X.ppm, "numeric")   ) {
+        } else if (!inherits(X.ppm, "numeric")   ) {
             X.ppm <- as.numeric(as.character(X.ppm))
         }
         Y.peaks$groupPPM <- as.numeric(X.ppm[Y.peaks$peakIndex])
@@ -36,7 +36,7 @@ AddPlottingStuff <- function(Y.peaks, X.ppm = NULL, groupLabels = NULL) {
     
     if (!is.null(groupLabels)) {
         
-        if (!is(groupLabels, "factor")) {
+        if (!inherits(groupLabels, "factor")) {
             groupLabels <- as.factor(groupLabels)
         }
         if (length(groupLabels) != length(unique(Y.peaks$Sample))) {

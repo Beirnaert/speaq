@@ -39,7 +39,7 @@ relevant.features.p <- function(datamatrix, response, p.adj = "BH", POI = 1, res
         response <- responsevector
     }
     
-    if(is(response, "matrix")){
+    if(inherits(response, "matrix")){
         if (nrow(response) != nrow(datamatrix)) {
             stop("The amount of rows of the response does not match with the amount of rows in the datamatrix")
         }
@@ -51,7 +51,7 @@ relevant.features.p <- function(datamatrix, response, p.adj = "BH", POI = 1, res
         }
         coeff.index <- POI + 1 # +1 because of the intercept
     } else{
-        if (!is(response, "numeric")) {
+        if (!inherits(response, "numeric")) {
             print("response was transformed to numeric")
             levels(response) <- 1:length(levels(response))
             response <- as.numeric(response)

@@ -44,7 +44,7 @@ BuildRawDataMatrix <- function(spectrum.list, ppm.list = NULL, ppm.edges.matrix 
     # Note that, as standard in NMR spectra, the highest ppm value is on the left
     
     # checks and setting some variables
-    if (is(spectrum.list, "list")) {
+    if (inherits(spectrum.list, "list")) {
         nspectra <- length(spectrum.list)
     } else stop("spectrum.list is not a list")
     

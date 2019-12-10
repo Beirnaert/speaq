@@ -21,7 +21,7 @@
 regroupR <- function(grouped.peaks, list.to.regroup, min.samp.grp = 1, max.dupli.prop = 0.1, maxClust = 10) {
     
     
-    if ( !is(list.to.regroup, "list")) {
+    if ( !inherits(list.to.regroup, "list")) {
         message("'list.to.regroup' is not a list. Assuming it is a list with only one element.")
         list.to.regroup <- list(list.to.regroup)
     }
