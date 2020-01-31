@@ -1,37 +1,41 @@
-language: R
-sudo: false
+language: r
+os: linux
 cache: packages
 
 
 notifications:
   email: false
 
-r: # also include oldrel and devel when finished
-  - release
-  - devel
+jobs:
+  include:
+    - r: release
+      addons:
+        apt:
+          packages:
+          - r-cran-devtools
+          - r-bioc-massspecwavelet
+          - r-cran-mqtl
+          - r-cran-dosnow
+          - r-cran-cluster
+          - r-cran-data.table
+          - r-cran-foreach
+          - r-cran-rfast
+          - r-cran-ggplot2
+          - r-cran-gridextra
+          - r-cran-reshape2
+          - r-cran-rvest
+          - r-cran-xml2
+          - r-cran-missforest
+          - r-bioc-impute
+          - r-cran-knitr
+          - r-cran-rmarkdown
+          - r-cran-gridbase 
+    - r: devel
+      addons:
+        apt:
+          packages:
+          - libgsl-dev
 
 bioc_packages:
   - MassSpecWavelet
-
-addons:
-  apt:
-    packages:
-    - r-cran-devtools
-    - r-bioc-massspecwavelet
-    - r-cran-mqtl
-    - r-cran-dosnow
-    - r-cran-cluster
-    - r-cran-data.table
-    - r-cran-foreach
-    - r-cran-rfast
-    - r-cran-ggplot2
-    - r-cran-gridextra
-    - r-cran-reshape2
-    - r-cran-rvest
-    - r-cran-xml2
-    - r-cran-missforest
-    - r-bioc-impute
-    - r-cran-knitr
-    - r-cran-rmarkdown
-    - r-cran-gridbase 
 
