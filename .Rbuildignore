@@ -15,3 +15,5 @@
 ^docimages/speaq-github-workflow.png$
 ^revdep/.+$
 ^.gitattributes
+^\.github$
+^revdep$

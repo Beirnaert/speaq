@@ -3,9 +3,8 @@
 #' This function allows the column-wise or row-wise scaling, normalization and transformation operations on a data matrix.
 #'
 #' @param data.matrix the data matrix to be scaled, normalized or transformed.
-#' @param type the operations to be performed, this can be multiple and are performed sequentially. Any of 'unit', 'pareto', 'log10', 'log2', 'center', 'range', 'vast', 'prob.Q' or 'max' are accepted.
+#' @param type the operations to be performed, this can be multiple and are performed sequentially. Any of 'unit', 'pareto', 'log10', 'log2', 'center', 'range', 'vast', or 'max' are accepted.
 #' @param feature_orientation default = "columns". This corresponds to the default feature matrix with samples as rows and features as columns. The other option is "rows": samples as columns and different features as different rows.
-#' @param what (deprecated, use feature_orientation) to specify on which to perform the operations (row or column).
 #'
 #' @return The scaled, normalized and/or transformed matrix.
 #'
@@ -23,20 +22,14 @@
 #' 
 #' @export
 #' 
-#' @importFrom mQTL normalise
 #' @importFrom stats sd
 #' 
-SCANT <- function(data.matrix, type = "unit", feature_orientation = "columns", what = NA) {
+SCANT <- function(data.matrix, type = "unit", feature_orientation = "columns") {
     
     for (N in seq_along(type)) {
         if (!(type[N] %in% c("unit", "pareto", "log10", "log2", "center", "range", "vast", "prob.Q", "max", "TotSum"))) {
             stop("No appropriate type of normalization/scaling selected")
         }
-    }
-    
-    if(!is.na(what)){
-        warning("The use of the 'what' parameter is deprecated. Please use 'feature_orientation' instead. For now feature_orientation has been set in accordance with the supplied 'what' parameter.")
-        feature_orientation = what
     }
     
     if (!(feature_orientation %in% c("columns", "rows"))) {
@@ -87,11 +80,6 @@ SCANT <- function(data.matrix, type = "unit", feature_orientation = "columns", w
         }
         if (Curr.type == "vast") {
             scaled.data <- apply(scaled.data, 2, function(x) ((x - mean(x)) * mean(x))/(stats::sd(x)^2))
-        }
-        ## Quotient probabilistic normalisation
-        if (Curr.type == "prob.Q") {
-            scaled.data <- mQTL::normalise(scaled.data, "prob")
-            scaled.data <- scaled.data[[1]]
         }
         if (Curr.type == "max") {
             scaled.data <- apply(scaled.data, 2, function(x) (x/max(x)))

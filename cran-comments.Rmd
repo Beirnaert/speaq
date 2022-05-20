@@ -8,26 +8,22 @@ output: md_document
 MassSpecWavelet and impute are Bioconductor packages.
 
 ## Test environments
-* local OS X install, R 3.6.1
-* devtools win-builder, R oldrel 3.5.3 (2019-03-11)
-* devtools win-builder, R release 3.6.1 (2019-07-05)
-* devtools win-builder, R devel (unstable) (2019-12-02 r77499)
-* travis.ci Linux, x64, R release 3.6.1 (2017-01-27)
-* travis.ci Linux, x64, R devel (unstable) (2019-12-10 r77548) 
+* local OS X install, R 4.2.0
+* devtools win-builder, R release 4.2.0 (2022-04-22 ucrt)
+* devtools win-builder, R devel (2022-05-19 r82383 ucrt)
 
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
 
-Local OS X build generated 1 NOTE
+Local OS X build generated 0 NOTEs
 
-Travis.ci generated no NOTEs
+R-hub generatet 1 NOTE
 
 Win-builder generated 1 NOTE
 
 * Uses the superseded package: 'doSNOW': this is to provide continuously updated progress bars when performing parallel computations (not available in doParallel so far as doParallel calls the combine function only when all results have been accumulated). When this option is avalaible in doParallel the switch to this package will be made.
 
-* possibly mis-spelled words in DESCRIPTION: These words are not mis-spelled.
 
 
 ## Downstream dependencies

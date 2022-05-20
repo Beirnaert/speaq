@@ -1,3 +1,9 @@
+# speaq 2.6.2
+### 17/05/2022
+
+* Removing mQTL dependencies due to ending CRAN availability of mQTL package. Probabilistic quotient normalisation will not be available anymore in SCANT function. Also ended support of deprecated 'what' option in SCANT function in favor of the 'feature_orientation' designation. 
+
+
 # speaq 2.6.1
 ### 10/12/2019
 

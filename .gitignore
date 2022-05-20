@@ -7,3 +7,5 @@ doc
 .DS_Store
 
 revdep/.cache.rds
+/doc/
+/Meta/

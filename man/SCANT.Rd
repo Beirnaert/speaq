@@ -4,16 +4,14 @@
 \alias{SCANT}
 \title{SCAle, Normalize and Transform a data matrix}
 \usage{
-SCANT(data.matrix, type = "unit", feature_orientation = "columns", what = NA)
+SCANT(data.matrix, type = "unit", feature_orientation = "columns")
 }
 \arguments{
 \item{data.matrix}{the data matrix to be scaled, normalized or transformed.}
 
-\item{type}{the operations to be performed, this can be multiple and are performed sequentially. Any of 'unit', 'pareto', 'log10', 'log2', 'center', 'range', 'vast', 'prob.Q' or 'max' are accepted.}
+\item{type}{the operations to be performed, this can be multiple and are performed sequentially. Any of 'unit', 'pareto', 'log10', 'log2', 'center', 'range', 'vast', or 'max' are accepted.}
 
 \item{feature_orientation}{default = "columns". This corresponds to the default feature matrix with samples as rows and features as columns. The other option is "rows": samples as columns and different features as different rows.}
-
-\item{what}{(deprecated, use feature_orientation) to specify on which to perform the operations (row or column).}
 }
 \value{
 The scaled, normalized and/or transformed matrix.

@@ -18,7 +18,6 @@ addons:
     packages:
     - r-cran-devtools
     - r-bioc-massspecwavelet
-    - r-cran-mqtl
     - r-cran-dosnow
     - r-cran-cluster
     - r-cran-data.table
