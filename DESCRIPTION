@@ -32,6 +32,7 @@ Suggests:
     rmarkdown,
     grid,
     gridBase
+biocViews:
 LazyData: true
 VignetteBuilder: knitr
 License: Apache License 2.0
