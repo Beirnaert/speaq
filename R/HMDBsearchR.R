@@ -16,7 +16,7 @@
 #' HMDBsearchR(peakVector = c(3.2, 3.38), ppmTol = 0.2, returnURL = TRUE)
 #' }
 #' 
-#' @importFrom rvest html_session html_form set_values submit_form
+#' @importFrom rvest session html_form html_form_set session_submit
 #' @importFrom xml2 read_html
 #' @importFrom utils browseURL      
 #'         
@@ -26,10 +26,10 @@ HMDBsearchR <- function(peakVector, ppmTol = 0.02, returnURL = FALSE){
     
     peakSubmit <- paste(as.character(peakVector), collapse = " \n ")
     
-    session <- rvest::html_session("http://www.hmdb.ca/spectra/nmr/one_d/search/new")
+    session <- rvest::session("http://www.hmdb.ca/spectra/nmr/one_d/search/new")
     form <- rvest::html_form(xml2::read_html("http://www.hmdb.ca/spectra/nmr/one_d/search/new"))[[2]]
-    filled_form <- rvest::set_values(form, peaks = peakSubmit, cs_tolerance = ppmTol)
-    result <- rvest::submit_form(session, filled_form, submit = 'peaks')
+    filled_form <- rvest::html_form_set(form, peaks = peakSubmit, cs_tolerance = ppmTol)
+    result <- rvest::session_submit(session, filled_form, submit = 'peaks')
     
     HMDBResultsURL = result$url
     if(returnURL){

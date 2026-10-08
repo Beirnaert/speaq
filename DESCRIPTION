@@ -22,7 +22,7 @@ Imports:
     ggplot2,
     gridExtra,
     reshape2,
-    rvest,
+    rvest (>= 1.0.0),
     xml2,
     missForest,
     impute
